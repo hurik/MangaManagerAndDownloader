@@ -35,7 +35,8 @@ public class ChapterTableModel extends AbstractTableModel {
 
     private final List<Chapter> chapters;
     private final List<String> columnNames = Arrays.asList(
-            "Title");
+            "Title",
+            "");
 
     public ChapterTableModel(List<Chapter> chapters) {
         this.chapters = chapters;
@@ -52,21 +53,53 @@ public class ChapterTableModel extends AbstractTableModel {
     }
 
     @Override
-    public Object getValueAt(int row, int col) {
-        switch (col) {
+    public String getColumnName(int column) {
+        return columnNames.get(column);
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return columnIndex == 1;
+    }
+
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        if (columnIndex == 1) {
+            return Boolean.class;
+        }
+        return super.getColumnClass(columnIndex);
+    }
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        switch (columnIndex) {
             case 0:
-                return chapters.get(row).getTitle();
+                return chapters.get(rowIndex).getTitle();
+            case 1:
+                return chapters.get(rowIndex).isDownload();
             default:
                 return null;
         }
     }
 
     @Override
-    public String getColumnName(int col) {
-        return columnNames.get(col);
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        getChapterAt(rowIndex).setDownload((boolean) aValue);
+        super.setValueAt(aValue, rowIndex, columnIndex);
     }
 
     public Chapter getChapterAt(int row) {
         return chapters.get(row);
+    }
+
+    public List<Chapter> getChapters() {
+        return chapters;
+    }
+
+    public void deactivateDownload() {
+        for (Chapter chapter : chapters) {
+            chapter.setDownload(false);
+        }
+        fireTableDataChanged();
     }
 }

@@ -31,6 +31,7 @@ public class Chapter {
 
     private final String link;
     private final String title;
+    private boolean download = false;
 
     public Chapter(String link, String title) {
         this.link = link;
@@ -43,6 +44,14 @@ public class Chapter {
 
     public String getTitle() {
         return title;
+    }
+
+    public boolean isDownload() {
+        return download;
+    }
+
+    public void setDownload(boolean download) {
+        this.download = download;
     }
 
     @Override

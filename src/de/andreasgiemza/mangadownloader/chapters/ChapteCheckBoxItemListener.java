@@ -21,26 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.helpers;
+package de.andreasgiemza.mangadownloader.chapters;
+
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import javax.swing.JTable;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public final class Filename {
+public class ChapteCheckBoxItemListener implements ItemListener {
 
-    private final static String windows = "[<>:\"/\\|?*]";
+    private final JTable chapterListTable;
+    private final ChapterTableModel chapterTableModel;
 
-    private Filename() {
+    public ChapteCheckBoxItemListener(JTable chapterListTable) {
+        this.chapterListTable = chapterListTable;
+
+        chapterTableModel = (ChapterTableModel) chapterListTable.getModel();
     }
 
-    public static String checkForIllegalCharacters(String string) {
-        String os = System.getProperty("os.name").toLowerCase();
-
-        if (os.contains("win")) {
-            return string.replaceAll(windows, "_");
-        } else {
-            return string;
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            for (int i = 0; i < chapterListTable.getRowCount(); i++) {
+                chapterTableModel.getChapterAt(chapterListTable.convertRowIndexToModel(i)).setDownload(true);
+            }
+            chapterTableModel.fireTableDataChanged();
+        } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+            chapterTableModel.deactivateDownload();
         }
     }
 }

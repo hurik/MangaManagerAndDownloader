@@ -24,6 +24,7 @@
 package de.andreasgiemza.mangadownloader.chapters;
 
 import java.util.regex.Pattern;
+import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
@@ -35,47 +36,52 @@ import javax.swing.table.TableRowSorter;
  * @author Andreas Giemza <andreas@giemza.net>
  */
 public class ChapterListSearchDocumentListener implements DocumentListener {
-
+    
     private final JTextField chapterListSearchTextField;
     private final TableRowSorter<ChapterTableModel> chapterTableRowSorter;
-
-    public ChapterListSearchDocumentListener(JTextField chapterListSearchTextField, TableRowSorter<ChapterTableModel> chapterTableRowSorter) {
+    private final JCheckBox chapterDeSelectAllCheckBox;
+    
+    public ChapterListSearchDocumentListener(JTextField chapterListSearchTextField, TableRowSorter<ChapterTableModel> chapterTableRowSorter, JCheckBox chapterDeSelectAllCheckBox) {
         this.chapterListSearchTextField = chapterListSearchTextField;
         this.chapterTableRowSorter = chapterTableRowSorter;
+        this.chapterDeSelectAllCheckBox = chapterDeSelectAllCheckBox;
     }
-
+    
     @Override
     public void insertUpdate(DocumentEvent e) {
         changed();
     }
-
+    
     @Override
     public void removeUpdate(DocumentEvent e) {
         changed();
     }
-
+    
     @Override
     public void changedUpdate(DocumentEvent e) {
         changed();
-
+        
     }
-
+    
     private void changed() {
         final String searchText = chapterListSearchTextField.getText();
-
+        
+        chapterTableRowSorter.getModel().deactivateDownload();
+        chapterDeSelectAllCheckBox.setSelected(false);
+        
         if (searchText.length() == 0) {
             chapterTableRowSorter.setRowFilter(null);
         } else if (searchText.length() > 0) {
             final String[] searchTextAray = searchText.split(" ");
-
+            
             String regexExpression = "(?i)";
-
+            
             for (String word : searchTextAray) {
                 if (word.length() > 0) {
                     regexExpression += "(?=.*" + Pattern.quote(word) + ")";
                 }
             }
-
+            
             chapterTableRowSorter.setRowFilter(RowFilter.regexFilter(regexExpression));
         }
     }
