@@ -24,7 +24,6 @@
 package de.andreasgiemza.mangadownloader.sites;
 
 import de.andreasgiemza.mangadownloader.chapters.Chapter;
-import de.andreasgiemza.mangadownloader.images.Image;
 import de.andreasgiemza.mangadownloader.mangas.Manga;
 import java.util.List;
 
@@ -34,9 +33,9 @@ import java.util.List;
  */
 public interface Site {
 
-    public List<Manga> updateMangaList();
+    public List<Manga> getMangaList();
 
     public List<Chapter> getChapterList(Manga manga);
 
-    public List<Image> downloadChapter(Chapter chapter);
+    public List<String> getChapterImageLinks(Chapter chapter);
 }

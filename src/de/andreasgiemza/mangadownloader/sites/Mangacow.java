@@ -24,7 +24,6 @@
 package de.andreasgiemza.mangadownloader.sites;
 
 import de.andreasgiemza.mangadownloader.chapters.Chapter;
-import de.andreasgiemza.mangadownloader.images.Image;
 import de.andreasgiemza.mangadownloader.mangas.Manga;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -45,7 +44,7 @@ public class Mangacow implements Site {
     private final String baseUrl = "http://mangacow.co";
 
     @Override
-    public List<Manga> updateMangaList() {
+    public List<Manga> getMangaList() {
         List<Manga> mangas = new LinkedList<>();
 
         try {
@@ -54,8 +53,8 @@ public class Mangacow implements Site {
                     .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
                     .get();
 
-            Element div = doc.select("div[class=wpm_pag mng_lst tbn]").first();
-            Elements rows = div.select("div[class^=nde]");
+            Elements rows = doc.select("div[class=wpm_pag mng_lst tbn]").first()
+                    .select("div[class^=nde]");
 
             for (Element row : rows) {
                 Element link = row.select("a").first();
@@ -79,24 +78,24 @@ public class Mangacow implements Site {
                     .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
                     .get();
 
-            Element table = doc.select("ul[class=pgg]").first();
+            Element nav = doc.select("ul[class=pgg]").first();
 
             int pages = 1;
-            Elements rows;
 
-            if (table != null) {
-                rows = table.select("li");
-                pages = Integer.parseInt(rows.get(rows.size() - 3).text());
+            if (nav != null) {
+                pages = Integer.parseInt(nav.select("li").get(nav.select("li").size() - 3).text());
             }
 
             for (int i = 1; i <= pages; i++) {
-                doc = Jsoup.connect(manga.getLink() + "chapter-list/" + i + "/")
-                        .maxBodySize(10 * 1024 * 1024)
-                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                        .get();
+                if (i != 1) {
+                    doc = Jsoup.connect(manga.getLink() + "chapter-list/" + i + "/")
+                            .maxBodySize(10 * 1024 * 1024)
+                            .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
+                            .get();
+                }
 
-                table = doc.select("ul[class=lst mng_chp]").first();
-                rows = table.select("li");
+                Elements rows = doc.select("ul[class=lst mng_chp]").first()
+                        .select("li");
 
                 for (Element row : rows) {
                     Element link = row.select("a").first();
@@ -112,8 +111,8 @@ public class Mangacow implements Site {
     }
 
     @Override
-    public List<Image> downloadChapter(Chapter chapter) {
-        List<Image> images = new LinkedList<>();
+    public List<String> getChapterImageLinks(Chapter chapter) {
+        List<String> images = new LinkedList<>();
 
         try {
             Document doc = Jsoup.connect(chapter.getLink())
@@ -121,32 +120,24 @@ public class Mangacow implements Site {
                     .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
                     .get();
 
-            Element nav = doc.select("select[class=cbo_wpm_pag]").first();
-            Elements nav_options = nav.select("option");
+            Elements nav = doc.select("select[class=cbo_wpm_pag]").first()
+                    .select("option");
 
-            int pages = nav_options.size();
+            int pages = nav.size();
 
-            for (int i = 0; i < pages; i++) {
-                doc = Jsoup.connect(chapter.getLink() + (i + 1) + "/")
-                        .maxBodySize(10 * 1024 * 1024)
-                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                        .get();
+            for (int i = 1; i <= pages; i++) {
+                if (i != 1) {
+                    doc = Jsoup.connect(chapter.getLink() + (i) + "/")
+                            .maxBodySize(10 * 1024 * 1024)
+                            .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
+                            .get();
+                }
 
-                String imageLink = doc.select("div[class=prw]").first().select("img").attr("src");
-                String imageExtension = imageLink.substring(imageLink.length() - 3, imageLink.length());
-
-                byte[] image = Jsoup.connect(imageLink)
-                        .maxBodySize(10 * 1024 * 1024)
-                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                        .ignoreContentType(true)
-                        .execute().bodyAsBytes();
-
-                images.add(new Image(image, imageExtension));
+                images.add(doc.select("div[class=prw]").first().select("img").attr("src"));
             }
         } catch (IOException ex) {
             Logger.getLogger(Batoto.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return images;
     }
 }

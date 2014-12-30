@@ -215,6 +215,7 @@
                       <Connection code="chaptersTableModel" type="code"/>
                     </Property>
                     <Property name="autoscrolls" type="boolean" value="false"/>
+                    <Property name="rowSelectionAllowed" type="boolean" value="false"/>
                   </Properties>
                 </Component>
               </SubComponents>

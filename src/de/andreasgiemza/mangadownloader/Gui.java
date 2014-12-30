@@ -27,8 +27,7 @@ import de.andreasgiemza.mangadownloader.chapters.ChapteCheckBoxItemListener;
 import de.andreasgiemza.mangadownloader.chapters.Chapter;
 import de.andreasgiemza.mangadownloader.chapters.ChapterListSearchDocumentListener;
 import de.andreasgiemza.mangadownloader.chapters.ChapterTableModel;
-import de.andreasgiemza.mangadownloader.helpers.Filename;
-import de.andreasgiemza.mangadownloader.images.Image;
+import de.andreasgiemza.mangadownloader.downloader.Downloader;
 import de.andreasgiemza.mangadownloader.mangas.Manga;
 import de.andreasgiemza.mangadownloader.mangas.MangaListSearchDocumentListener;
 import de.andreasgiemza.mangadownloader.mangas.MangaListSelectionListener;
@@ -50,8 +49,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -64,6 +61,7 @@ public class Gui extends javax.swing.JFrame {
     private Site site;
     private final List<Manga> mangas = new LinkedList<>();
     private final MangaTableModel mangasTableModel = new MangaTableModel(mangas);
+    private Manga selectedManga;
     private final List<Chapter> chapters = new LinkedList<>();
     private final ChapterTableModel chaptersTableModel = new ChapterTableModel(chapters);
 
@@ -151,42 +149,9 @@ public class Gui extends javax.swing.JFrame {
         chaptersTableModel.fireTableDataChanged();
         chapterListSearchTextField.setText("");
 
+        this.selectedManga = selectedManga;
         chapters.addAll(site.getChapterList(selectedManga));
         chaptersTableModel.fireTableDataChanged();
-    }
-
-    public void getChapters(Chapter selectedChapter) {
-        List<Image> images = site.downloadChapter(selectedChapter);
-
-        Manga selectedManga = ((MangaTableModel) mangaListTable.getModel()).getMangaAt(mangaListTable.convertRowIndexToModel(mangaListTable.getSelectedRow()));
-
-        try {
-            String mangaTitle = Filename.checkForIllegalCharacters(selectedManga.getTitleShort());
-            String chapterTitle = Filename.checkForIllegalCharacters(selectedChapter.getTitle());
-
-            Path mangaFile = currentDirectory.resolve("mangas")
-                    .resolve(mangaTitle)
-                    .resolve(chapterTitle + ".cbz");
-
-            if (!Files.exists(mangaFile.getParent())) {
-                Files.createDirectories(mangaFile.getParent());
-            }
-
-            if (Files.exists(mangaFile)) {
-                Files.delete(mangaFile);
-            }
-
-            try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(mangaFile.toFile()))) {
-                for (int i = 0; i < images.size(); i++) {
-                    ZipEntry ze = new ZipEntry((i + 1) + "." + images.get(i).getExtension());
-                    zos.putNextEntry(ze);
-                    zos.write(images.get(i).getData(), 0, images.get(i).getData().length);
-                    zos.closeEntry();
-                }
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**
@@ -269,6 +234,7 @@ public class Gui extends javax.swing.JFrame {
 
         chapterListTable.setModel(chaptersTableModel);
         chapterListTable.setAutoscrolls(false);
+        chapterListTable.setRowSelectionAllowed(false);
         chapterListScrollPane.setViewportView(chapterListTable);
 
         javax.swing.GroupLayout chapterListPanelLayout = new javax.swing.GroupLayout(chapterListPanel);
@@ -344,7 +310,7 @@ public class Gui extends javax.swing.JFrame {
 
         String source = (String) sourceComboBox.getSelectedItem();
 
-        mangas.addAll(site.updateMangaList());
+        mangas.addAll(site.getMangaList());
         mangasTableModel.fireTableDataChanged();
 
         // Save data to file
@@ -370,11 +336,7 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_sourceButtonActionPerformed
 
     private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
-        for (Chapter chapter : chapters) {
-            if (chapter.isDownload()) {
-                getChapters(chapter);
-            }
-        }
+        Downloader.download(currentDirectory, site, selectedManga, chapters);
     }//GEN-LAST:event_downloadButtonActionPerformed
 
     /**
