@@ -27,7 +27,7 @@ import de.andreasgiemza.mangadownloader.chapters.ChapteCheckBoxItemListener;
 import de.andreasgiemza.mangadownloader.chapters.Chapter;
 import de.andreasgiemza.mangadownloader.chapters.ChapterListSearchDocumentListener;
 import de.andreasgiemza.mangadownloader.chapters.ChapterTableModel;
-import de.andreasgiemza.mangadownloader.downloader.Downloader;
+import de.andreasgiemza.mangadownloader.download.Download;
 import de.andreasgiemza.mangadownloader.mangas.Manga;
 import de.andreasgiemza.mangadownloader.mangas.MangaListSearchDocumentListener;
 import de.andreasgiemza.mangadownloader.mangas.MangaListSelectionListener;
@@ -35,6 +35,7 @@ import de.andreasgiemza.mangadownloader.mangas.MangaTableModel;
 import de.andreasgiemza.mangadownloader.sites.Batoto;
 import de.andreasgiemza.mangadownloader.sites.Mangacow;
 import de.andreasgiemza.mangadownloader.sites.Site;
+import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.FileInputStream;
@@ -50,6 +51,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -113,6 +115,7 @@ public class Gui extends javax.swing.JFrame {
         loadMangaList();
     }
 
+    @SuppressWarnings("unchecked")
     private void loadMangaList() {
         mangas.clear();
         chapters.clear();
@@ -136,6 +139,7 @@ public class Gui extends javax.swing.JFrame {
         if (Files.exists(sourceFile)) {
             try (FileInputStream fin = new FileInputStream(sourceFile.toFile())) {
                 ObjectInputStream ois = new ObjectInputStream(fin);
+                Object data = ois.readObject();
                 mangas.addAll((LinkedList<Manga>) ois.readObject());
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
@@ -338,7 +342,14 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_sourceButtonActionPerformed
 
     private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
-        Downloader.download(currentDirectory, site, selectedManga, chapters);
+        JDialog dialog = new JDialog(this, "Downloading ...", true);
+        dialog.getContentPane().add(new Download(currentDirectory, site, selectedManga, chapters));
+        dialog.pack();
+        dialog.setLocation(
+                new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (dialog.getWidth() / 2)).intValue(),
+                new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (dialog.getHeight() / 2)).intValue());
+        dialog.setResizable(true);
+        dialog.setVisible(true);
     }//GEN-LAST:event_downloadButtonActionPerformed
 
     /**
