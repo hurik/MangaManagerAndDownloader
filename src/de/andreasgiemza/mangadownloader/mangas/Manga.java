@@ -34,12 +34,10 @@ public class Manga implements Serializable, Comparable<Manga> {
 
     private final String link;
     private final String title;
-    private final String titleShort;
 
-    public Manga(String link, String title, String titleShort) {
+    public Manga(String link, String title) {
         this.link = link;
         this.title = title;
-        this.titleShort = titleShort;
     }
 
     public String getLink() {
@@ -50,10 +48,6 @@ public class Manga implements Serializable, Comparable<Manga> {
         return title;
     }
 
-    public String getTitleShort() {
-        return titleShort;
-    }
-
     @Override
     public String toString() {
         return title + " (" + link + ")";
@@ -61,15 +55,14 @@ public class Manga implements Serializable, Comparable<Manga> {
 
     @Override
     public int compareTo(Manga manga) {
-        return titleShort.compareToIgnoreCase(manga.getTitleShort());
+        return title.compareToIgnoreCase(manga.getTitle());
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 67 * hash + Objects.hashCode(this.link);
-        hash = 67 * hash + Objects.hashCode(this.title);
-        hash = 67 * hash + Objects.hashCode(this.titleShort);
+        hash = 79 * hash + Objects.hashCode(this.link);
+        hash = 79 * hash + Objects.hashCode(this.title);
         return hash;
     }
 
@@ -85,9 +78,6 @@ public class Manga implements Serializable, Comparable<Manga> {
         if (!Objects.equals(this.link, other.link)) {
             return false;
         }
-        if (!Objects.equals(this.title, other.title)) {
-            return false;
-        }
-        return Objects.equals(this.titleShort, other.titleShort);
+        return Objects.equals(this.title, other.title);
     }
 }

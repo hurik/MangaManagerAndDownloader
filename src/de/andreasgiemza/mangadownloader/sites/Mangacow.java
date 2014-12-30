@@ -59,7 +59,7 @@ public class Mangacow implements Site {
             for (Element row : rows) {
                 Element link = row.select("a").first();
 
-                mangas.add(new Manga(link.attr("href"), link.attr("title"), link.attr("title")));
+                mangas.add(new Manga(link.attr("href"), link.attr("title")));
             }
         } catch (IOException ex) {
             Logger.getLogger(Batoto.class.getName()).log(Level.SEVERE, null, ex);

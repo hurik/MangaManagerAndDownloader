@@ -74,13 +74,7 @@ public class Batoto implements Site {
 
                     Elements cols = row.select("td");
 
-                    String title = cols.get(1).text()
-                            + " [" + (cols.get(2).text().equals(cols.get(3).text()) ? cols.get(2).text() : cols.get(2).text() + " / " + cols.get(3).text()) + "]"
-                            + " [" + cols.get(4).text() + "]"
-                            + " [" + cols.get(5).text() + "]"
-                            + ("".equals(cols.get(6).text()) ? "" : " [" + cols.get(6).text() + "]");
-
-                    mangas.add(new Manga(cols.get(1).select("a").first().attr("href"), title, cols.get(1).text()));
+                    mangas.add(new Manga(cols.get(1).select("a").first().attr("href"), cols.get(1).text()));
                 }
             }
         } catch (IOException ex) {

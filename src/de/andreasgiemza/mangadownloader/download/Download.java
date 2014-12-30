@@ -60,7 +60,7 @@ public class Download extends javax.swing.JPanel {
         initComponents();
 
         // Setup manga info
-        mangaTitleLabel.setText(selectedManga.getTitleShort());
+        mangaTitleLabel.setText(selectedManga.getTitle());
 
         // Setup Chapter info
         for (Chapter chapter : chapters) {
@@ -206,7 +206,7 @@ public class Download extends javax.swing.JPanel {
                     List<String> imageLinks = site.getChapterImageLinks(chapter);
                     imageProgressBar.setMaximum(imageLinks.size());
                     
-                    String mangaTitle = Filename.checkForIllegalCharacters(selectedManga.getTitleShort());
+                    String mangaTitle = Filename.checkForIllegalCharacters(selectedManga.getTitle());
                     String chapterTitle = Filename.checkForIllegalCharacters(chapter.getTitle());
                     
                     Path mangaFile = currentDirectory.resolve("mangas")

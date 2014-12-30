@@ -139,7 +139,6 @@ public class Gui extends javax.swing.JFrame {
         if (Files.exists(sourceFile)) {
             try (FileInputStream fin = new FileInputStream(sourceFile.toFile())) {
                 ObjectInputStream ois = new ObjectInputStream(fin);
-                Object data = ois.readObject();
                 mangas.addAll((LinkedList<Manga>) ois.readObject());
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
