@@ -45,6 +45,7 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -311,6 +312,7 @@ public class Gui extends javax.swing.JFrame {
         String source = (String) sourceComboBox.getSelectedItem();
 
         mangas.addAll(site.getMangaList());
+        Collections.sort(mangas);
         mangasTableModel.fireTableDataChanged();
 
         // Save data to file

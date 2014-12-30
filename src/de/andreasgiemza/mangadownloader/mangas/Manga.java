@@ -24,12 +24,13 @@
 package de.andreasgiemza.mangadownloader.mangas;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class Manga implements Serializable {
+public class Manga implements Serializable, Comparable<Manga> {
 
     private final String link;
     private final String title;
@@ -56,5 +57,37 @@ public class Manga implements Serializable {
     @Override
     public String toString() {
         return title + " (" + link + ")";
+    }
+
+    @Override
+    public int compareTo(Manga manga) {
+        return titleShort.compareToIgnoreCase(manga.getTitleShort());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + Objects.hashCode(this.link);
+        hash = 67 * hash + Objects.hashCode(this.title);
+        hash = 67 * hash + Objects.hashCode(this.titleShort);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Manga other = (Manga) obj;
+        if (!Objects.equals(this.link, other.link)) {
+            return false;
+        }
+        if (!Objects.equals(this.title, other.title)) {
+            return false;
+        }
+        return Objects.equals(this.titleShort, other.titleShort);
     }
 }

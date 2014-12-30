@@ -90,7 +90,8 @@ public final class Downloader {
                                     .maxBodySize(10 * 1024 * 1024)
                                     .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
                                     .ignoreContentType(true)
-                                    .execute().bodyAsBytes();
+                                    .execute()
+                                    .bodyAsBytes();
 
                             zos.write(image, 0, image.length);
                             zos.closeEntry();
