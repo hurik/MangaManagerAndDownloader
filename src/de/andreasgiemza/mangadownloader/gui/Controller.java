@@ -31,6 +31,7 @@ import de.andreasgiemza.mangadownloader.download.Download;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
 import de.andreasgiemza.mangadownloader.sites.Batoto;
 import de.andreasgiemza.mangadownloader.sites.Mangacow;
+import de.andreasgiemza.mangadownloader.sites.Mangajoy;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.awt.Toolkit;
 import java.io.FileInputStream;
@@ -111,6 +112,9 @@ public class Controller {
                 break;
             case "Mangacow":
                 site = new Mangacow();
+                break;
+            case "Mangajoy":
+                site = new Mangajoy();
                 break;
         }
 
