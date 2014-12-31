@@ -230,7 +230,7 @@ public class Controller {
             dialog.setLocation(
                     new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (dialog.getWidth() / 2)).intValue(),
                     new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (dialog.getHeight() / 2)).intValue());
-            dialog.setResizable(true);
+            dialog.setResizable(false);
             dialog.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(
