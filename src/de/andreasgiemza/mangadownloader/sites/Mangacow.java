@@ -23,8 +23,8 @@
  */
 package de.andreasgiemza.mangadownloader.sites;
 
-import de.andreasgiemza.mangadownloader.chapters.Chapter;
-import de.andreasgiemza.mangadownloader.mangas.Manga;
+import de.andreasgiemza.mangadownloader.data.Chapter;
+import de.andreasgiemza.mangadownloader.data.Manga;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;

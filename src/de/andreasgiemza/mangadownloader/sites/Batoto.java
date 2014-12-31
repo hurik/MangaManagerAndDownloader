@@ -23,8 +23,8 @@
  */
 package de.andreasgiemza.mangadownloader.sites;
 
-import de.andreasgiemza.mangadownloader.chapters.Chapter;
-import de.andreasgiemza.mangadownloader.mangas.Manga;
+import de.andreasgiemza.mangadownloader.data.Chapter;
+import de.andreasgiemza.mangadownloader.data.Manga;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +42,6 @@ import org.jsoup.select.Elements;
 public class Batoto implements Site {
 
     private final String baseUrl = "https://bato.to";
-    private final int maxMangaCount = 13000;
     private final int loadCount = 1000;
 
     @Override
@@ -68,11 +67,11 @@ public class Batoto implements Site {
                 Elements rows = doc.select("table[class=ipb_table topic_list hover_rows]").first().select("tr");
 
                 for (Element row : rows) {
-                    if (row == rows.first()) {
+                    Elements cols = row.select("td");
+
+                    if (cols.size() != 7) {
                         continue;
                     }
-
-                    Elements cols = row.select("td");
 
                     mangas.add(new Manga(cols.get(1).select("a").first().attr("href"), cols.get(1).text()));
                 }
@@ -98,12 +97,8 @@ public class Batoto implements Site {
                     .select("tr");
 
             for (Element row : rows) {
-                if (row == rows.first() || row == rows.last()) {
-                    continue;
-                }
-
                 Elements cols = row.select("td");
-                if (cols.size() == 1) {
+                if (cols.size() != 5) {
                     continue;
                 }
 

@@ -21,21 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites;
+package de.andreasgiemza.mangadownloader.gui.chapter;
 
-import de.andreasgiemza.mangadownloader.data.Chapter;
-import de.andreasgiemza.mangadownloader.data.Manga;
-import java.util.List;
+import de.andreasgiemza.mangadownloader.gui.Controller;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import javax.swing.JTable;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public interface Site {
+public class ChapterCheckBoxItemListener implements ItemListener {
 
-    public List<Manga> getMangaList();
+    private final JTable chapterListTable;
+    private final ChapterTableModel chapterTableModel;
+    private final Controller controller;
 
-    public List<Chapter> getChapterList(Manga manga);
+    public ChapterCheckBoxItemListener(JTable chapterListTable, Controller controller) {
+        this.chapterListTable = chapterListTable;
+        chapterTableModel = (ChapterTableModel) chapterListTable.getModel();
+        this.controller = controller;
+    }
 
-    public List<String> getChapterImageLinks(Chapter chapter);
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            for (int i = 0; i < chapterListTable.getRowCount(); i++) {
+                chapterTableModel.getChapterAt(chapterListTable.convertRowIndexToModel(i)).setDownload(true);
+            }
+            chapterTableModel.fireTableDataChanged();
+        } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+            controller.deactivateDownloads();
+        }
+    }
 }

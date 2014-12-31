@@ -21,21 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites;
-
-import de.andreasgiemza.mangadownloader.data.Chapter;
-import de.andreasgiemza.mangadownloader.data.Manga;
-import java.util.List;
+package de.andreasgiemza.mangadownloader.data;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public interface Site {
+public class Chapter {
 
-    public List<Manga> getMangaList();
+    private final String link;
+    private final String title;
+    private boolean download = false;
 
-    public List<Chapter> getChapterList(Manga manga);
+    public Chapter(String link, String title) {
+        this.link = link;
+        this.title = title;
+    }
 
-    public List<String> getChapterImageLinks(Chapter chapter);
+    public String getLink() {
+        return link;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public boolean isDownload() {
+        return download;
+    }
+
+    public void setDownload(boolean download) {
+        this.download = download;
+    }
+
+    @Override
+    public String toString() {
+        return title + " (" + link + ")";
+    }
 }

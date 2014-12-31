@@ -21,36 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.chapters;
+package de.andreasgiemza.mangadownloader.helpers;
 
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import javax.swing.JTable;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class ChapteCheckBoxItemListener implements ItemListener {
+public final class Regex {
 
-    private final JTable chapterListTable;
-    private final ChapterTableModel chapterTableModel;
-
-    public ChapteCheckBoxItemListener(JTable chapterListTable) {
-        this.chapterListTable = chapterListTable;
-
-        chapterTableModel = (ChapterTableModel) chapterListTable.getModel();
+    private Regex() {
     }
 
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-        if (e.getStateChange() == ItemEvent.SELECTED) {
-            for (int i = 0; i < chapterListTable.getRowCount(); i++) {
-                chapterTableModel.getChapterAt(chapterListTable.convertRowIndexToModel(i)).setDownload(true);
+    public static String build(String string) {
+        final String[] searchTextAray = string.split(" ");
+
+        String regexExpression = "(?i)";
+
+        for (String word : searchTextAray) {
+            if (word.length() > 0) {
+                regexExpression += "(?=.*" + Pattern.quote(word) + ")";
             }
-            chapterTableModel.fireTableDataChanged();
-        } else if (e.getStateChange() == ItemEvent.DESELECTED) {
-            chapterTableModel.deactivateDownload();
         }
+
+        return regexExpression;
     }
 }

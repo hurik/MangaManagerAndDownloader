@@ -24,17 +24,11 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="sourcePanel" max="32767" attributes="0"/>
                   <Component id="MangaChapterPanel" alignment="1" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="sourceLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="sourceComboBox" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="sourceButton" min="-2" max="-2" attributes="0"/>
-                  </Group>
                   <Component id="downloadButton" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -44,12 +38,8 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="sourceButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="sourceComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="sourceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="sourcePanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="MangaChapterPanel" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -60,29 +50,55 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="sourceLabel">
+    <Container class="javax.swing.JPanel" name="sourcePanel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Source:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JComboBox" name="sourceComboBox">
-      <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="2">
-            <StringItem index="0" value="Batoto"/>
-            <StringItem index="1" value="Mangacow"/>
-          </StringArray>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Source"/>
+          </Border>
         </Property>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="sourceButton">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Update"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sourceButtonActionPerformed"/>
-      </Events>
-    </Component>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
+                  <Component id="sourceComboBox" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="sourceButton" min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="sourceButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="sourceComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JComboBox" name="sourceComboBox">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="2">
+                <StringItem index="0" value="Batoto"/>
+                <StringItem index="1" value="Mangacow"/>
+              </StringArray>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="sourceButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Update"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sourceButtonActionPerformed"/>
+          </Events>
+        </Component>
+      </SubComponents>
+    </Container>
     <Container class="javax.swing.JPanel" name="MangaChapterPanel">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
@@ -117,7 +133,7 @@
                           <Component id="mangaListSearchLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="mangaListScrollPane" pref="471" max="32767" attributes="0"/>
+                      <Component id="mangaListScrollPane" pref="448" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -141,6 +157,9 @@
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="mangasTableModel" type="code"/>
+                    </Property>
+                    <Property name="rowSorter" type="javax.swing.RowSorter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="new TableRowSorter&lt;&gt;(mangasTableModel)" type="code"/>
                     </Property>
                     <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
                       <JTableSelectionModel selectionMode="0"/>
@@ -184,7 +203,7 @@
                           <Component id="chapterDeSelectAllCheckBox" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="chapterListScrollPane" pref="471" max="32767" attributes="0"/>
+                      <Component id="chapterListScrollPane" pref="448" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -216,6 +235,9 @@
                     </Property>
                     <Property name="autoscrolls" type="boolean" value="false"/>
                     <Property name="rowSelectionAllowed" type="boolean" value="false"/>
+                    <Property name="rowSorter" type="javax.swing.RowSorter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="new TableRowSorter&lt;&gt;(chaptersTableModel)" type="code"/>
+                    </Property>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -227,6 +249,7 @@
     <Component class="javax.swing.JButton" name="downloadButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Download"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="downloadButtonActionPerformed"/>

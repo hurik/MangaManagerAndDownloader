@@ -23,9 +23,9 @@
  */
 package de.andreasgiemza.mangadownloader.download;
 
-import de.andreasgiemza.mangadownloader.chapters.Chapter;
+import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.helpers.Filename;
-import de.andreasgiemza.mangadownloader.mangas.Manga;
+import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -43,20 +43,20 @@ import org.jsoup.Jsoup;
  * @author Andreas Giemza <andreas@giemza.net>
  */
 public class Download extends javax.swing.JPanel {
-    
+
     private volatile boolean interrupted;
     private final Path currentDirectory;
     private final Site site;
     private final Manga selectedManga;
     private final List<Chapter> chapters;
     private int chapterCount = 0;
-    
+
     public Download(Path currentDirectory, Site site, Manga selectedManga, List<Chapter> chapters) {
         this.currentDirectory = currentDirectory;
         this.site = site;
         this.selectedManga = selectedManga;
         this.chapters = chapters;
-        
+
         initComponents();
 
         // Setup manga info
@@ -69,6 +69,7 @@ public class Download extends javax.swing.JPanel {
             }
         }
         chapterProgressBar.setMaximum(chapterCount);
+        chapterProgressBar.setString(0 + " of " + chapterCount);
     }
 
     /**
@@ -114,6 +115,7 @@ public class Download extends javax.swing.JPanel {
         });
 
         cancelButton.setText("Cancel");
+        cancelButton.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -165,12 +167,11 @@ public class Download extends javax.swing.JPanel {
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         startButton.setEnabled(false);
         cancelButton.setEnabled(true);
-        
+
         interrupted = false;
-        
+
         new Thread(new Worker()).start();
     }//GEN-LAST:event_startButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
@@ -185,66 +186,66 @@ public class Download extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private class Worker implements Runnable {
-        
+
         @Override
         public void run() {
             int chapterDone = 1;
-            
+
             for (Chapter chapter : chapters) {
                 if (interrupted) {
                     updateGui();
                     return;
                 }
-                
+
                 if (chapter.isDownload()) {
                     chapterTileLabel.setText(chapter.getTitle());
                     chapterProgressBar.setValue(chapterDone);
                     chapterProgressBar.setString(chapterDone + " of " + chapterCount);
-                    
+
                     imageProgressBar.setValue(0);
                     imageProgressBar.setString("Getting image links ...");
                     List<String> imageLinks = site.getChapterImageLinks(chapter);
                     imageProgressBar.setMaximum(imageLinks.size());
-                    
+
                     String mangaTitle = Filename.checkForIllegalCharacters(selectedManga.getTitle());
                     String chapterTitle = Filename.checkForIllegalCharacters(chapter.getTitle());
-                    
+
                     Path mangaFile = currentDirectory.resolve("mangas")
                             .resolve(mangaTitle)
                             .resolve(chapterTitle + ".cbz");
-                    
+
                     try {
                         if (!Files.exists(mangaFile.getParent())) {
                             Files.createDirectories(mangaFile.getParent());
                         }
-                        
+
                         if (Files.exists(mangaFile)) {
                             Files.delete(mangaFile);
                         }
-                        
+
                         try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(mangaFile.toFile()))) {
                             for (int i = 0; i < imageLinks.size(); i++) {
                                 if (interrupted) {
                                     updateGui();
                                     return;
                                 }
-                                
+
                                 imageProgressBar.setValue(i + 1);
                                 imageProgressBar.setString((i + 1) + " of " + imageLinks.size());
-                                
+
                                 String imageLink = imageLinks.get(i);
                                 String extension = imageLink.substring(imageLink.length() - 3, imageLink.length());
-                                
+
                                 ZipEntry ze = new ZipEntry((i + 1) + "." + extension);
                                 zos.putNextEntry(ze);
-                                
+
                                 byte[] image = Jsoup.connect(imageLink)
                                         .maxBodySize(10 * 1024 * 1024)
                                         .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
                                         .ignoreContentType(true)
                                         .execute()
                                         .bodyAsBytes();
-                                
+
                                 zos.write(image, 0, image.length);
                                 zos.closeEntry();
                             }
@@ -252,14 +253,14 @@ public class Download extends javax.swing.JPanel {
                     } catch (IOException ex) {
                         Logger.getLogger(Download.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
+
                     chapterDone++;
                 }
             }
-            
+
             updateGui();
         }
-        
+
         private void updateGui() {
             startButton.setEnabled(true);
             cancelButton.setEnabled(false);

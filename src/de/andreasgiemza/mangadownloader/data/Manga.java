@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.mangas;
+package de.andreasgiemza.mangadownloader.data;
 
 import java.io.Serializable;
 import java.util.Objects;

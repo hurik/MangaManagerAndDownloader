@@ -21,41 +21,53 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.chapters;
+package de.andreasgiemza.mangadownloader.gui.manga;
+
+import de.andreasgiemza.mangadownloader.data.Manga;
+import java.util.Arrays;
+import java.util.List;
+import javax.swing.table.AbstractTableModel;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class Chapter {
+public class MangaTableModel extends AbstractTableModel {
 
-    private final String link;
-    private final String title;
-    private boolean download = false;
+    private final List<Manga> mangas;
+    private final List<String> columnNames = Arrays.asList(
+            "Title");
 
-    public Chapter(String link, String title) {
-        this.link = link;
-        this.title = title;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public boolean isDownload() {
-        return download;
-    }
-
-    public void setDownload(boolean download) {
-        this.download = download;
+    public MangaTableModel(List<Manga> mangas) {
+        this.mangas = mangas;
     }
 
     @Override
-    public String toString() {
-        return title + " (" + link + ")";
+    public int getRowCount() {
+        return mangas.size();
+    }
+
+    @Override
+    public int getColumnCount() {
+        return columnNames.size();
+    }
+
+    @Override
+    public Object getValueAt(int row, int col) {
+        switch (col) {
+            case 0:
+                return mangas.get(row).getTitle();
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public String getColumnName(int col) {
+        return columnNames.get(col);
+    }
+
+    public Manga getMangaAt(int row) {
+        return mangas.get(row);
     }
 }

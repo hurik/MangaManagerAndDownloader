@@ -21,8 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.chapters;
+package de.andreasgiemza.mangadownloader.gui.chapter;
 
+import de.andreasgiemza.mangadownloader.data.Chapter;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -94,12 +95,5 @@ public class ChapterTableModel extends AbstractTableModel {
 
     public List<Chapter> getChapters() {
         return chapters;
-    }
-
-    public void deactivateDownload() {
-        for (Chapter chapter : chapters) {
-            chapter.setDownload(false);
-        }
-        fireTableDataChanged();
     }
 }

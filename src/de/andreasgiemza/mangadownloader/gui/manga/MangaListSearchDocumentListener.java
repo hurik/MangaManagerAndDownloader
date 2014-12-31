@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.chapters;
+package de.andreasgiemza.mangadownloader.gui.manga;
 
-import java.util.regex.Pattern;
-import javax.swing.JCheckBox;
+import de.andreasgiemza.mangadownloader.gui.Controller;
+import de.andreasgiemza.mangadownloader.helpers.Regex;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
@@ -35,54 +36,47 @@ import javax.swing.table.TableRowSorter;
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class ChapterListSearchDocumentListener implements DocumentListener {
-    
-    private final JTextField chapterListSearchTextField;
-    private final TableRowSorter<ChapterTableModel> chapterTableRowSorter;
-    private final JCheckBox chapterDeSelectAllCheckBox;
-    
-    public ChapterListSearchDocumentListener(JTextField chapterListSearchTextField, TableRowSorter<ChapterTableModel> chapterTableRowSorter, JCheckBox chapterDeSelectAllCheckBox) {
-        this.chapterListSearchTextField = chapterListSearchTextField;
-        this.chapterTableRowSorter = chapterTableRowSorter;
-        this.chapterDeSelectAllCheckBox = chapterDeSelectAllCheckBox;
+public class MangaListSearchDocumentListener implements DocumentListener {
+
+    private final JTextField mangaListSearchTextField;
+    private final TableRowSorter<MangaTableModel> mangaTableRowSorter;
+    private final Controller controller;
+
+    @SuppressWarnings("unchecked")
+    public MangaListSearchDocumentListener(
+            JTextField mangaListSearchTextField,
+            JTable mangaListTable,
+            Controller controller) {
+        this.mangaListSearchTextField = mangaListSearchTextField;
+        mangaTableRowSorter = (TableRowSorter<MangaTableModel>) mangaListTable.getRowSorter();
+        this.controller = controller;
     }
-    
+
     @Override
     public void insertUpdate(DocumentEvent e) {
         changed();
     }
-    
+
     @Override
     public void removeUpdate(DocumentEvent e) {
         changed();
     }
-    
+
     @Override
     public void changedUpdate(DocumentEvent e) {
         changed();
-        
+
     }
-    
+
     private void changed() {
-        final String searchText = chapterListSearchTextField.getText();
-        
-        chapterTableRowSorter.getModel().deactivateDownload();
-        chapterDeSelectAllCheckBox.setSelected(false);
-        
+        final String searchText = mangaListSearchTextField.getText();
         if (searchText.length() == 0) {
-            chapterTableRowSorter.setRowFilter(null);
+            mangaTableRowSorter.setRowFilter(null);
         } else if (searchText.length() > 0) {
-            final String[] searchTextAray = searchText.split(" ");
-            
-            String regexExpression = "(?i)";
-            
-            for (String word : searchTextAray) {
-                if (word.length() > 0) {
-                    regexExpression += "(?=.*" + Pattern.quote(word) + ")";
-                }
-            }
-            
-            chapterTableRowSorter.setRowFilter(RowFilter.regexFilter(regexExpression));
+            mangaTableRowSorter.setRowFilter(RowFilter.regexFilter(
+                    Regex.build(searchText)));
         }
+
+        controller.mangaSearchChanged();
     }
 }

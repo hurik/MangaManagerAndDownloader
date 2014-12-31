@@ -21,21 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites;
+package de.andreasgiemza.mangadownloader.gui.manga;
 
-import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Manga;
-import java.util.List;
+import de.andreasgiemza.mangadownloader.gui.Controller;
+import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public interface Site {
+public class MangaListSelectionListener implements ListSelectionListener {
 
-    public List<Manga> getMangaList();
+    final private Controller controller;
+    final private JTable mangaListTable;
+    private Manga lastSelected;
 
-    public List<Chapter> getChapterList(Manga manga);
+    public MangaListSelectionListener(Controller controller, JTable mangaListTable) {
+        this.controller = controller;
+        this.mangaListTable = mangaListTable;
+    }
 
-    public List<String> getChapterImageLinks(Chapter chapter);
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        try {
+            Manga selectedManga = ((MangaTableModel) mangaListTable.getModel()).getMangaAt(mangaListTable.convertRowIndexToModel(mangaListTable.getSelectedRow()));
+
+            if (selectedManga != lastSelected) {
+                controller.mangaSelected(selectedManga);
+            }
+
+            lastSelected = selectedManga;
+        } catch (IndexOutOfBoundsException ex) {
+        }
+    }
 }
