@@ -23,28 +23,46 @@
  */
 package de.andreasgiemza.mangadownloader.helpers;
 
-import java.util.regex.Pattern;
+import java.io.IOException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public final class Regex {
+public final class JsoupHelper {
 
-    private Regex() {
+    private JsoupHelper() {
     }
 
-    public static String build(String string) {
-        final String[] searchTextAray = string.split(" ");
-
-        String regexExpression = "(?i)";
-
-        for (String word : searchTextAray) {
-            if (word.length() > 0) {
-                regexExpression += "(?=.*" + Pattern.quote(word) + ")";
+    public static Document getHTMLPage(String url) throws IOException {
+        for (int i = 1; i <= 3; i++) {
+            try {
+                return Jsoup.connect(url)
+                        .maxBodySize(10 * 1024 * 1024)
+                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
+                        .get();
+            } catch (IOException e) {
             }
         }
 
-        return regexExpression;
+        throw new IOException();
+    }
+
+    public static byte[] getImage(String url) throws IOException {
+        for (int i = 1; i <= 3; i++) {
+            try {
+                return Jsoup.connect(url)
+                        .maxBodySize(10 * 1024 * 1024)
+                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
+                        .ignoreContentType(true)
+                        .execute()
+                        .bodyAsBytes();
+            } catch (IOException e) {
+            }
+        }
+
+        throw new IOException();
     }
 }

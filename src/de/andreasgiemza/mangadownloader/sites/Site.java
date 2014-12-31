@@ -25,6 +25,7 @@ package de.andreasgiemza.mangadownloader.sites;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Manga;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -33,9 +34,9 @@ import java.util.List;
  */
 public interface Site {
 
-    public List<Manga> getMangaList();
+    public List<Manga> getMangaList() throws IOException;
 
-    public List<Chapter> getChapterList(Manga manga);
+    public List<Chapter> getChapterList(Manga manga) throws IOException;
 
-    public List<String> getChapterImageLinks(Chapter chapter);
+    public List<String> getChapterImageLinks(Chapter chapter) throws IOException;
 }

@@ -25,12 +25,10 @@ package de.andreasgiemza.mangadownloader.sites;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Manga;
+import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -44,83 +42,60 @@ public class MangaFox implements Site {
     private final String baseUrl = "http://mangafox.me";
 
     @Override
-    public List<Manga> getMangaList() {
+    public List<Manga> getMangaList() throws IOException {
         List<Manga> mangas = new LinkedList<>();
 
-        try {
-            Document doc = Jsoup.connect(baseUrl + "/manga/")
-                    .maxBodySize(10 * 1024 * 1024)
-                    .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                    .get();
+        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/manga/");
 
-            Elements rows = doc.select("div[class=left]").first().select("li");
+        Elements rows = doc.select("div[class=left]").first().select("li");
 
-            for (Element row : rows) {
-                Element link = row.select("a[class^=series_preview]").first();
+        for (Element row : rows) {
+            Element link = row.select("a[class^=series_preview]").first();
 
-                if (link == null) {
-                    continue;
-                }
-
-                mangas.add(new Manga(link.attr("href"), link.text()));
+            if (link == null) {
+                continue;
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Batoto.class.getName()).log(Level.SEVERE, null, ex);
+
+            mangas.add(new Manga(link.attr("href"), link.text()));
         }
 
         return mangas;
     }
 
     @Override
-    public List<Chapter> getChapterList(Manga manga) {
+    public List<Chapter> getChapterList(Manga manga) throws IOException {
         List<Chapter> chapters = new LinkedList<>();
 
-        try {
-            Document doc = Jsoup.connect(manga.getLink())
-                    .maxBodySize(10 * 1024 * 1024)
-                    .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                    .get();
+        Document doc = JsoupHelper.getHTMLPage(manga.getLink());
 
-            Elements rows = doc.select("div[id=chapters]").first().select("li");
+        Elements rows = doc.select("div[id=chapters]").first().select("li");
 
-            for (Element row : rows) {
-                chapters.add(new Chapter(row.select("a[class=tips]").first().attr("href"), row.select("a[class=tips]").first().text()));
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Batoto.class.getName()).log(Level.SEVERE, null, ex);
+        for (Element row : rows) {
+            chapters.add(new Chapter(row.select("a[class=tips]").first().attr("href"), row.select("a[class=tips]").first().text()));
         }
 
         return chapters;
     }
 
     @Override
-    public List<String> getChapterImageLinks(Chapter chapter) {
+    public List<String> getChapterImageLinks(Chapter chapter) throws IOException {
         List<String> images = new LinkedList<>();
 
-        try {
-            Document doc = Jsoup.connect(chapter.getLink().endsWith("1.html") ? chapter.getLink() : chapter.getLink() + "1.html")
-                    .maxBodySize(10 * 1024 * 1024)
-                    .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                    .get();
+        Document doc = JsoupHelper.getHTMLPage(chapter.getLink().endsWith("1.html") ? chapter.getLink() : chapter.getLink() + "1.html");
 
-            Elements nav = doc.select("select[onchange=change_page(this)]").first()
-                    .select("option");
+        Elements nav = doc.select("select[onchange=change_page(this)]").first()
+                .select("option");
 
-            int pages = nav.size() - 1;
+        int pages = nav.size() - 1;
 
-            for (int i = 1; i <= pages; i++) {
-                if (i != 1) {
-                    doc = Jsoup.connect(chapter.getLink().replace("1.html", "") + i + ".html")
-                            .maxBodySize(10 * 1024 * 1024)
-                            .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                            .get();
-                }
-
-                images.add(doc.select("img[id=image]").first().attr("src"));
+        for (int i = 1; i <= pages; i++) {
+            if (i != 1) {
+                doc = JsoupHelper.getHTMLPage(chapter.getLink().replace("1.html", "") + i + ".html");
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Batoto.class.getName()).log(Level.SEVERE, null, ex);
+
+            images.add(doc.select("img[id=image]").first().attr("src"));
         }
+
         return images;
     }
 }

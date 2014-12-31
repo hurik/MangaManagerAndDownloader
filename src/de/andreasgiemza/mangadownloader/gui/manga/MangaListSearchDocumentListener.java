@@ -24,7 +24,7 @@
 package de.andreasgiemza.mangadownloader.gui.manga;
 
 import de.andreasgiemza.mangadownloader.gui.Controller;
-import de.andreasgiemza.mangadownloader.helpers.Regex;
+import de.andreasgiemza.mangadownloader.helpers.RegexHelper;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
@@ -73,8 +73,7 @@ public class MangaListSearchDocumentListener implements DocumentListener {
         if (searchText.length() == 0) {
             mangaTableRowSorter.setRowFilter(null);
         } else if (searchText.length() > 0) {
-            mangaTableRowSorter.setRowFilter(RowFilter.regexFilter(
-                    Regex.build(searchText)));
+            mangaTableRowSorter.setRowFilter(RowFilter.regexFilter(RegexHelper.build(searchText)));
         }
 
         controller.mangaSearchChanged();

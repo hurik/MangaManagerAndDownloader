@@ -23,24 +23,28 @@
  */
 package de.andreasgiemza.mangadownloader.helpers;
 
+import java.util.regex.Pattern;
+
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public final class Filename {
+public final class RegexHelper {
 
-    private final static String windows = "[<>:\"/\\|?*]";
-
-    private Filename() {
+    private RegexHelper() {
     }
 
-    public static String checkForIllegalCharacters(String string) {
-        String os = System.getProperty("os.name").toLowerCase();
+    public static String build(String string) {
+        final String[] searchTextAray = string.split(" ");
 
-        if (os.contains("win")) {
-            return string.replaceAll(windows, "_");
-        } else {
-            return string;
+        String regexExpression = "(?i)";
+
+        for (String word : searchTextAray) {
+            if (word.length() > 0) {
+                regexExpression += "(?=.*" + Pattern.quote(word) + ")";
+            }
         }
+
+        return regexExpression;
     }
 }

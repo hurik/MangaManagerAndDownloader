@@ -24,19 +24,17 @@
 package de.andreasgiemza.mangadownloader.download;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
-import de.andreasgiemza.mangadownloader.helpers.Filename;
+import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
 import de.andreasgiemza.mangadownloader.data.Manga;
+import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import org.jsoup.Jsoup;
 
 /**
  *
@@ -90,6 +88,9 @@ public class Download extends javax.swing.JPanel {
         imageProgressBar = new javax.swing.JProgressBar();
         startButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        errorLogPanel = new javax.swing.JPanel();
+        errorLogScrollPane = new javax.swing.JScrollPane();
+        errorLogTextArea = new javax.swing.JTextArea();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -132,6 +133,28 @@ public class Download extends javax.swing.JPanel {
             }
         });
         add(cancelButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 166, 380, -1));
+
+        errorLogPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Error Log"));
+
+        errorLogTextArea.setEditable(false);
+        errorLogTextArea.setColumns(20);
+        errorLogTextArea.setRows(5);
+        errorLogScrollPane.setViewportView(errorLogTextArea);
+
+        javax.swing.GroupLayout errorLogPanelLayout = new javax.swing.GroupLayout(errorLogPanel);
+        errorLogPanel.setLayout(errorLogPanelLayout);
+        errorLogPanelLayout.setHorizontalGroup(
+            errorLogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(errorLogScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+        );
+        errorLogPanelLayout.setVerticalGroup(
+            errorLogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(errorLogPanelLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(errorLogScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        add(errorLogPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 380, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
@@ -140,6 +163,7 @@ public class Download extends javax.swing.JPanel {
 
         interrupted = false;
 
+        errorLogTextArea.setText("");
         new Thread(new Worker()).start();
     }//GEN-LAST:event_startButtonActionPerformed
 
@@ -153,6 +177,9 @@ public class Download extends javax.swing.JPanel {
     private javax.swing.JLabel chapterLabel;
     private javax.swing.JProgressBar chapterProgressBar;
     private javax.swing.JLabel chapterTileLabel;
+    private javax.swing.JPanel errorLogPanel;
+    private javax.swing.JScrollPane errorLogScrollPane;
+    private javax.swing.JTextArea errorLogTextArea;
     private javax.swing.JLabel imageLabel;
     private javax.swing.JProgressBar imageProgressBar;
     private javax.swing.JLabel mangaLabel;
@@ -162,32 +189,44 @@ public class Download extends javax.swing.JPanel {
 
     private class Worker implements Runnable {
 
+        private String errorLog = null;
+
         @Override
         public void run() {
             int chapterDone = 1;
 
             for (Chapter chapter : chapters) {
-                if (interrupted) {
-                    updateGui();
-                    return;
-                }
-
                 if (chapter.isDownload()) {
+                    if (interrupted) {
+                        chapterError(currentDirectory, chapter, "Aborted while downloading: ");
+                        updateGui();
+                        return;
+                    }
+
                     chapterTileLabel.setText(chapter.getTitle());
                     chapterProgressBar.setValue(chapterDone);
                     chapterProgressBar.setString(chapterDone + " of " + chapterCount);
 
                     imageProgressBar.setValue(0);
                     imageProgressBar.setString("Getting image links ...");
-                    List<String> imageLinks = site.getChapterImageLinks(chapter);
-                    imageProgressBar.setMaximum(imageLinks.size());
 
-                    String mangaTitle = Filename.checkForIllegalCharacters(selectedManga.getTitle());
-                    String chapterTitle = Filename.checkForIllegalCharacters(chapter.getTitle());
+                    String mangaTitle = FilenameHelper.checkForIllegalCharacters(selectedManga.getTitle());
+                    String chapterTitle = FilenameHelper.checkForIllegalCharacters(chapter.getTitle());
 
                     Path mangaFile = currentDirectory.resolve("mangas")
                             .resolve(mangaTitle)
                             .resolve(chapterTitle + ".cbz");
+
+                    List<String> imageLinks;
+
+                    try {
+                        imageLinks = site.getChapterImageLinks(chapter);
+                    } catch (IOException ex) {
+                        chapterError(mangaFile, chapter, "Error while downloading: ");
+                        continue;
+                    }
+
+                    imageProgressBar.setMaximum(imageLinks.size());
 
                     try {
                         if (!Files.exists(mangaFile.getParent())) {
@@ -201,6 +240,8 @@ public class Download extends javax.swing.JPanel {
                         try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(mangaFile.toFile()))) {
                             for (int i = 0; i < imageLinks.size(); i++) {
                                 if (interrupted) {
+                                    zos.close();
+                                    chapterError(mangaFile, chapter, "Aborted while downloading: ");
                                     updateGui();
                                     return;
                                 }
@@ -214,19 +255,15 @@ public class Download extends javax.swing.JPanel {
                                 ZipEntry ze = new ZipEntry((i + 1) + "." + extension);
                                 zos.putNextEntry(ze);
 
-                                byte[] image = Jsoup.connect(imageLink)
-                                        .maxBodySize(10 * 1024 * 1024)
-                                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                                        .ignoreContentType(true)
-                                        .execute()
-                                        .bodyAsBytes();
+                                byte[] image = JsoupHelper.getImage(imageLink);
 
                                 zos.write(image, 0, image.length);
                                 zos.closeEntry();
                             }
                         }
                     } catch (IOException ex) {
-                        Logger.getLogger(Download.class.getName()).log(Level.SEVERE, null, ex);
+                        chapterError(mangaFile, chapter, "Error while downloading: ");
+                        continue;
                     }
 
                     chapterDone++;
@@ -239,6 +276,23 @@ public class Download extends javax.swing.JPanel {
         private void updateGui() {
             startButton.setEnabled(true);
             cancelButton.setEnabled(false);
+        }
+
+        private void chapterError(Path mangaFile, Chapter chapter, String message) {
+            if (Files.exists(mangaFile)) {
+                try {
+                    Files.delete(mangaFile);
+                } catch (IOException ex) {
+                }
+            }
+
+            if (errorLog == null) {
+                errorLog = message + chapter.getTitle();
+            } else {
+                errorLog += "\n" + message + chapter.getTitle();
+            }
+
+            errorLogTextArea.setText(errorLog);
         }
     }
 }

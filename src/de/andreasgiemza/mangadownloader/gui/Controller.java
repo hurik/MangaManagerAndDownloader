@@ -65,6 +65,7 @@ public class Controller {
     // Current directory
     private final Path currentDirectory = Paths.get("").toAbsolutePath();
     // Gui elements
+    private final MangaDownloader mangaDownloader;
     private final JComboBox sourceComboBox;
     private final JTextField mangaListSearchTextField;
     private final JTable mangaListTable;
@@ -79,8 +80,10 @@ public class Controller {
     private final List<Chapter> chapters;
     // Selected manga
     private Manga selectedManga;
+    private Manga lastSelectedManga;
 
     public Controller(
+            MangaDownloader mangaDownloader,
             JComboBox sourceComboBox,
             JTextField mangaListSearchTextField,
             JTable mangaListTable,
@@ -90,6 +93,7 @@ public class Controller {
             JButton downloadButton,
             List<Manga> mangas,
             List<Chapter> chapters) {
+        this.mangaDownloader = mangaDownloader;
         this.sourceComboBox = sourceComboBox;
         this.mangaListSearchTextField = mangaListSearchTextField;
         this.mangaListTable = mangaListTable;
@@ -141,7 +145,16 @@ public class Controller {
 
         String source = (String) sourceComboBox.getSelectedItem();
 
-        mangas.addAll(site.getMangaList());
+        try {
+            mangas.addAll(site.getMangaList());
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(
+                    mangaDownloader,
+                    "Cant't connect to " + source + "!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         Collections.sort(mangas);
         ((MangaTableModel) mangaListTable.getModel()).fireTableDataChanged();
 
@@ -162,25 +175,39 @@ public class Controller {
                 oos.writeObject(mangas);
             }
         } catch (IOException ex) {
-            Logger.getLogger(MangaDownloader.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void mangaSearchChanged() {
         mangaListTable.clearSelection();
         downloadButton.setEnabled(false);
-        selectedManga = null;
+        lastSelectedManga = null;
         resetChapterPanel();
     }
 
     public void mangaSelected(Manga selectedManga) {
-        resetChapterPanel();
+        if (selectedManga != lastSelectedManga) {
+            resetChapterPanel();
 
-        this.selectedManga = selectedManga;
-        chapters.addAll(site.getChapterList(selectedManga));
-        ((ChapterTableModel) chapterListTable.getModel()).fireTableDataChanged();
+            this.selectedManga = selectedManga;
+            try {
+                chapters.addAll(site.getChapterList(selectedManga));
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(
+                        mangaDownloader,
+                        "Cant't connect to " + site.getClass().getSimpleName() + "!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                mangaListTable.clearSelection();
+                lastSelectedManga = null;
+                return;
+            }
+            ((ChapterTableModel) chapterListTable.getModel()).fireTableDataChanged();
 
-        downloadButton.setEnabled(true);
+            downloadButton.setEnabled(true);
+
+            lastSelectedManga = selectedManga;
+        }
     }
 
     public void chapterSearchChanged() {
@@ -213,7 +240,7 @@ public class Controller {
         chapterDeSelectAllCheckBox.setSelected(false);
     }
 
-    public void download(MangaDownloader mangaDownloader) {
+    public void download() {
         boolean oneSelected = false;
 
         for (Chapter chapter : chapters) {

@@ -25,12 +25,10 @@ package de.andreasgiemza.mangadownloader.sites;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Manga;
+import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -45,106 +43,79 @@ public class Batoto implements Site {
     private final int loadCount = 1000;
 
     @Override
-    public List<Manga> getMangaList() {
+    public List<Manga> getMangaList() throws IOException {
         List<Manga> mangas = new LinkedList<>();
 
-        try {
-            Document doc = Jsoup.connect(baseUrl + "/comic/_/comics/?per_page=" + loadCount + "&st=0")
-                    .maxBodySize(10 * 1024 * 1024)
-                    .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                    .get();
+        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/comic/_/comics/?per_page=" + loadCount + "&st=0");
 
-            int max = Integer.parseInt(doc.select("li[class=last]").first().select("a").first().attr("href").split("st=")[1]);
+        int max = Integer.parseInt(doc.select("li[class=last]").first().select("a").first().attr("href").split("st=")[1]);
 
-            for (int i = 0; i <= max; i += loadCount) {
-                if (i != 0) {
-                    doc = Jsoup.connect(baseUrl + "/comic/_/comics/?per_page=" + loadCount + "&st=" + i)
-                            .maxBodySize(10 * 1024 * 1024)
-                            .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                            .get();
-                }
-
-                Elements rows = doc.select("table[class=ipb_table topic_list hover_rows]").first().select("tr");
-
-                for (Element row : rows) {
-                    Elements cols = row.select("td");
-
-                    if (cols.size() != 7) {
-                        continue;
-                    }
-
-                    mangas.add(new Manga(cols.get(1).select("a").first().attr("href"), cols.get(1).text()));
-                }
+        for (int i = 0; i <= max; i += loadCount) {
+            if (i != 0) {
+                doc = JsoupHelper.getHTMLPage(baseUrl + "/comic/_/comics/?per_page=" + loadCount + "&st=" + i);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Batoto.class.getName()).log(Level.SEVERE, null, ex);
+
+            Elements rows = doc.select("table[class=ipb_table topic_list hover_rows]").first().select("tr");
+
+            for (Element row : rows) {
+                Elements cols = row.select("td");
+
+                if (cols.size() != 7) {
+                    continue;
+                }
+
+                mangas.add(new Manga(cols.get(1).select("a").first().attr("href"), cols.get(1).text()));
+            }
         }
 
         return mangas;
     }
 
     @Override
-    public List<Chapter> getChapterList(Manga manga) {
+    public List<Chapter> getChapterList(Manga manga) throws IOException {
         List<Chapter> chapters = new LinkedList<>();
 
-        try {
-            Document doc = Jsoup.connect(manga.getLink())
-                    .maxBodySize(10 * 1024 * 1024)
-                    .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                    .get();
+        Document doc = JsoupHelper.getHTMLPage(manga.getLink());
 
-            Elements rows = doc.select("table[class=ipb_table chapters_list]").first()
-                    .select("tr");
+        Elements rows = doc.select("table[class=ipb_table chapters_list]").first()
+                .select("tr");
 
-            for (Element row : rows) {
-                Elements cols = row.select("td");
-                if (cols.size() != 5) {
-                    continue;
-                }
-
-                Element link = cols.get(0).select("a").first();
-
-                String title = cols.get(0).text()
-                        + " [" + cols.get(1).select("div").first().attr("title") + "]"
-                        + " [" + cols.get(2).text() + "]";
-
-                chapters.add(new Chapter(link.attr("href"), title));
+        for (Element row : rows) {
+            Elements cols = row.select("td");
+            if (cols.size() != 5) {
+                continue;
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Batoto.class.getName()).log(Level.SEVERE, null, ex);
+
+            Element link = cols.get(0).select("a").first();
+
+            String title = cols.get(0).text()
+                    + " [" + cols.get(1).select("div").first().attr("title") + "]"
+                    + " [" + cols.get(2).text() + "]";
+
+            chapters.add(new Chapter(link.attr("href"), title));
         }
 
         return chapters;
     }
 
     @Override
-    public List<String> getChapterImageLinks(Chapter chapter) {
+    public List<String> getChapterImageLinks(Chapter chapter) throws IOException {
         List<String> images = new LinkedList<>();
 
-        try {
-            Document doc = Jsoup.connect(chapter.getLink() + "?supress_webtoon=t")
-                    .maxBodySize(10 * 1024 * 1024)
-                    .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                    .get();
+        Document doc = JsoupHelper.getHTMLPage(chapter.getLink() + "?supress_webtoon=t");
 
-            // Get pages linkes
-            Elements pages = doc.select("div[class=moderation_bar rounded clear]").first()
-                    .select("ul").first()
-                    .select("li").get(3)
-                    .select("option");
+        // Get pages linkes
+        Elements pages = doc.select("div[class=moderation_bar rounded clear]").first()
+                .select("ul").first()
+                .select("li").get(3)
+                .select("option");
 
-            for (int i = 0; i < pages.size(); i++) {
-                if (i != 0) {
-                    doc = Jsoup.connect(pages.get(i).attr("value") + "?supress_webtoon=t")
-                            .maxBodySize(10 * 1024 * 1024)
-                            .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                            .get();
-                }
-
-                images.add(doc.select("img[id=comic_page]").first().attr("src"));
+        for (int i = 0; i < pages.size(); i++) {
+            if (i != 0) {
+                doc = JsoupHelper.getHTMLPage(pages.get(i).attr("value") + "?supress_webtoon=t");
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Batoto.class.getName()).log(Level.SEVERE, null, ex);
+
+            images.add(doc.select("img[id=comic_page]").first().attr("src"));
         }
 
         return images;

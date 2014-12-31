@@ -58,6 +58,7 @@ public class MangaDownloader extends javax.swing.JFrame {
 
         // Setup controller
         controller = new Controller(
+                this,
                 sourceComboBox,
                 mangaListSearchTextField,
                 mangaListTable,
@@ -270,7 +271,7 @@ public class MangaDownloader extends javax.swing.JFrame {
     }//GEN-LAST:event_sourceButtonActionPerformed
 
     private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
-        controller.download(this);
+        controller.download();
     }//GEN-LAST:event_downloadButtonActionPerformed
 
     /**
