@@ -32,6 +32,7 @@ import de.andreasgiemza.mangadownloader.gui.Controller;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSearchDocumentListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSelectionListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
+import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.LinkedList;
@@ -55,6 +56,9 @@ public class MangaDownloader extends javax.swing.JFrame {
      */
     public MangaDownloader() {
         initComponents();
+
+        setLocation(new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (this.getWidth() / 2)).intValue(),
+                new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (this.getHeight() / 2)).intValue());
 
         // Setup controller
         controller = new Controller(
@@ -132,6 +136,7 @@ public class MangaDownloader extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Manga Downloader");
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("de/andreasgiemza/mangadownloader/gui/icons/mangadownloader.png")));
 
         sourcePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Source"));
 
