@@ -37,6 +37,8 @@ public final class JsoupHelper {
     }
 
     public static Document getHTMLPage(String url) throws IOException {
+        IOException ex = null;
+
         for (int i = 1; i <= 3; i++) {
             try {
                 return Jsoup.connect(url)
@@ -44,13 +46,33 @@ public final class JsoupHelper {
                         .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
                         .get();
             } catch (IOException e) {
+                ex = e;
             }
         }
 
-        throw new IOException();
+        throw ex;
+    }
+
+    public static Document getHTMLPageMobile(String url) throws IOException {
+        IOException ex = null;
+
+        for (int i = 1; i <= 3; i++) {
+            try {
+                return Jsoup.connect(url)
+                        .maxBodySize(10 * 1024 * 1024)
+                        .userAgent("Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19")
+                        .get();
+            } catch (IOException e) {
+                ex = e;
+            }
+        }
+
+        throw ex;
     }
 
     public static byte[] getImage(String url) throws IOException {
+        IOException ex = null;
+
         for (int i = 1; i <= 3; i++) {
             try {
                 return Jsoup.connect(url)
@@ -60,9 +82,30 @@ public final class JsoupHelper {
                         .execute()
                         .bodyAsBytes();
             } catch (IOException e) {
+                ex = e;
             }
         }
 
-        throw new IOException();
+        throw ex;
+    }
+
+    public static byte[] getImage(String url, String referrer) throws IOException {
+        IOException ex = null;
+
+        for (int i = 1; i <= 3; i++) {
+            try {
+                return Jsoup.connect(url)
+                        .maxBodySize(10 * 1024 * 1024)
+                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
+                        .referrer(referrer)
+                        .ignoreContentType(true)
+                        .execute()
+                        .bodyAsBytes();
+            } catch (IOException e) {
+                ex = e;
+            }
+        }
+
+        throw ex;
     }
 }

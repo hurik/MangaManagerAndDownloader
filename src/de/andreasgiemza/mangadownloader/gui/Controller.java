@@ -30,6 +30,7 @@ import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.download.Download;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
 import de.andreasgiemza.mangadownloader.sites.Batoto;
+import de.andreasgiemza.mangadownloader.sites.LINEWebtoon;
 import de.andreasgiemza.mangadownloader.sites.MangaFox;
 import de.andreasgiemza.mangadownloader.sites.Mangacow;
 import de.andreasgiemza.mangadownloader.sites.Mangajoy;
@@ -123,6 +124,9 @@ public class Controller {
                 break;
             case "MangaFox":
                 site = new MangaFox();
+                break;
+            case "LINEWebtoon":
+                site = new LINEWebtoon();
                 break;
         }
 
