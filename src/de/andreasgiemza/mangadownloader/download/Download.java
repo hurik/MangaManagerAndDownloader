@@ -93,30 +93,21 @@ public class Download extends javax.swing.JPanel {
         errorLogScrollPane = new javax.swing.JScrollPane();
         errorLogTextArea = new javax.swing.JTextArea();
 
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
         mangaLabel.setText("Manga:");
-        add(mangaLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 11, 43, -1));
 
         mangaTitleLabel.setText("TEMP");
-        add(mangaTitleLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(59, 11, 331, -1));
 
         chapterLabel.setText("Chapter:");
-        add(chapterLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 36, -1, -1));
 
         chapterTileLabel.setText(" ");
-        add(chapterTileLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(59, 36, 331, -1));
 
         chapterProgressBar.setString("");
         chapterProgressBar.setStringPainted(true);
-        add(chapterProgressBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 56, 380, -1));
 
         imageLabel.setText("Images:");
-        add(imageLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 84, 380, -1));
 
         imageProgressBar.setString("");
         imageProgressBar.setStringPainted(true);
-        add(imageProgressBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 104, 380, -1));
 
         startButton.setText("Start");
         startButton.addActionListener(new java.awt.event.ActionListener() {
@@ -124,7 +115,6 @@ public class Download extends javax.swing.JPanel {
                 startButtonActionPerformed(evt);
             }
         });
-        add(startButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 132, 380, -1));
 
         cancelButton.setText("Cancel");
         cancelButton.setEnabled(false);
@@ -133,7 +123,6 @@ public class Download extends javax.swing.JPanel {
                 cancelButtonActionPerformed(evt);
             }
         });
-        add(cancelButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 166, 380, -1));
 
         errorLogPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Error Log"));
 
@@ -146,16 +135,63 @@ public class Download extends javax.swing.JPanel {
         errorLogPanel.setLayout(errorLogPanelLayout);
         errorLogPanelLayout.setHorizontalGroup(
             errorLogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(errorLogScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+            .addComponent(errorLogScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 608, Short.MAX_VALUE)
         );
         errorLogPanelLayout.setVerticalGroup(
             errorLogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(errorLogPanelLayout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addComponent(errorLogScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(errorLogScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
         );
 
-        add(errorLogPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 380, -1));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chapterProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(imageProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(startButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(errorLogPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(chapterLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                            .addComponent(mangaLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(mangaTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chapterTileLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(mangaLabel)
+                    .addComponent(mangaTitleLabel))
+                .addGap(11, 11, 11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chapterLabel)
+                    .addComponent(chapterTileLabel))
+                .addGap(6, 6, 6)
+                .addComponent(chapterProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addComponent(imageLabel)
+                .addGap(6, 6, 6)
+                .addComponent(imageProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addComponent(startButton)
+                .addGap(11, 11, 11)
+                .addComponent(cancelButton)
+                .addGap(11, 11, 11)
+                .addComponent(errorLogPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
