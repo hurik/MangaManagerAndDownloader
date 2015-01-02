@@ -93,9 +93,9 @@ public class Tapastic implements Site {
 
         String[] jsons = line.replace("},{", "}},{{").split("\\},\\{");
 
-        for (String json : jsons) {
-            JSONObject data = new JSONObject(json);
-            chapters.add(new Chapter(data.get("id").toString(), data.get("title").toString()));
+        for (int i = 0; i < jsons.length; i++) {
+            JSONObject data = new JSONObject(jsons[i]);
+            chapters.add(new Chapter(data.get("id").toString(), "(" + i + ") " + data.get("title").toString()));
         }
 
         return chapters;
