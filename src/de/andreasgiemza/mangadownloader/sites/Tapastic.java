@@ -23,6 +23,9 @@
  */
 package de.andreasgiemza.mangadownloader.sites;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
@@ -31,7 +34,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
-import org.json.JSONObject;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -94,8 +96,8 @@ public class Tapastic implements Site {
         String[] jsons = line.replace("},{", "}},{{").split("\\},\\{");
 
         for (int i = 0; i < jsons.length; i++) {
-            JSONObject data = new JSONObject(jsons[i]);
-            chapters.add(new Chapter(data.get("id").toString(), "(" + i + ") " + data.get("title").toString()));
+            JsonObject jsonObject = new JsonParser().parse(jsons[i]).getAsJsonObject();
+            chapters.add(new Chapter(jsonObject.get("id").toString(), "(" + i + ") " + jsonObject.get("title").toString()));
         }
 
         return chapters;
