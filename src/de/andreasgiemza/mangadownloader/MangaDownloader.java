@@ -32,12 +32,16 @@ import de.andreasgiemza.mangadownloader.gui.Controller;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSearchDocumentListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSelectionListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
+import de.andreasgiemza.mangadownloader.sites.Site;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.TableRowSorter;
+import org.reflections.Reflections;
 
 /**
  *
@@ -54,6 +58,7 @@ public class MangaDownloader extends javax.swing.JFrame {
     /**
      * Creates new form Gui
      */
+    @SuppressWarnings("unchecked")
     public MangaDownloader() {
         initComponents();
 
@@ -74,6 +79,14 @@ public class MangaDownloader extends javax.swing.JFrame {
                 chapters);
 
         // Setup Source ComboBox
+        List<String> supportedSites = new LinkedList<>();
+        for (Class<? extends Site> site : new Reflections("de.andreasgiemza.mangadownloader.sites").getSubTypesOf(Site.class)) {
+            String[] packageAndName = site.getName().split("\\.");
+            supportedSites.add(packageAndName[packageAndName.length - 1]);
+        }
+        Collections.sort(supportedSites);
+        sourceComboBox.setModel(new DefaultComboBoxModel<>(supportedSites.toArray()));
+
         sourceComboBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -139,8 +152,6 @@ public class MangaDownloader extends javax.swing.JFrame {
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("de/andreasgiemza/mangadownloader/gui/icons/mangadownloader.png")));
 
         sourcePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Source"));
-
-        sourceComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Batoto", "Mangacow", "Mangajoy", "MangaFox", "LINEWebtoon", "Tapastic" }));
 
         sourceButton.setText("Update");
         sourceButton.addActionListener(new java.awt.event.ActionListener() {
@@ -293,10 +304,12 @@ public class MangaDownloader extends javax.swing.JFrame {
                 if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MangaDownloader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MangaDownloader.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 

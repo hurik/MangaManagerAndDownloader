@@ -85,14 +85,7 @@
         <Component class="javax.swing.JComboBox" name="sourceComboBox">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="6">
-                <StringItem index="0" value="Batoto"/>
-                <StringItem index="1" value="Mangacow"/>
-                <StringItem index="2" value="Mangajoy"/>
-                <StringItem index="3" value="MangaFox"/>
-                <StringItem index="4" value="LINEWebtoon"/>
-                <StringItem index="5" value="Tapastic"/>
-              </StringArray>
+              <StringArray count="0"/>
             </Property>
           </Properties>
         </Component>

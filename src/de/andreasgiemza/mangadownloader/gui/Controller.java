@@ -30,13 +30,7 @@ import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.gui.panels.Download;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
 import de.andreasgiemza.mangadownloader.gui.panels.Loading;
-import de.andreasgiemza.mangadownloader.sites.Batoto;
-import de.andreasgiemza.mangadownloader.sites.LINEWebtoon;
-import de.andreasgiemza.mangadownloader.sites.MangaFox;
-import de.andreasgiemza.mangadownloader.sites.Mangacow;
-import de.andreasgiemza.mangadownloader.sites.Mangajoy;
 import de.andreasgiemza.mangadownloader.sites.Site;
-import de.andreasgiemza.mangadownloader.sites.Tapastic;
 import java.awt.Toolkit;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -58,6 +52,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import org.reflections.Reflections;
 
 /**
  *
@@ -114,25 +109,17 @@ public class Controller {
 
         String source = (String) sourceComboBox.getSelectedItem();
 
-        switch (source) {
-            case "Batoto":
-                site = new Batoto();
-                break;
-            case "Mangacow":
-                site = new Mangacow();
-                break;
-            case "Mangajoy":
-                site = new Mangajoy();
-                break;
-            case "MangaFox":
-                site = new MangaFox();
-                break;
-            case "LINEWebtoon":
-                site = new LINEWebtoon();
-                break;
-            case "Tapastic":
-                site = new Tapastic();
-                break;
+        for (Class<? extends Site> siteClasse : new Reflections("de.andreasgiemza.mangadownloader.sites").getSubTypesOf(Site.class)) {
+            if (siteClasse.getName().contains(source)) {
+                try {
+                    site = siteClasse.newInstance();
+                } catch (InstantiationException | IllegalAccessException ex) {
+                }
+            }
+        }
+
+        if (site == null) {
+            return;
         }
 
         Path sourceFile = currentDirectory.resolve("sources").resolve(source + ".txt");
