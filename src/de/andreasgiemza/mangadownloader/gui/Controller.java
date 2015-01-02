@@ -199,36 +199,36 @@ public class Controller {
     }
 
     public void mangaSelected(Manga selectedManga) {
-        resetChapterPanel();
+        if (selectedManga != lastSelectedManga) {
+            this.selectedManga = selectedManga;
+            resetChapterPanel();
 
-        Loading loading = new Loading(mangaDownloader, true, this, selectedManga);
-        loading.setLocation(
-                new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (loading.getWidth() / 2)).intValue(),
-                new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (loading.getHeight() / 2)).intValue());
-        loading.setVisible(true);
+            Loading loading = new Loading(mangaDownloader, true, this, selectedManga);
+            loading.setLocation(
+                    new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (loading.getWidth() / 2)).intValue(),
+                    new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (loading.getHeight() / 2)).intValue());
+            loading.setVisible(true);
+        }
     }
 
     public void mangaSelectedWorker(Manga selectedManga) {
-        if (selectedManga != lastSelectedManga) {
-            this.selectedManga = selectedManga;
-            try {
-                chapters.addAll(site.getChapterList(selectedManga));
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(
-                        mangaDownloader,
-                        "Cant't connect to " + site.getClass().getSimpleName() + "!",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                mangaListTable.clearSelection();
-                lastSelectedManga = null;
-                return;
-            }
-            ((ChapterTableModel) chapterListTable.getModel()).fireTableDataChanged();
-
-            downloadButton.setEnabled(true);
-
-            lastSelectedManga = selectedManga;
+        try {
+            chapters.addAll(site.getChapterList(selectedManga));
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(
+                    mangaDownloader,
+                    "Cant't connect to " + site.getClass().getSimpleName() + "!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            mangaListTable.clearSelection();
+            lastSelectedManga = null;
+            return;
         }
+        ((ChapterTableModel) chapterListTable.getModel()).fireTableDataChanged();
+
+        downloadButton.setEnabled(true);
+
+        lastSelectedManga = selectedManga;
     }
 
     public void chapterSearchChanged() {
