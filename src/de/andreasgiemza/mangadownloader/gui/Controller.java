@@ -27,8 +27,9 @@ import de.andreasgiemza.mangadownloader.MangaDownloader;
 import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableModel;
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Manga;
-import de.andreasgiemza.mangadownloader.download.Download;
+import de.andreasgiemza.mangadownloader.gui.panels.Download;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
+import de.andreasgiemza.mangadownloader.gui.panels.Loading;
 import de.andreasgiemza.mangadownloader.sites.Batoto;
 import de.andreasgiemza.mangadownloader.sites.LINEWebtoon;
 import de.andreasgiemza.mangadownloader.sites.MangaFox;
@@ -147,6 +148,14 @@ public class Controller {
     public void updateMangaList() {
         resetMangaPanel();
 
+        Loading loading = new Loading(mangaDownloader, true, this, null);
+        loading.setLocation(
+                new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (loading.getWidth() / 2)).intValue(),
+                new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (loading.getHeight() / 2)).intValue());
+        loading.setVisible(true);
+    }
+
+    public void updateMangaListWorker() {
         String source = (String) sourceComboBox.getSelectedItem();
 
         try {
@@ -190,9 +199,17 @@ public class Controller {
     }
 
     public void mangaSelected(Manga selectedManga) {
-        if (selectedManga != lastSelectedManga) {
-            resetChapterPanel();
+        resetChapterPanel();
 
+        Loading loading = new Loading(mangaDownloader, true, this, selectedManga);
+        loading.setLocation(
+                new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (loading.getWidth() / 2)).intValue(),
+                new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (loading.getHeight() / 2)).intValue());
+        loading.setVisible(true);
+    }
+
+    public void mangaSelectedWorker(Manga selectedManga) {
+        if (selectedManga != lastSelectedManga) {
             this.selectedManga = selectedManga;
             try {
                 chapters.addAll(site.getChapterList(selectedManga));
