@@ -140,7 +140,7 @@ public class MangaDownloader extends javax.swing.JFrame {
 
         sourcePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Source"));
 
-        sourceComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Batoto", "Mangacow", "Mangajoy", "MangaFox", "LINEWebtoon" }));
+        sourceComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Batoto", "Mangacow", "Mangajoy", "MangaFox", "LINEWebtoon", "Tapastic" }));
 
         sourceButton.setText("Update");
         sourceButton.addActionListener(new java.awt.event.ActionListener() {

@@ -9,6 +9,7 @@ Little tool to download mangas from various sites.
 * Mangajoy
 * MangaFox
 * LINEWebtoon
+* Tapastic
 
 ## Download
 [https://github.com/hurik/MangaDownloader/releases/latest](https://github.com/hurik/MangaDownloader/releases/latest)
