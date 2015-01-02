@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Andreas Giemza <andreas@giemza.net>.
+ * Copyright 2015 Andreas Giemza <andreas@giemza.net>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,23 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites;
-
-import de.andreasgiemza.mangadownloader.data.Chapter;
-import de.andreasgiemza.mangadownloader.data.Image;
-import de.andreasgiemza.mangadownloader.data.Manga;
-import java.io.IOException;
-import java.util.List;
+package de.andreasgiemza.mangadownloader.data;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public interface Site {
+public class Image {
 
-    public List<Manga> getMangaList() throws IOException;
+    private final String link;
+    private final String referrer;
+    private final String extension;
 
-    public List<Chapter> getChapterList(Manga manga) throws IOException;
+    public Image(String link, String referrer, String extension) {
+        this.link = link;
+        this.referrer = referrer;
+        this.extension = extension;
+    }
 
-    public List<Image> getChapterImageLinks(Chapter chapter) throws IOException;
+    public String getLink() {
+        return link;
+    }
+
+    public String getReferrer() {
+        return referrer;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
 }

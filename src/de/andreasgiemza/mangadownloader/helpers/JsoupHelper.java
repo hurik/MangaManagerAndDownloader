@@ -23,6 +23,7 @@
  */
 package de.andreasgiemza.mangadownloader.helpers;
 
+import de.andreasgiemza.mangadownloader.data.Image;
 import java.io.IOException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -70,34 +71,15 @@ public final class JsoupHelper {
         throw ex;
     }
 
-    public static byte[] getImage(String url) throws IOException {
+    public static byte[] getImage(Image image) throws IOException {
         IOException ex = null;
 
         for (int i = 1; i <= 3; i++) {
             try {
-                return Jsoup.connect(url)
+                return Jsoup.connect(image.getLink())
                         .maxBodySize(10 * 1024 * 1024)
                         .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                        .ignoreContentType(true)
-                        .execute()
-                        .bodyAsBytes();
-            } catch (IOException e) {
-                ex = e;
-            }
-        }
-
-        throw ex;
-    }
-
-    public static byte[] getImage(String url, String referrer) throws IOException {
-        IOException ex = null;
-
-        for (int i = 1; i <= 3; i++) {
-            try {
-                return Jsoup.connect(url)
-                        .maxBodySize(10 * 1024 * 1024)
-                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                        .referrer(referrer)
+                        .referrer(image.getReferrer())
                         .ignoreContentType(true)
                         .execute()
                         .bodyAsBytes();

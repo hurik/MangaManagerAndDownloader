@@ -24,10 +24,10 @@
 package de.andreasgiemza.mangadownloader.gui.panels;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
+import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
-import de.andreasgiemza.mangadownloader.sites.LINEWebtoon;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -254,7 +254,7 @@ public class Download extends javax.swing.JPanel {
                             .resolve(mangaTitle)
                             .resolve(chapterTitle + ".cbz");
 
-                    List<String> imageLinks;
+                    List<Image> imageLinks;
 
                     try {
                         imageLinks = site.getChapterImageLinks(chapter);
@@ -286,27 +286,12 @@ public class Download extends javax.swing.JPanel {
                                 imageProgressBar.setValue(i + 1);
                                 imageProgressBar.setString((i + 1) + " of " + imageLinks.size());
 
-                                String imageLink;
-                                String extension;
-
-                                if (site instanceof LINEWebtoon) {
-                                    imageLink = imageLinks.get(i).split("\\?")[0];
-                                    extension = imageLink.substring(imageLink.length() - 3, imageLink.length());
-                                } else {
-                                    imageLink = imageLinks.get(i);
-                                    extension = imageLink.substring(imageLink.length() - 3, imageLink.length());
-                                }
-
-                                ZipEntry ze = new ZipEntry((i + 1) + "." + extension);
+                                ZipEntry ze = new ZipEntry((i + 1) + "." + imageLinks.get(i).getExtension());
                                 zos.putNextEntry(ze);
 
                                 byte[] image;
 
-                                if (site instanceof LINEWebtoon) {
-                                    image = JsoupHelper.getImage(imageLink, chapter.getLink());
-                                } else {
-                                    image = JsoupHelper.getImage(imageLink);
-                                }
+                                image = JsoupHelper.getImage(imageLinks.get(i));
 
                                 zos.write(image, 0, image.length);
                                 zos.closeEntry();
