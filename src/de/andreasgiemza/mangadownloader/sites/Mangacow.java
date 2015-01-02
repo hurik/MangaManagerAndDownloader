@@ -39,83 +39,83 @@ import org.jsoup.select.Elements;
  * @author Andreas Giemza <andreas@giemza.net>
  */
 public class Mangacow implements Site {
-    
+
     private final String baseUrl = "http://mangacow.co";
-    
+
     @Override
     public List<Manga> getMangaList() throws IOException {
         List<Manga> mangas = new LinkedList<>();
-        
+
         Document doc = JsoupHelper.getHTMLPage(baseUrl + "/manga-list/");
-        
+
         Elements rows = doc.select("div[class=wpm_pag mng_lst tbn]").first()
                 .select("div[class^=nde]");
-        
+
         for (Element row : rows) {
             Element link = row.select("a").first();
-            
+
             mangas.add(new Manga(link.attr("href"), link.attr("title")));
         }
-        
+
         return mangas;
     }
-    
+
     @Override
     public List<Chapter> getChapterList(Manga manga) throws IOException {
         List<Chapter> chapters = new LinkedList<>();
-        
+
         Document doc = JsoupHelper.getHTMLPage(manga.getLink());
-        
+
         Element nav = doc.select("ul[class=pgg]").first();
-        
+
         int pages = 1;
-        
+
         if (nav != null) {
             pages = Integer.parseInt(nav.select("li").get(nav.select("li").size() - 3).text());
         }
-        
+
         for (int i = 1; i <= pages; i++) {
             if (i != 1) {
                 doc = JsoupHelper.getHTMLPage(manga.getLink() + "chapter-list/" + i + "/");
             }
-            
+
             Elements rows = doc.select("ul[class=lst mng_chp]").first()
                     .select("li");
-            
+
             for (Element row : rows) {
                 Element link = row.select("a").first();
-                
+
                 chapters.add(new Chapter(link.attr("href"), link.attr("title")));
             }
         }
-        
+
         return chapters;
     }
-    
+
     @Override
     public List<Image> getChapterImageLinks(Chapter chapter) throws IOException {
         List<Image> images = new LinkedList<>();
-        
+
         String referrer = chapter.getLink();
         Document doc = JsoupHelper.getHTMLPage(referrer);
-        
+
         Elements nav = doc.select("select[class=cbo_wpm_pag]").first()
                 .select("option");
-        
+
         int pages = nav.size();
-        
+
         for (int i = 1; i <= pages; i++) {
             if (i != 1) {
                 referrer = chapter.getLink() + (i) + "/";
                 doc = JsoupHelper.getHTMLPage(referrer);
             }
-            
+
             String link = doc.select("div[class=prw]").first().select("img").attr("src");
             String extension = link.substring(link.length() - 3, link.length());
-            
+
             images.add(new Image(link, referrer, extension));
         }
-        
+
         return images;
     }
 }

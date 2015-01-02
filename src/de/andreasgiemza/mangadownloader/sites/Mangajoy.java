@@ -39,65 +39,65 @@ import org.jsoup.select.Elements;
  * @author Andreas Giemza <andreas@giemza.net>
  */
 public class Mangajoy implements Site {
-    
+
     private final String baseUrl = "http://mangajoy.com";
-    
+
     @Override
     public List<Manga> getMangaList() throws IOException {
         List<Manga> mangas = new LinkedList<>();
-        
+
         Document doc = JsoupHelper.getHTMLPage(baseUrl + "/manga-list-all/");
-        
+
         Elements rows = doc.select("div[id=sct_manga_list_all]").first().select("li");
-        
+
         for (Element row : rows) {
             Element link = row.select("a").first();
-            
+
             mangas.add(new Manga(link.attr("href"), link.attr("title")));
         }
-        
+
         return mangas;
     }
-    
+
     @Override
     public List<Chapter> getChapterList(Manga manga) throws IOException {
         List<Chapter> chapters = new LinkedList<>();
-        
+
         Document doc = JsoupHelper.getHTMLPage(manga.getLink());
-        
+
         Elements rows = doc.select("ul[class=chp_lst]").first().select("li");
-        
+
         for (Element row : rows) {
             chapters.add(new Chapter(row.select("a").first().attr("href"), row.select("span[class=val]").first().text()));
         }
-        
+
         return chapters;
     }
-    
+
     @Override
     public List<Image> getChapterImageLinks(Chapter chapter) throws IOException {
         List<Image> images = new LinkedList<>();
-        
+
         String referrer = chapter.getLink();
         Document doc = JsoupHelper.getHTMLPage(referrer);
-        
+
         Elements nav = doc.select("div[class=wpm_nav_rdr]").first().select("select[onchange^=location.href='" + chapter.getLink() + "' + this.value + '/']").first()
                 .select("option");
-        
+
         int pages = nav.size();
-        
+
         for (int i = 1; i <= pages; i++) {
             if (i != 1) {
                 referrer = chapter.getLink() + (i) + "/";
                 doc = JsoupHelper.getHTMLPage(referrer);
             }
-            
+
             String link = doc.select("div[class=prw]").first().select("img").attr("src");
             String extension = link.substring(link.length() - 3, link.length());
-            
+
             images.add(new Image(link, referrer, extension));
         }
-        
+
         return images;
     }
 }
