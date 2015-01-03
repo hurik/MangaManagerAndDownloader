@@ -7,6 +7,7 @@ Little tool to download mangas from various sites.
 * Batoto
 * LINEWebtoon
 * MangaFox
+* MangaStream
 * Mangacow
 * Mangajoy
 * Mangapanda
