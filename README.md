@@ -6,11 +6,11 @@ Little tool to download mangas from various sites.
 ## Supported sites
 * Batoto
 * LINEWebtoon
-* MangaFox
-* MangaStream
 * Mangacow
+* MangaFox
 * Mangajoy
 * Mangapanda
+* MangaStream
 * Tapastic
 
 ## Download

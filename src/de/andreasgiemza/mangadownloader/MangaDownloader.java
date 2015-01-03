@@ -84,7 +84,7 @@ public class MangaDownloader extends javax.swing.JFrame {
             String[] packageAndName = site.getName().split("\\.");
             supportedSites.add(packageAndName[packageAndName.length - 1]);
         }
-        Collections.sort(supportedSites);
+        Collections.sort(supportedSites, String.CASE_INSENSITIVE_ORDER);
         sourceComboBox.setModel(new DefaultComboBoxModel<>(supportedSites.toArray()));
 
         sourceComboBox.addItemListener(new ItemListener() {
