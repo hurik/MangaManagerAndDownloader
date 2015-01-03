@@ -43,8 +43,6 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -103,7 +101,6 @@ public class Controller {
         this.chapters = chapters;
     }
 
-    @SuppressWarnings("unchecked")
     public void loadMangaList() {
         resetMangaPanel();
 
@@ -122,6 +119,17 @@ public class Controller {
             return;
         }
 
+        Loading loading = new Loading(mangaDownloader, true, this, Loading.LoadingJob.SiteSelected);
+        loading.setLocation(
+                new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (loading.getWidth() / 2)).intValue(),
+                new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (loading.getHeight() / 2)).intValue());
+        loading.setVisible(true);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void loadMangaListWorker() {
+        String source = (String) sourceComboBox.getSelectedItem();
+
         Path sourceFile = currentDirectory.resolve("sources").resolve(source + ".txt");
 
         if (Files.exists(sourceFile)) {
@@ -129,7 +137,6 @@ public class Controller {
                 ObjectInputStream ois = new ObjectInputStream(fin);
                 mangas.addAll((LinkedList<Manga>) ois.readObject());
             } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(MangaDownloader.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -139,7 +146,7 @@ public class Controller {
     public void updateMangaList() {
         resetMangaPanel();
 
-        Loading loading = new Loading(mangaDownloader, true, this, null);
+        Loading loading = new Loading(mangaDownloader, true, this, Loading.LoadingJob.MangaListUpdate);
         loading.setLocation(
                 new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (loading.getWidth() / 2)).intValue(),
                 new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (loading.getHeight() / 2)).intValue());
@@ -194,7 +201,7 @@ public class Controller {
             this.selectedManga = selectedManga;
             resetChapterPanel();
 
-            Loading loading = new Loading(mangaDownloader, true, this, selectedManga);
+            Loading loading = new Loading(mangaDownloader, true, this, Loading.LoadingJob.MangaSelected);
             loading.setLocation(
                     new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (loading.getWidth() / 2)).intValue(),
                     new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (loading.getHeight() / 2)).intValue());
@@ -202,7 +209,7 @@ public class Controller {
         }
     }
 
-    public void mangaSelectedWorker(Manga selectedManga) {
+    public void mangaSelectedWorker() {
         try {
             chapters.addAll(site.getChapterList(selectedManga));
         } catch (IOException ex) {
@@ -263,7 +270,7 @@ public class Controller {
         }
 
         if (oneSelected) {
-            JDialog dialog = new JDialog(mangaDownloader, "Downloading ...", true);
+            JDialog dialog = new JDialog(mangaDownloader, "Download", true);
             dialog.getContentPane().add(new Download(currentDirectory, site, selectedManga, chapters));
             dialog.pack();
             dialog.setLocation(

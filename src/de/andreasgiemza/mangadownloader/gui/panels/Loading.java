@@ -23,7 +23,6 @@
  */
 package de.andreasgiemza.mangadownloader.gui.panels;
 
-import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.gui.Controller;
 import javax.swing.ImageIcon;
 
@@ -34,22 +33,18 @@ import javax.swing.ImageIcon;
 public class Loading extends javax.swing.JDialog {
 
     private final Controller controller;
-    private final Manga selectedManga;
+    private final LoadingJob loadingJob;
 
-    public Loading(java.awt.Frame parent, boolean modal, Controller controller, Manga selectedManga) {
+    public Loading(java.awt.Frame parent, boolean modal, Controller controller, LoadingJob loadingJob) {
         super(parent, modal);
         initComponents();
         this.controller = controller;
-        this.selectedManga = selectedManga;
+        this.loadingJob = loadingJob;
     }
 
     @Override
     public void setVisible(boolean b) {
-        if (selectedManga == null) {
-            new Thread(new WorkerMangaList(this)).start();
-        } else {
-            new Thread(new WorkerChapterList(this, selectedManga)).start();
-        }
+        new Thread(new Worker(this)).start();
 
         super.setVisible(b);
     }
@@ -81,35 +76,34 @@ public class Loading extends javax.swing.JDialog {
     private javax.swing.JLabel loadingImage;
     // End of variables declaration//GEN-END:variables
 
-    private class WorkerMangaList implements Runnable {
+    private class Worker implements Runnable {
 
         private final Loading loading;
 
-        public WorkerMangaList(Loading loading) {
+        public Worker(Loading loading) {
             this.loading = loading;
         }
 
         @Override
         public void run() {
-            controller.updateMangaListWorker();
+            switch (loadingJob) {
+                case SiteSelected:
+                    controller.loadMangaListWorker();
+                    break;
+                case MangaListUpdate:
+                    controller.updateMangaListWorker();
+                    break;
+                case MangaSelected:
+                    controller.mangaSelectedWorker();
+                    break;
+            }
+
             loading.dispose();
         }
     }
 
-    private class WorkerChapterList implements Runnable {
+    public enum LoadingJob {
 
-        private final Loading loading;
-        private final Manga selectedManga;
-
-        public WorkerChapterList(Loading loading, Manga selectedManga) {
-            this.loading = loading;
-            this.selectedManga = selectedManga;
-        }
-
-        @Override
-        public void run() {
-            controller.mangaSelectedWorker(selectedManga);
-            loading.dispose();
-        }
+        SiteSelected, MangaListUpdate, MangaSelected;
     }
 }
