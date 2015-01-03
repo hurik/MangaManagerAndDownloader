@@ -72,7 +72,9 @@ public class MangaFox implements Site {
         Elements rows = doc.select("div[id=chapters]").first().select("li");
 
         for (Element row : rows) {
-            chapters.add(new Chapter(row.select("a[class=tips]").first().attr("href"), row.select("a[class=tips]").first().text()));
+            chapters.add(new Chapter(
+                    row.select("a[class=tips]").first().attr("href"),
+                    row.select("a[class=tips]").first().text() + (row.select("span[class=title nowrap]").first() == null ? "" : " - " + row.select("span[class=title nowrap]").first().text())));
         }
 
         return chapters;
