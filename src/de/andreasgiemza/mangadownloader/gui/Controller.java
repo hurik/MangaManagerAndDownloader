@@ -41,7 +41,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -130,7 +129,7 @@ public class Controller {
     public void loadMangaListWorker() {
         String source = (String) sourceComboBox.getSelectedItem();
 
-        Path sourceFile = Paths.get("").toAbsolutePath().resolve("sources").resolve(source + ".txt");
+        Path sourceFile = Options.INSTANCE.getOptionsDir().resolve("sources").resolve(source + ".txt");
 
         if (Files.exists(sourceFile)) {
             try (FileInputStream fin = new FileInputStream(sourceFile.toFile())) {
@@ -171,7 +170,8 @@ public class Controller {
 
         // Save data to file
         try {
-            Path sourceFile = Paths.get("").toAbsolutePath().resolve("sources").resolve(source + ".txt");
+            Path sourceFile = Options.INSTANCE.getOptionsDir().resolve("sources")
+                    .resolve(source + ".txt");
 
             if (!Files.exists(sourceFile.getParent())) {
                 Files.createDirectory(sourceFile.getParent());

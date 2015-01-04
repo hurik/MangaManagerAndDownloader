@@ -1,6 +1,4 @@
-/build/
-/dist/
-/mangas/
-/nbproject/private/
-/sources/
+build/
+dist/
+nbproject/private/
 Thumbs.db

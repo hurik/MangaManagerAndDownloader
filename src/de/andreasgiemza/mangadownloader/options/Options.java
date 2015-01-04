@@ -26,6 +26,7 @@ package de.andreasgiemza.mangadownloader.options;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -38,7 +39,9 @@ public enum Options {
 
     INSTANCE;
 
-    private final Path OPTIONS_FILE = Paths.get(System.getProperty("user.home")).resolve(".MangaDownloader");
+    private final Path OPTIONS_DIR = Paths.get(System.getProperty("user.home"))
+            .resolve(".MangaDownloader");
+    private final Path OPTIONS_FILE = OPTIONS_DIR.resolve("MangaDownloader.properties");
     private final String MANGAS_DIR = "mangaasDir";
     private final String SELECTED_SOURCE = "selectedSource";
     private final Properties properties = new Properties();
@@ -57,7 +60,7 @@ public enum Options {
     public String getMangaDir() {
         String mangaDir = properties.getProperty(MANGAS_DIR, "");
         if (mangaDir.isEmpty()) {
-            return Paths.get("").toAbsolutePath().resolve("mangas").toString();
+            return Paths.get(System.getProperty("user.home")).resolve("Mangas").toString();
         } else {
             return mangaDir;
         }
@@ -73,8 +76,21 @@ public enum Options {
 
     public void saveOptions() {
         try {
+            getOptionsDir();
             properties.store(new FileOutputStream(OPTIONS_FILE.toFile()), null);
         } catch (IOException ex) {
         }
+    }
+
+    public Path getOptionsDir() {
+        if (!Files.exists(OPTIONS_DIR)) {
+            try {
+                Files.createDirectory(OPTIONS_DIR);
+                Files.setAttribute(OPTIONS_DIR, "dos:hidden", true);
+            } catch (IOException ex) {
+            }
+        }
+
+        return OPTIONS_DIR;
     }
 }
