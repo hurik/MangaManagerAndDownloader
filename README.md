@@ -11,6 +11,7 @@ Little tool to download mangas from various sites.
 * MangaFox
 * Mangajoy
 * Mangapanda
+* MangaReader
 * MangaStream
 * Tapastic
 
