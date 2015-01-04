@@ -65,6 +65,10 @@ public class ChapterTableModel extends AbstractTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
+        if (columnIndex == 0) {
+            return String.class;
+        }
+
         if (columnIndex == 1) {
             return Boolean.class;
         }

@@ -29,6 +29,7 @@ import de.andreasgiemza.mangadownloader.gui.chapter.ChapterListSearchDocumentLis
 import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableModel;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.gui.Controller;
+import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableCellRenderer;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSearchDocumentListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSelectionListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
@@ -113,6 +114,7 @@ public class MangaDownloader extends javax.swing.JFrame {
                         controller));
         chapterListTable.getColumnModel().getColumn(1).setMaxWidth(34);
         chapterListTable.getColumnModel().getColumn(1).setMinWidth(34);
+        chapterListTable.setDefaultRenderer(String.class, new ChapterTableCellRenderer());
 
         // Setup DeSelectAll CheckBox
         chapterDeSelectAllCheckBox.addItemListener(new ChapterCheckBoxItemListener(chapterListTable, controller));

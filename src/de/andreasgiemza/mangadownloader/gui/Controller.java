@@ -30,6 +30,7 @@ import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
 import de.andreasgiemza.mangadownloader.gui.panels.Download;
 import de.andreasgiemza.mangadownloader.gui.panels.Loading;
+import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.awt.Toolkit;
 import java.io.FileInputStream;
@@ -211,6 +212,19 @@ public class Controller {
     public void mangaSelectedWorker() {
         try {
             chapters.addAll(site.getChapterList(selectedManga));
+
+            for (Chapter chapter : chapters) {
+                String mangaTitle = FilenameHelper.checkForIllegalCharacters(selectedManga.getTitle());
+                String chapterTitle = FilenameHelper.checkForIllegalCharacters(chapter.getTitle());
+
+                Path file = currentDirectory.resolve("mangas")
+                        .resolve(mangaTitle)
+                        .resolve(chapterTitle + ".cbz");
+
+                if (Files.exists(file)) {
+                    chapter.setAlreadyDownloaded(true);
+                }
+            }
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(
                     mangaDownloader,
@@ -274,6 +288,8 @@ public class Controller {
                     new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (download.getWidth() / 2)).intValue(),
                     new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (download.getHeight() / 2)).intValue());
             download.setVisible(true);
+            
+            ((ChapterTableModel) chapterListTable.getModel()).fireTableDataChanged();
         } else {
             JOptionPane.showMessageDialog(
                     mangaDownloader,

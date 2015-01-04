@@ -251,6 +251,7 @@ public class Download extends javax.swing.JDialog {
                     try {
                         imageLinks = site.getChapterImageLinks(chapter);
                     } catch (IOException ex) {
+                        chapterDone++;
                         chapterError(mangaFile, chapter, "Error while downloading: ");
                         continue;
                     }
@@ -290,11 +291,14 @@ public class Download extends javax.swing.JDialog {
                             }
                         }
                     } catch (IOException ex) {
+                        chapterDone++;
                         chapterError(mangaFile, chapter, "Error while downloading: ");
                         continue;
                     }
 
                     chapterDone++;
+                    chapter.setAlreadyDownloaded(true);
+                    chapter.setDownload(false);
                 }
             }
 

@@ -23,6 +23,7 @@
  */
 package de.andreasgiemza.mangadownloader.gui.chapter;
 
+import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.gui.Controller;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -48,7 +49,11 @@ public class ChapterCheckBoxItemListener implements ItemListener {
     public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
             for (int i = 0; i < chapterListTable.getRowCount(); i++) {
-                chapterTableModel.getChapterAt(chapterListTable.convertRowIndexToModel(i)).setDownload(true);
+                Chapter chapter = chapterTableModel.getChapterAt(chapterListTable.convertRowIndexToModel(i));
+
+                if (!chapter.isAlreadyDownloaded()) {
+                    chapter.setDownload(true);
+                }
             }
             chapterTableModel.fireTableDataChanged();
         } else if (e.getStateChange() == ItemEvent.DESELECTED) {

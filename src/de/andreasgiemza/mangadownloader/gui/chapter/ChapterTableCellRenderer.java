@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Andreas Giemza <andreas@giemza.net>.
+ * Copyright 2015 Andreas Giemza <andreas@giemza.net>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,50 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.data;
+package de.andreasgiemza.mangadownloader.gui.chapter;
+
+import de.andreasgiemza.mangadownloader.data.Chapter;
+import java.awt.Component;
+import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class Chapter {
-
-    private final String link;
-    private final String title;
-    private boolean alreadyDownloaded = false;
-    private boolean download = false;
-
-    public Chapter(String link, String title) {
-        this.link = link;
-        this.title = title;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public boolean isDownload() {
-        return download;
-    }
-
-    public void setDownload(boolean download) {
-        this.download = download;
-    }
-
-    public boolean isAlreadyDownloaded() {
-        return alreadyDownloaded;
-    }
-
-    public void setAlreadyDownloaded(boolean alreadyDownloaded) {
-        this.alreadyDownloaded = alreadyDownloaded;
-    }
+public class ChapterTableCellRenderer extends DefaultTableCellRenderer {
 
     @Override
-    public String toString() {
-        return title + " (" + link + ")";
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+        Chapter chapter = ((ChapterTableModel) table.getModel()).getChapterAt(table.convertRowIndexToModel(row));
+
+        if (chapter.isAlreadyDownloaded()) {
+            c.setBackground(UIManager.getColor("Table.shadow"));
+        } else {
+            c.setBackground(UIManager.getColor("Table.background"));
+        }
+
+        return c;
     }
 }
