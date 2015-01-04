@@ -23,7 +23,6 @@
  */
 package de.andreasgiemza.mangadownloader.sites;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.andreasgiemza.mangadownloader.data.Chapter;
@@ -87,7 +86,7 @@ public class Tapastic implements Site {
         }
 
         if (line == null) {
-            throw new IOException("Can't find data!");
+            return chapters;
         }
 
         line = line.split("episodeList : \\[")[1];
