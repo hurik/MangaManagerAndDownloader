@@ -31,6 +31,7 @@ import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
 import de.andreasgiemza.mangadownloader.gui.panels.Download;
 import de.andreasgiemza.mangadownloader.gui.panels.Loading;
 import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
+import de.andreasgiemza.mangadownloader.options.Options;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.awt.Toolkit;
 import java.io.FileInputStream;
@@ -58,8 +59,6 @@ import org.reflections.Reflections;
  */
 public class Controller {
 
-    // Current directory
-    private final Path currentDirectory = Paths.get("").toAbsolutePath();
     // Gui elements
     private final MangaDownloader mangaDownloader;
     private final JComboBox sourceComboBox;
@@ -105,6 +104,7 @@ public class Controller {
         resetMangaPanel();
 
         String source = (String) sourceComboBox.getSelectedItem();
+        Options.INSTANCE.setSelectedSource(source);
 
         for (Class<? extends Site> siteClasse : new Reflections("de.andreasgiemza.mangadownloader.sites").getSubTypesOf(Site.class)) {
             if (siteClasse.getName().contains(source)) {
@@ -130,7 +130,7 @@ public class Controller {
     public void loadMangaListWorker() {
         String source = (String) sourceComboBox.getSelectedItem();
 
-        Path sourceFile = currentDirectory.resolve("sources").resolve(source + ".txt");
+        Path sourceFile = Paths.get("").toAbsolutePath().resolve("sources").resolve(source + ".txt");
 
         if (Files.exists(sourceFile)) {
             try (FileInputStream fin = new FileInputStream(sourceFile.toFile())) {
@@ -171,7 +171,7 @@ public class Controller {
 
         // Save data to file
         try {
-            Path sourceFile = currentDirectory.resolve("sources").resolve(source + ".txt");
+            Path sourceFile = Paths.get("").toAbsolutePath().resolve("sources").resolve(source + ".txt");
 
             if (!Files.exists(sourceFile.getParent())) {
                 Files.createDirectory(sourceFile.getParent());
@@ -214,12 +214,7 @@ public class Controller {
             chapters.addAll(site.getChapterList(selectedManga));
 
             for (Chapter chapter : chapters) {
-                String mangaTitle = FilenameHelper.checkForIllegalCharacters(selectedManga.getTitle());
-                String chapterTitle = FilenameHelper.checkForIllegalCharacters(chapter.getTitle());
-
-                Path file = currentDirectory.resolve("mangas")
-                        .resolve(mangaTitle)
-                        .resolve(chapterTitle + ".cbz");
+                Path file = FilenameHelper.buildChapterPath(selectedManga, chapter);
 
                 if (Files.exists(file)) {
                     chapter.setAlreadyDownloaded(true);
@@ -283,12 +278,12 @@ public class Controller {
         }
 
         if (oneSelected) {
-            Download download = new Download(mangaDownloader, true, currentDirectory, site, selectedManga, chapters);
+            Download download = new Download(mangaDownloader, true, site, selectedManga, chapters);
             download.setLocation(
                     new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (download.getWidth() / 2)).intValue(),
                     new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (download.getHeight() / 2)).intValue());
             download.setVisible(true);
-            
+
             ((ChapterTableModel) chapterListTable.getModel()).fireTableDataChanged();
         } else {
             JOptionPane.showMessageDialog(

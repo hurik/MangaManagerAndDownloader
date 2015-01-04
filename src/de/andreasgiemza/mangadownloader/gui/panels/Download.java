@@ -44,16 +44,14 @@ import java.util.zip.ZipOutputStream;
 public class Download extends javax.swing.JDialog {
 
     private volatile boolean interrupted = false;
-    private final Path currentDirectory;
     private final Site site;
     private final Manga selectedManga;
     private final List<Chapter> chapters;
     private int chapterCount = 0;
 
-    public Download(java.awt.Frame parent, boolean modal, Path currentDirectory, Site site, Manga selectedManga, List<Chapter> chapters) {
+    public Download(java.awt.Frame parent, boolean modal, Site site, Manga selectedManga, List<Chapter> chapters) {
         super(parent, modal);
 
-        this.currentDirectory = currentDirectory;
         this.site = site;
         this.selectedManga = selectedManga;
         this.chapters = chapters;
@@ -143,7 +141,7 @@ public class Download extends javax.swing.JDialog {
         );
         errorLogPanelLayout.setVerticalGroup(
             errorLogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(errorLogScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(errorLogScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -190,8 +188,8 @@ public class Download extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(cancelButton)
                 .addGap(18, 18, 18)
-                .addComponent(errorLogPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(errorLogPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -226,8 +224,10 @@ public class Download extends javax.swing.JDialog {
 
             for (Chapter chapter : chapters) {
                 if (chapter.isDownload()) {
+                    Path mangaFile = FilenameHelper.buildChapterPath(selectedManga, chapter);
+
                     if (interrupted) {
-                        chapterError(currentDirectory, chapter, "Aborted while downloading: ");
+                        chapterError(mangaFile, chapter, "Aborted while downloading: ");
                         updateGui();
                         return;
                     }
@@ -238,13 +238,6 @@ public class Download extends javax.swing.JDialog {
 
                     imageProgressBar.setValue(0);
                     imageProgressBar.setString("Getting image links ...");
-
-                    String mangaTitle = FilenameHelper.checkForIllegalCharacters(selectedManga.getTitle());
-                    String chapterTitle = FilenameHelper.checkForIllegalCharacters(chapter.getTitle());
-
-                    Path mangaFile = currentDirectory.resolve("mangas")
-                            .resolve(mangaTitle)
-                            .resolve(chapterTitle + ".cbz");
 
                     List<Image> imageLinks;
 

@@ -23,6 +23,12 @@
  */
 package de.andreasgiemza.mangadownloader.helpers;
 
+import de.andreasgiemza.mangadownloader.data.Chapter;
+import de.andreasgiemza.mangadownloader.data.Manga;
+import de.andreasgiemza.mangadownloader.options.Options;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
@@ -34,7 +40,7 @@ public final class FilenameHelper {
     private FilenameHelper() {
     }
 
-    public static String checkForIllegalCharacters(String string) {
+    private static String checkForIllegalCharacters(String string) {
         String os = System.getProperty("os.name").toLowerCase();
 
         if (os.contains("win")) {
@@ -42,5 +48,13 @@ public final class FilenameHelper {
         } else {
             return string;
         }
+    }
+
+    public static Path buildChapterPath(Manga manga, Chapter chapter) {
+        String mangaTitle = checkForIllegalCharacters(manga.getTitle());
+        String chapterTitle = checkForIllegalCharacters(chapter.getTitle());
+
+        return Paths.get(Options.INSTANCE.getMangaDir())
+                .resolve(mangaTitle).resolve(chapterTitle + ".cbz");
     }
 }

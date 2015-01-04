@@ -33,14 +33,17 @@ import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableCellRenderer;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSearchDocumentListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSelectionListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
+import de.andreasgiemza.mangadownloader.options.Options;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowEvent;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFileChooser;
 import javax.swing.table.TableRowSorter;
 import org.reflections.Reflections;
 
@@ -88,6 +91,10 @@ public class MangaDownloader extends javax.swing.JFrame {
         Collections.sort(supportedSites, String.CASE_INSENSITIVE_ORDER);
         sourceComboBox.setModel(new DefaultComboBoxModel<>(supportedSites.toArray()));
 
+        if (supportedSites.indexOf(Options.INSTANCE.getSelectedSource()) != -1) {
+            sourceComboBox.setSelectedIndex(supportedSites.indexOf(Options.INSTANCE.getSelectedSource()));
+        }
+
         sourceComboBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -119,6 +126,19 @@ public class MangaDownloader extends javax.swing.JFrame {
         // Setup DeSelectAll CheckBox
         chapterDeSelectAllCheckBox.addItemListener(new ChapterCheckBoxItemListener(chapterListTable, controller));
 
+        addWindowListener(new java.awt.event.WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+
+                Options.INSTANCE.saveOptions();
+            }
+
+        });
+
+        mangasDirTextField.setText(Options.INSTANCE.getMangaDir());
+
         // Load Manga List
         controller.loadMangaList();
     }
@@ -132,6 +152,10 @@ public class MangaDownloader extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        mangasDirFileChooser = new javax.swing.JFileChooser();
+        mangasDirPanel = new javax.swing.JPanel();
+        mangasDirTextField = new javax.swing.JTextField();
+        mangasDirButton = new javax.swing.JButton();
         sourcePanel = new javax.swing.JPanel();
         sourceComboBox = new javax.swing.JComboBox();
         sourceButton = new javax.swing.JButton();
@@ -149,9 +173,39 @@ public class MangaDownloader extends javax.swing.JFrame {
         chapterListTable = new javax.swing.JTable();
         downloadButton = new javax.swing.JButton();
 
+        mangasDirFileChooser.setDialogTitle("Select a manga directory ...");
+        mangasDirFileChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Manga Downloader");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("de/andreasgiemza/mangadownloader/gui/icons/mangadownloader.png")));
+
+        mangasDirPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Mangas Directory"));
+
+        mangasDirTextField.setEditable(false);
+
+        mangasDirButton.setText("Select");
+        mangasDirButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mangasDirButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout mangasDirPanelLayout = new javax.swing.GroupLayout(mangasDirPanel);
+        mangasDirPanel.setLayout(mangasDirPanelLayout);
+        mangasDirPanelLayout.setHorizontalGroup(
+            mangasDirPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mangasDirPanelLayout.createSequentialGroup()
+                .addComponent(mangasDirTextField)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(mangasDirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        mangasDirPanelLayout.setVerticalGroup(
+            mangasDirPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mangasDirPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(mangasDirTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(mangasDirButton))
+        );
 
         sourcePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Source"));
 
@@ -169,7 +223,7 @@ public class MangaDownloader extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sourcePanelLayout.createSequentialGroup()
                 .addComponent(sourceComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourceButton))
+                .addComponent(sourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         sourcePanelLayout.setVerticalGroup(
             sourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,7 +260,7 @@ public class MangaDownloader extends javax.swing.JFrame {
                     .addComponent(mangaListSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(mangaListSearchLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(mangaListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE))
+                .addComponent(mangaListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE))
         );
 
         MangaChapterPanel.add(mangaListPanel);
@@ -244,7 +298,7 @@ public class MangaDownloader extends javax.swing.JFrame {
                         .addComponent(chapterListSearchLabel))
                     .addComponent(chapterDeSelectAllCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chapterListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE))
+                .addComponent(chapterListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE))
         );
 
         MangaChapterPanel.add(chapterListPanel);
@@ -266,13 +320,16 @@ public class MangaDownloader extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(MangaChapterPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(downloadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(downloadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(mangasDirPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(mangasDirPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sourcePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(MangaChapterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -291,6 +348,14 @@ public class MangaDownloader extends javax.swing.JFrame {
     private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
         controller.download();
     }//GEN-LAST:event_downloadButtonActionPerformed
+
+    private void mangasDirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mangasDirButtonActionPerformed
+        if (mangasDirFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            String mangaDir = mangasDirFileChooser.getSelectedFile().toString();
+            mangasDirTextField.setText(mangaDir);
+            Options.INSTANCE.setMangaDir(mangaDir);
+        }
+    }//GEN-LAST:event_mangasDirButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -338,6 +403,10 @@ public class MangaDownloader extends javax.swing.JFrame {
     private javax.swing.JLabel mangaListSearchLabel;
     private javax.swing.JTextField mangaListSearchTextField;
     private javax.swing.JTable mangaListTable;
+    private javax.swing.JButton mangasDirButton;
+    private javax.swing.JFileChooser mangasDirFileChooser;
+    private javax.swing.JPanel mangasDirPanel;
+    private javax.swing.JTextField mangasDirTextField;
     private javax.swing.JButton sourceButton;
     private javax.swing.JComboBox sourceComboBox;
     private javax.swing.JPanel sourcePanel;
