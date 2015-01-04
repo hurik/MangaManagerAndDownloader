@@ -25,8 +25,8 @@ package de.andreasgiemza.mangadownloader.gui.panels;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
-import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
 import de.andreasgiemza.mangadownloader.data.Manga;
+import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.io.FileOutputStream;
@@ -41,16 +41,18 @@ import java.util.zip.ZipOutputStream;
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class Download extends javax.swing.JPanel {
+public class Download extends javax.swing.JDialog {
 
-    private volatile boolean interrupted;
+    private volatile boolean interrupted = false;
     private final Path currentDirectory;
     private final Site site;
     private final Manga selectedManga;
     private final List<Chapter> chapters;
     private int chapterCount = 0;
 
-    public Download(Path currentDirectory, Site site, Manga selectedManga, List<Chapter> chapters) {
+    public Download(java.awt.Frame parent, boolean modal, Path currentDirectory, Site site, Manga selectedManga, List<Chapter> chapters) {
+        super(parent, modal);
+
         this.currentDirectory = currentDirectory;
         this.site = site;
         this.selectedManga = selectedManga;
@@ -71,6 +73,13 @@ public class Download extends javax.swing.JPanel {
         chapterProgressBar.setString(0 + " of " + chapterCount);
     }
 
+    @Override
+    public void setVisible(boolean b) {
+        new Thread(new Worker()).start();
+
+        super.setVisible(b);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -87,11 +96,14 @@ public class Download extends javax.swing.JPanel {
         chapterProgressBar = new javax.swing.JProgressBar();
         imageLabel = new javax.swing.JLabel();
         imageProgressBar = new javax.swing.JProgressBar();
-        startButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         errorLogPanel = new javax.swing.JPanel();
         errorLogScrollPane = new javax.swing.JScrollPane();
         errorLogTextArea = new javax.swing.JTextArea();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Downloading ...");
+        setResizable(false);
 
         mangaLabel.setText("Manga:");
 
@@ -109,15 +121,7 @@ public class Download extends javax.swing.JPanel {
         imageProgressBar.setString("");
         imageProgressBar.setStringPainted(true);
 
-        startButton.setText("Start");
-        startButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                startButtonActionPerformed(evt);
-            }
-        });
-
         cancelButton.setText("Cancel");
-        cancelButton.setEnabled(false);
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
@@ -128,7 +132,7 @@ public class Download extends javax.swing.JPanel {
 
         errorLogTextArea.setEditable(false);
         errorLogTextArea.setColumns(20);
-        errorLogTextArea.setRows(5);
+        errorLogTextArea.setRows(10);
         errorLogScrollPane.setViewportView(errorLogTextArea);
 
         javax.swing.GroupLayout errorLogPanelLayout = new javax.swing.GroupLayout(errorLogPanel);
@@ -139,11 +143,11 @@ public class Download extends javax.swing.JPanel {
         );
         errorLogPanelLayout.setVerticalGroup(
             errorLogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(errorLogScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+            .addComponent(errorLogScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -151,7 +155,6 @@ public class Download extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(chapterProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(imageProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(startButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(errorLogPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
@@ -184,25 +187,15 @@ public class Download extends javax.swing.JPanel {
                 .addComponent(imageLabel)
                 .addGap(6, 6, 6)
                 .addComponent(imageProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(11, 11, 11)
-                .addComponent(startButton)
-                .addGap(11, 11, 11)
+                .addGap(18, 18, 18)
                 .addComponent(cancelButton)
-                .addGap(11, 11, 11)
-                .addComponent(errorLogPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(errorLogPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-        startButton.setEnabled(false);
-        cancelButton.setEnabled(true);
-
-        interrupted = false;
-
-        errorLogTextArea.setText("");
-        new Thread(new Worker()).start();
-    }//GEN-LAST:event_startButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         interrupted = true;
@@ -221,7 +214,6 @@ public class Download extends javax.swing.JPanel {
     private javax.swing.JProgressBar imageProgressBar;
     private javax.swing.JLabel mangaLabel;
     private javax.swing.JLabel mangaTitleLabel;
-    private javax.swing.JButton startButton;
     // End of variables declaration//GEN-END:variables
 
     private class Worker implements Runnable {
@@ -310,7 +302,6 @@ public class Download extends javax.swing.JPanel {
         }
 
         private void updateGui() {
-            startButton.setEnabled(true);
             cancelButton.setEnabled(false);
         }
 

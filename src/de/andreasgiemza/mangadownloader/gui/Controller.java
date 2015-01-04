@@ -27,8 +27,8 @@ import de.andreasgiemza.mangadownloader.MangaDownloader;
 import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableModel;
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Manga;
-import de.andreasgiemza.mangadownloader.gui.panels.Download;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
+import de.andreasgiemza.mangadownloader.gui.panels.Download;
 import de.andreasgiemza.mangadownloader.gui.panels.Loading;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.awt.Toolkit;
@@ -46,7 +46,6 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -270,14 +269,11 @@ public class Controller {
         }
 
         if (oneSelected) {
-            JDialog dialog = new JDialog(mangaDownloader, "Download", true);
-            dialog.getContentPane().add(new Download(currentDirectory, site, selectedManga, chapters));
-            dialog.pack();
-            dialog.setLocation(
-                    new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (dialog.getWidth() / 2)).intValue(),
-                    new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (dialog.getHeight() / 2)).intValue());
-            dialog.setResizable(false);
-            dialog.setVisible(true);
+            Download download = new Download(mangaDownloader, true, currentDirectory, site, selectedManga, chapters);
+            download.setLocation(
+                    new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (download.getWidth() / 2)).intValue(),
+                    new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (download.getHeight() / 2)).intValue());
+            download.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(
                     mangaDownloader,
