@@ -4,19 +4,25 @@
 Little tool to download mangas from various sites.
 
 ## Supported sites
-* Batoto (International)
-* DeManga (German)
-* EGscans (English)
-* LINEWebtoon (English)
-* Mangacow (English)
-* MangaFox (English)
-* MangaHere (English)
-* Mangajoy (English)
-* Mangapanda (English)
-* MangaReader (English)
-* MangaStream (English)
-* MeinManga (German)
-* Tapastic (English)
+
+### International
+* Batoto
+
+### English
+* EGscans
+* LINEWebtoon
+* Mangacow
+* MangaFox
+* MangaHere
+* Mangajoy
+* Mangapanda
+* MangaReader
+* MangaStream
+* Tapastic
+
+### German
+* DeManga
+* MeinManga
 
 ## Download
 [https://github.com/hurik/MangaDownloader/releases/latest](https://github.com/hurik/MangaDownloader/releases/latest)
