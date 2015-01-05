@@ -129,7 +129,7 @@ public class Controller {
     public void loadMangaListWorker() {
         String source = (String) sourceComboBox.getSelectedItem();
 
-        Path sourceFile = Options.INSTANCE.getOptionsDir().resolve("sources").resolve(source + ".txt");
+        Path sourceFile = Options.INSTANCE.getOptionsDir().resolve("sources").resolve(source + ".list");
 
         if (Files.exists(sourceFile)) {
             try (FileInputStream fin = new FileInputStream(sourceFile.toFile())) {
@@ -171,7 +171,7 @@ public class Controller {
         // Save data to file
         try {
             Path sourceFile = Options.INSTANCE.getOptionsDir().resolve("sources")
-                    .resolve(source + ".txt");
+                    .resolve(source + ".list");
 
             if (!Files.exists(sourceFile.getParent())) {
                 Files.createDirectory(sourceFile.getParent());
