@@ -34,6 +34,7 @@ import de.andreasgiemza.mangadownloader.gui.panels.Loading;
 import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
 import de.andreasgiemza.mangadownloader.options.Options;
 import de.andreasgiemza.mangadownloader.sites.Site;
+import de.andreasgiemza.mangadownloader.sites.SiteHelper;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -46,7 +47,6 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import org.reflections.Reflections;
 
 /**
  *
@@ -101,14 +101,7 @@ public class Controller {
         String source = (String) sourceComboBox.getSelectedItem();
         Options.INSTANCE.setSelectedSource(source);
 
-        for (Class<? extends Site> siteClasse : new Reflections("de.andreasgiemza.mangadownloader.sites.implementations").getSubTypesOf(Site.class)) {
-            if (siteClasse.getName().contains(source)) {
-                try {
-                    site = siteClasse.newInstance();
-                } catch (InstantiationException | IllegalAccessException ex) {
-                }
-            }
-        }
+        site = SiteHelper.getInstance(source);
 
         if (site == null) {
             return;

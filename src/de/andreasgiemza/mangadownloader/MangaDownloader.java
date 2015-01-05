@@ -34,18 +34,16 @@ import de.andreasgiemza.mangadownloader.gui.manga.MangaListSearchDocumentListene
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSelectionListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
 import de.andreasgiemza.mangadownloader.options.Options;
-import de.andreasgiemza.mangadownloader.sites.Site;
+import de.andreasgiemza.mangadownloader.sites.SiteHelper;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.table.TableRowSorter;
-import org.reflections.Reflections;
 
 /**
  *
@@ -83,12 +81,7 @@ public class MangaDownloader extends javax.swing.JFrame {
                 chapters);
 
         // Setup Source ComboBox
-        List<String> supportedSites = new LinkedList<>();
-        for (Class<? extends Site> site : new Reflections("de.andreasgiemza.mangadownloader.sites.implementations").getSubTypesOf(Site.class)) {
-            String[] packageAndName = site.getName().split("\\.");
-            supportedSites.add(packageAndName[packageAndName.length - 1]);
-        }
-        Collections.sort(supportedSites, String.CASE_INSENSITIVE_ORDER);
+        List<String> supportedSites = SiteHelper.getSites();
         sourceComboBox.setModel(new DefaultComboBoxModel<>(supportedSites.toArray()));
 
         if (supportedSites.indexOf(Options.INSTANCE.getSelectedSource()) != -1) {
