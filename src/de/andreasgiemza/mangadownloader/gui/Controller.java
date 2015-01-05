@@ -27,6 +27,7 @@ import de.andreasgiemza.mangadownloader.MangaDownloader;
 import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableModel;
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Manga;
+import de.andreasgiemza.mangadownloader.data.MangaList;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
 import de.andreasgiemza.mangadownloader.gui.panels.Download;
 import de.andreasgiemza.mangadownloader.gui.panels.Loading;
@@ -34,15 +35,10 @@ import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
 import de.andreasgiemza.mangadownloader.options.Options;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.awt.Toolkit;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -125,19 +121,8 @@ public class Controller {
         loading.setVisible(true);
     }
 
-    @SuppressWarnings("unchecked")
     public void loadMangaListWorker() {
-        String source = (String) sourceComboBox.getSelectedItem();
-
-        Path sourceFile = Options.INSTANCE.getOptionsDir().resolve("sources").resolve(source + ".list");
-
-        if (Files.exists(sourceFile)) {
-            try (FileInputStream fin = new FileInputStream(sourceFile.toFile())) {
-                ObjectInputStream ois = new ObjectInputStream(fin);
-                mangas.addAll((LinkedList<Manga>) ois.readObject());
-            } catch (IOException | ClassNotFoundException ex) {
-            }
-        }
+        mangas.addAll(MangaList.load((String) sourceComboBox.getSelectedItem()));
 
         ((MangaTableModel) mangaListTable.getModel()).fireTableDataChanged();
     }
@@ -169,24 +154,7 @@ public class Controller {
         ((MangaTableModel) mangaListTable.getModel()).fireTableDataChanged();
 
         // Save data to file
-        try {
-            Path sourceFile = Options.INSTANCE.getOptionsDir().resolve("sources")
-                    .resolve(source + ".list");
-
-            if (!Files.exists(sourceFile.getParent())) {
-                Files.createDirectory(sourceFile.getParent());
-            }
-
-            if (Files.exists(sourceFile)) {
-                Files.delete(sourceFile);
-            }
-
-            try (FileOutputStream fout = new FileOutputStream(sourceFile.toFile())) {
-                ObjectOutputStream oos = new ObjectOutputStream(fout);
-                oos.writeObject(mangas);
-            }
-        } catch (IOException ex) {
-        }
+        MangaList.save(source, mangas);
     }
 
     public void mangaSearchChanged() {
