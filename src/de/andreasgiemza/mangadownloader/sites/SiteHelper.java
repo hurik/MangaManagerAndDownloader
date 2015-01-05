@@ -23,6 +23,9 @@
  */
 package de.andreasgiemza.mangadownloader.sites;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +39,11 @@ public final class SiteHelper {
 
     private final static String implementationsPackage
             = "de.andreasgiemza.mangadownloader.sites.implementations";
+    private final static PrintStream noErr = new PrintStream(new OutputStream() {
+        @Override
+        public void write(int b) throws IOException {
+        }
+    });
 
     private SiteHelper() {
     }
@@ -43,11 +51,16 @@ public final class SiteHelper {
     public static List<String> getSites() {
         List<String> sites = new LinkedList<>();
 
+        PrintStream err = System.err;
+        System.setErr(noErr);
+
         for (Class<? extends Site> site : new Reflections(implementationsPackage)
                 .getSubTypesOf(Site.class)) {
             String[] packageAndName = site.getName().split("\\.");
             sites.add(packageAndName[packageAndName.length - 1]);
         }
+
+        System.setErr(err);
 
         Collections.sort(sites, String.CASE_INSENSITIVE_ORDER);
 
@@ -56,6 +69,9 @@ public final class SiteHelper {
 
     public static Site getInstance(String source) {
         Site site = null;
+
+        PrintStream err = System.err;
+        System.setErr(noErr);
 
         for (Class<? extends Site> siteClasse : new Reflections(implementationsPackage)
                 .getSubTypesOf(Site.class)) {
@@ -67,6 +83,8 @@ public final class SiteHelper {
                 }
             }
         }
+
+        System.setErr(err);
 
         return site;
     }
