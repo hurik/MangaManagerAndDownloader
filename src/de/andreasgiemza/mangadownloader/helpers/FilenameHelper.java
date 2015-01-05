@@ -36,13 +36,12 @@ import java.nio.file.Paths;
 public final class FilenameHelper {
 
     private final static String windows = "[<>:\"/\\|?*]";
+    private final static String os = System.getProperty("os.name").toLowerCase();
 
     private FilenameHelper() {
     }
 
     private static String checkForIllegalCharacters(String string) {
-        String os = System.getProperty("os.name").toLowerCase();
-
         if (os.contains("win")) {
             return string.replaceAll(windows, "_");
         } else {
@@ -50,8 +49,20 @@ public final class FilenameHelper {
         }
     }
 
+    private static String checkForValidDirectoryName(String string) {
+        if (os.contains("win")) {
+            while (string.endsWith(".")) {
+                string = string.substring(0, string.length() - 1);
+            }
+            return string;
+        } else {
+            return string;
+        }
+    }
+
     public static Path buildChapterPath(Manga manga, Chapter chapter) {
         String mangaTitle = checkForIllegalCharacters(manga.getTitle());
+        mangaTitle = checkForValidDirectoryName(mangaTitle);
         String chapterTitle = checkForIllegalCharacters(chapter.getTitle());
 
         return Paths.get(Options.INSTANCE.getMangaDir())
