@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites;
+package de.andreasgiemza.mangadownloader.sites.implementations;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
@@ -38,22 +38,25 @@ import org.jsoup.select.Elements;
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class Mangajoy implements Site {
+public class MangaReader extends Mangapanda {
 
-    private final String baseUrl = "http://mangajoy.com";
+    private final String baseUrl = "http://www.mangareader.net";
 
     @Override
     public List<Manga> getMangaList() throws IOException {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/manga-list-all/");
+        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/alphabetical");
 
-        Elements rows = doc.select("div[id=sct_manga_list_all]").first().select("li");
+        Elements cols = doc.select("div[class=series_col]");
 
-        for (Element row : rows) {
-            Element link = row.select("a").first();
+        for (Element col : cols) {
+            Elements rows = col.select("li");
 
-            mangas.add(new Manga(link.attr("href"), link.attr("title")));
+            for (Element row : rows) {
+                Element link = row.select("a").first();
+                mangas.add(new Manga(link.attr("href"), link.text()));
+            }
         }
 
         return mangas;
@@ -63,12 +66,16 @@ public class Mangajoy implements Site {
     public List<Chapter> getChapterList(Manga manga) throws IOException {
         List<Chapter> chapters = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(manga.getLink());
+        Document doc = JsoupHelper.getHTMLPage(baseUrl + manga.getLink());
 
-        Elements rows = doc.select("ul[class=chp_lst]").first().select("li");
+        Elements rows = doc.select("div[id=chapterlist]").first().select("tr");
 
         for (Element row : rows) {
-            chapters.add(new Chapter(row.select("a").first().attr("href"), row.select("span[class=val]").first().text()));
+            if (row.select("a").first() == null) {
+                continue;
+            }
+
+            chapters.add(new Chapter(row.select("a").first().attr("href"), row.select("td").first().text()));
         }
 
         return chapters;
@@ -78,21 +85,21 @@ public class Mangajoy implements Site {
     public List<Image> getChapterImageLinks(Chapter chapter) throws IOException {
         List<Image> images = new LinkedList<>();
 
-        String referrer = chapter.getLink();
+        String referrer = baseUrl + chapter.getLink();
         Document doc = JsoupHelper.getHTMLPage(referrer);
 
-        Elements nav = doc.select("div[class=wpm_nav_rdr]").first().select("select[onchange^=location.href='" + chapter.getLink() + "' + this.value + '/']").first()
+        Elements nav = doc.select("select[id=pageMenu]").first()
                 .select("option");
 
         int pages = nav.size();
 
-        for (int i = 1; i <= pages; i++) {
-            if (i != 1) {
-                referrer = chapter.getLink() + (i) + "/";
+        for (int i = 0; i < pages; i++) {
+            if (i != 0) {
+                referrer = baseUrl + nav.get(i).attr("value");
                 doc = JsoupHelper.getHTMLPage(referrer);
             }
 
-            String link = doc.select("div[class=prw]").first().select("img").attr("src");
+            String link = doc.select("img[id=img]").first().attr("src");
             String extension = link.substring(link.length() - 3, link.length());
 
             images.add(new Image(link, referrer, extension));

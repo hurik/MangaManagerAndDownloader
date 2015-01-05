@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Andreas Giemza <andreas@giemza.net>.
+ * Copyright 2015 Andreas Giemza <andreas@giemza.net>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites;
+package de.andreasgiemza.mangadownloader.sites.implementations;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
+import de.andreasgiemza.mangadownloader.sites.Site;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import org.jsoup.nodes.Document;
@@ -38,55 +40,47 @@ import org.jsoup.select.Elements;
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class Mangacow implements Site {
+public class MangaStream implements Site {
 
-    private final String baseUrl = "http://mangacow.co";
+    private final String baseUrl = "http://mangastream.com";
 
     @Override
     public List<Manga> getMangaList() throws IOException {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/manga-list/");
+        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/manga");
 
-        Elements rows = doc.select("div[class=wpm_pag mng_lst tbn]").first()
-                .select("div[class^=nde]");
+        Elements rows = doc.select("table[class=table table-striped]").first().select("tr");
 
         for (Element row : rows) {
-            Element link = row.select("a").first();
+            if (row == rows.first()) {
+                continue;
+            }
 
-            mangas.add(new Manga(link.attr("href"), link.attr("title")));
+            mangas.add(new Manga(
+                    row.select("a").first().attr("href"),
+                    row.select("a").first().text()));
         }
 
-        return mangas;
+        return new LinkedList<>(new HashSet<>(mangas));
     }
 
     @Override
     public List<Chapter> getChapterList(Manga manga) throws IOException {
         List<Chapter> chapters = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(manga.getLink());
+        Document doc = JsoupHelper.getHTMLPageMobile(manga.getLink());
 
-        Element nav = doc.select("ul[class=pgg]").first();
+        Elements pages = doc.select("table[class=table table-striped]").first().select("tr");
 
-        int pages = 1;
-
-        if (nav != null) {
-            pages = Integer.parseInt(nav.select("li").get(nav.select("li").size() - 3).text());
-        }
-
-        for (int i = 1; i <= pages; i++) {
-            if (i != 1) {
-                doc = JsoupHelper.getHTMLPage(manga.getLink() + "chapter-list/" + i + "/");
+        for (Element page : pages) {
+            if (page == pages.first()) {
+                continue;
             }
 
-            Elements rows = doc.select("ul[class=lst mng_chp]").first()
-                    .select("li");
-
-            for (Element row : rows) {
-                Element link = row.select("a").first();
-
-                chapters.add(new Chapter(link.attr("href"), link.attr("title")));
-            }
+            chapters.add(new Chapter(
+                    page.select("a").first().attr("href"),
+                    page.select("a").first().text()));
         }
 
         return chapters;
@@ -94,28 +88,28 @@ public class Mangacow implements Site {
 
     @Override
     public List<Image> getChapterImageLinks(Chapter chapter) throws IOException {
-        List<Image> images = new LinkedList<>();
+        List<Image> imageLinks = new LinkedList<>();
 
         String referrer = chapter.getLink();
         Document doc = JsoupHelper.getHTMLPage(referrer);
 
-        Elements nav = doc.select("select[class=cbo_wpm_pag]").first()
-                .select("option");
+        // Get pages linkes
+        int max = Integer.parseInt(doc.select("div[class=btn-group]").last().select("li").last().text()
+                .replace("Last Page (", "").replace(")", ""));
 
-        int pages = nav.size();
-
-        for (int i = 1; i <= pages; i++) {
+        for (int i = 1; i <= max; i++) {
             if (i != 1) {
-                referrer = chapter.getLink() + (i) + "/";
+                referrer = chapter.getLink().substring(0, chapter.getLink().length() - 1) + i;
                 doc = JsoupHelper.getHTMLPage(referrer);
             }
 
-            String link = doc.select("div[class=prw]").first().select("img").attr("src");
+            String link = doc.select("img[id=manga-page]").first().attr("src");
             String extension = link.substring(link.length() - 3, link.length());
 
-            images.add(new Image(link, referrer, extension));
+            imageLinks.add(new Image(link, referrer, extension));
         }
 
-        return images;
+        return imageLinks;
     }
+
 }

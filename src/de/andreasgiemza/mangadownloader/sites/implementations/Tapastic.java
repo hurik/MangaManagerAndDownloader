@@ -21,16 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites;
+package de.andreasgiemza.mangadownloader.sites.implementations;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
+import de.andreasgiemza.mangadownloader.sites.Site;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -39,47 +42,62 @@ import org.jsoup.select.Elements;
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class MangaStream implements Site {
+public class Tapastic implements Site {
 
-    private final String baseUrl = "http://mangastream.com";
+    private final String baseUrl = "http://tapastic.com";
 
     @Override
     public List<Manga> getMangaList() throws IOException {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/manga");
+        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/browse/list");
 
-        Elements rows = doc.select("table[class=table table-striped]").first().select("tr");
+        int max = Integer.parseInt(doc.select("div[class^=g-pagination-wrap]").first().select("a[class=page-num paging-btn g-act]").last().text());
 
-        for (Element row : rows) {
-            if (row == rows.first()) {
-                continue;
+        for (int i = 1; i <= max; i++) {
+            if (i != 1) {
+                doc = JsoupHelper.getHTMLPage(baseUrl + "/browse/list?pageNumber=" + i);
             }
 
-            mangas.add(new Manga(
-                    row.select("a").first().attr("href"),
-                    row.select("a").first().text()));
+            Elements rows = doc.select("ul[class=page-list-wrap]").first().select("li");
+
+            for (Element row : rows) {
+                mangas.add(new Manga(row.select("a[class=title]").first().attr("href"), row.select("a[class=title]").first().text()));
+            }
         }
 
-        return new LinkedList<>(new HashSet<>(mangas));
+        return mangas;
     }
 
     @Override
     public List<Chapter> getChapterList(Manga manga) throws IOException {
         List<Chapter> chapters = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPageMobile(manga.getLink());
+        Document doc = JsoupHelper.getHTMLPage(baseUrl + manga.getLink());
 
-        Elements pages = doc.select("table[class=table table-striped]").first().select("tr");
+        Scanner scanner = new Scanner(doc.toString());
 
-        for (Element page : pages) {
-            if (page == pages.first()) {
-                continue;
+        String line = null;
+
+        while (scanner.hasNextLine()) {
+            line = scanner.nextLine();
+            if (line.contains("episodeList")) {
+                break;
             }
+        }
 
-            chapters.add(new Chapter(
-                    page.select("a").first().attr("href"),
-                    page.select("a").first().text()));
+        if (line == null) {
+            return chapters;
+        }
+
+        line = line.split("episodeList : \\[")[1];
+        line = line.substring(0, line.length() - 2);
+
+        String[] jsons = line.replace("},{", "}},{{").split("\\},\\{");
+
+        for (int i = 0; i < jsons.length; i++) {
+            JsonObject jsonObject = new JsonParser().parse(jsons[i]).getAsJsonObject();
+            chapters.add(new Chapter(jsonObject.get("id").toString(), "(" + i + ") " + jsonObject.get("title").toString()));
         }
 
         return chapters;
@@ -89,20 +107,14 @@ public class MangaStream implements Site {
     public List<Image> getChapterImageLinks(Chapter chapter) throws IOException {
         List<Image> imageLinks = new LinkedList<>();
 
-        String referrer = chapter.getLink();
+        String referrer = baseUrl + "/episode/" + chapter.getLink();
         Document doc = JsoupHelper.getHTMLPage(referrer);
 
         // Get pages linkes
-        int max = Integer.parseInt(doc.select("div[class=btn-group]").last().select("li").last().text()
-                .replace("Last Page (", "").replace(")", ""));
+        Elements images = doc.select("article[class^=ep-contents]").first().select("img[class=art-image]");
 
-        for (int i = 1; i <= max; i++) {
-            if (i != 1) {
-                referrer = chapter.getLink().substring(0, chapter.getLink().length() - 1) + i;
-                doc = JsoupHelper.getHTMLPage(referrer);
-            }
-
-            String link = doc.select("img[id=manga-page]").first().attr("src");
+        for (Element image : images) {
+            String link = image.attr("src");
             String extension = link.substring(link.length() - 3, link.length());
 
             imageLinks.add(new Image(link, referrer, extension));
@@ -110,5 +122,4 @@ public class MangaStream implements Site {
 
         return imageLinks;
     }
-
 }

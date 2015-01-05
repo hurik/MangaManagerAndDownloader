@@ -21,15 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites;
+package de.andreasgiemza.mangadownloader.sites.implementations;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
+import de.andreasgiemza.mangadownloader.sites.Site;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -38,35 +40,24 @@ import org.jsoup.select.Elements;
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class Batoto implements Site {
+public class EGScans implements Site {
 
-    private final String baseUrl = "https://bato.to";
-    private final int loadCount = 1000;
+    private final String baseUrl = "http://read.egscans.com/";
 
     @Override
     public List<Manga> getMangaList() throws IOException {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/comic/_/comics/?per_page=" + loadCount + "&st=0");
+        Document doc = JsoupHelper.getHTMLPage(baseUrl);
 
-        int max = Integer.parseInt(doc.select("li[class=last]").first().select("a").first().attr("href").split("st=")[1]);
+        Elements rows = doc.select("select[name=manga]").first().select("option");
 
-        for (int i = 0; i <= max; i += loadCount) {
-            if (i != 0) {
-                doc = JsoupHelper.getHTMLPage(baseUrl + "/comic/_/comics/?per_page=" + loadCount + "&st=" + i);
+        for (Element row : rows) {
+            if (row == rows.first()) {
+                continue;
             }
 
-            Elements rows = doc.select("table[class=ipb_table topic_list hover_rows]").first().select("tr");
-
-            for (Element row : rows) {
-                Elements cols = row.select("td");
-
-                if (cols.size() != 7) {
-                    continue;
-                }
-
-                mangas.add(new Manga(cols.get(1).select("a").first().attr("href"), cols.get(1).text()));
-            }
+            mangas.add(new Manga(baseUrl + row.attr("value"), row.text()));
         }
 
         return mangas;
@@ -78,22 +69,10 @@ public class Batoto implements Site {
 
         Document doc = JsoupHelper.getHTMLPage(manga.getLink());
 
-        Elements rows = doc.select("table[class=ipb_table chapters_list]").first()
-                .select("tr");
+        Elements rows = doc.select("select[name=chapter]").first().select("option");
 
         for (Element row : rows) {
-            Elements cols = row.select("td");
-            if (cols.size() != 5) {
-                continue;
-            }
-
-            Element link = cols.get(0).select("a").first();
-
-            String title = cols.get(0).text()
-                    + " [" + cols.get(1).select("div").first().attr("title") + "]"
-                    + " [" + cols.get(2).text() + "]";
-
-            chapters.add(new Chapter(link.attr("href"), title));
+            chapters.add(new Chapter(manga.getLink() + "/" + row.attr("value"), row.text()));
         }
 
         return chapters;
@@ -103,22 +82,41 @@ public class Batoto implements Site {
     public List<Image> getChapterImageLinks(Chapter chapter) throws IOException {
         List<Image> images = new LinkedList<>();
 
-        String referrer = chapter.getLink() + "?supress_webtoon=t";
+        String referrer = chapter.getLink();
         Document doc = JsoupHelper.getHTMLPage(referrer);
 
-        // Get pages linkes
-        Elements pages = doc.select("div[class=moderation_bar rounded clear]").first()
-                .select("ul").first()
-                .select("li").get(3)
-                .select("option");
+        Elements jss = doc.select("script[type=text/javascript]");
 
-        for (int i = 0; i < pages.size(); i++) {
-            if (i != 0) {
-                referrer = pages.get(i).attr("value") + "?supress_webtoon=t";
-                doc = JsoupHelper.getHTMLPage(referrer);
+        Element rightJs = null;
+
+        for (Element js : jss) {
+            if (js.toString().contains("img_url.push")) {
+                rightJs = js;
+                break;
             }
+        }
 
-            String link = doc.select("img[id=comic_page]").first().attr("src");
+        if (rightJs == null) {
+            return images;
+        }
+
+        List<String> data = new LinkedList<>();
+
+        Scanner scanner = new Scanner(rightJs.toString());
+
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if (line.contains("img_url.push('")) {
+                data.add(line);
+            }
+        }
+
+        if (data.isEmpty()) {
+            return images;
+        }
+
+        for (String line : data) {
+            String link = baseUrl + line.split("img_url\\.push\\(\\'")[1].split("\\' \\);")[0];
             String extension = link.substring(link.length() - 3, link.length());
 
             images.add(new Image(link, referrer, extension));

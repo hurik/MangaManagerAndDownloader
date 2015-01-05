@@ -84,7 +84,7 @@ public class MangaDownloader extends javax.swing.JFrame {
 
         // Setup Source ComboBox
         List<String> supportedSites = new LinkedList<>();
-        for (Class<? extends Site> site : new Reflections("de.andreasgiemza.mangadownloader.sites").getSubTypesOf(Site.class)) {
+        for (Class<? extends Site> site : new Reflections("de.andreasgiemza.mangadownloader.sites.implementations").getSubTypesOf(Site.class)) {
             String[] packageAndName = site.getName().split("\\.");
             supportedSites.add(packageAndName[packageAndName.length - 1]);
         }

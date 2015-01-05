@@ -101,7 +101,7 @@ public class Controller {
         String source = (String) sourceComboBox.getSelectedItem();
         Options.INSTANCE.setSelectedSource(source);
 
-        for (Class<? extends Site> siteClasse : new Reflections("de.andreasgiemza.mangadownloader.sites").getSubTypesOf(Site.class)) {
+        for (Class<? extends Site> siteClasse : new Reflections("de.andreasgiemza.mangadownloader.sites.implementations").getSubTypesOf(Site.class)) {
             if (siteClasse.getName().contains(source)) {
                 try {
                     site = siteClasse.newInstance();

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Andreas Giemza <andreas@giemza.net>.
+ * Copyright 2015 Andreas Giemza <andreas@giemza.net>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites;
+package de.andreasgiemza.mangadownloader.sites.implementations;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
+import de.andreasgiemza.mangadownloader.sites.Site;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import org.jsoup.nodes.Document;
@@ -38,43 +40,42 @@ import org.jsoup.select.Elements;
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class MangaFox implements Site {
+public class LINEWebtoon implements Site {
 
-    private final String baseUrl = "http://mangafox.me";
+    private final String baseUrl = "http://www.webtoons.com";
+    private final String baseUrlMobile = "http://m.webtoons.com";
 
     @Override
     public List<Manga> getMangaList() throws IOException {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/manga/");
+        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/dailySchedule");
 
-        Elements rows = doc.select("div[class=left]").first().select("li");
+        Elements rows = doc.select("li");
 
         for (Element row : rows) {
-            Element link = row.select("a[class^=series_preview]").first();
+            Elements data = row.select("h3");
 
-            if (link == null) {
-                continue;
+            if (data.size() > 0) {
+                mangas.add(new Manga(
+                        row.select("a").first().attr("href"),
+                        row.select("h3").first().text()));
             }
-
-            mangas.add(new Manga(link.attr("href"), link.text()));
         }
 
-        return mangas;
+        return new LinkedList<>(new HashSet<>(mangas));
     }
 
     @Override
     public List<Chapter> getChapterList(Manga manga) throws IOException {
         List<Chapter> chapters = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(manga.getLink());
+        Document doc = JsoupHelper.getHTMLPageMobile(baseUrlMobile + manga.getLink());
 
-        Elements rows = doc.select("div[id=chapters]").first().select("li");
+        Elements pages = doc.select("li[id^=episode]");
 
-        for (Element row : rows) {
-            chapters.add(new Chapter(
-                    row.select("a[class=tips]").first().attr("href"),
-                    row.select("a[class=tips]").first().text() + (row.select("span[class=title nowrap]").first() == null ? "" : " - " + row.select("span[class=title nowrap]").first().text())));
+        for (Element page : pages) {
+            chapters.add(new Chapter(baseUrl + page.select("a").first().attr("href"), page.select("span[class=ellipsis]").first().text()));
         }
 
         return chapters;
@@ -82,28 +83,22 @@ public class MangaFox implements Site {
 
     @Override
     public List<Image> getChapterImageLinks(Chapter chapter) throws IOException {
-        List<Image> images = new LinkedList<>();
+        List<Image> imageLinks = new LinkedList<>();
 
-        String referrer = chapter.getLink().endsWith("1.html") ? chapter.getLink() : chapter.getLink() + "1.html";
+        String referrer = chapter.getLink();
         Document doc = JsoupHelper.getHTMLPage(referrer);
 
-        Elements nav = doc.select("select[onchange=change_page(this)]").first()
-                .select("option");
+        // Get pages linkes
+        Elements images = doc.select("img[class=_images]");
 
-        int pages = nav.size() - 1;
+        for (Element image : images) {
+            String link = image.attr("data-url");
+            String extension = link.substring(link.length() - 12, link.length() - 9);
 
-        for (int i = 1; i <= pages; i++) {
-            if (i != 1) {
-                referrer = chapter.getLink().replace("1.html", "") + i + ".html";
-                doc = JsoupHelper.getHTMLPage(referrer);
-            }
-
-            String link = doc.select("img[id=image]").first().attr("src");
-            String extension = link.substring(link.length() - 3, link.length());
-
-            images.add(new Image(link, referrer, extension));
+            imageLinks.add(new Image(link, referrer, extension));
         }
 
-        return images;
+        return imageLinks;
     }
+
 }
