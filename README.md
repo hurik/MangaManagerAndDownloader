@@ -5,6 +5,7 @@ Little tool to download mangas from various sites.
 
 ## Supported sites
 * Batoto
+* DeManga
 * EGscans
 * LINEWebtoon
 * Mangacow
