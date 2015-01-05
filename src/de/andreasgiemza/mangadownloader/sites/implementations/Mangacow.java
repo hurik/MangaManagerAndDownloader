@@ -41,21 +41,36 @@ import org.jsoup.select.Elements;
  */
 public class Mangacow implements Site {
 
-    private final String baseUrl = "http://mangacow.co";
+    private final String baseUrl = "http://mangacow.co/";
 
     @Override
     public List<Manga> getMangaList() throws IOException {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/manga-list/");
+        Document doc = JsoupHelper.getHTMLPage(baseUrl + "manga-list/all/any/name-az/");
 
-        Elements rows = doc.select("div[class=wpm_pag mng_lst tbn]").first()
-                .select("div[class^=nde]");
+        Element nav = doc.select("ul[class=pgg]").first();
 
-        for (Element row : rows) {
-            Element link = row.select("a").first();
+        int pages = 1;
 
-            mangas.add(new Manga(link.attr("href"), link.attr("title")));
+        if (nav != null) {
+            String data = nav.select("li").last().select("a").attr("href");
+            String[] dataArray = data.split("/");
+
+            pages = Integer.parseInt(dataArray[dataArray.length - 1]);
+        }
+
+        for (int i = 1; i <= pages; i++) {
+            if (i != 1) {
+                doc = JsoupHelper.getHTMLPage(baseUrl + "manga-list/all/any/name-az/" + i + "/");
+            }
+
+            Elements rows = doc.select("div[class=wpm_pag mng_lst tbn]").first().select("div[class^=nde]");
+
+            for (Element row : rows) {
+                Element link = row.select("div[class=det]").first().select("a").first();
+                mangas.add(new Manga(link.attr("href"), link.text()));
+            }
         }
 
         return mangas;
@@ -72,7 +87,10 @@ public class Mangacow implements Site {
         int pages = 1;
 
         if (nav != null) {
-            pages = Integer.parseInt(nav.select("li").get(nav.select("li").size() - 3).text());
+            String data = nav.select("li").last().select("a").attr("href");
+            String[] dataArray = data.split("/");
+
+            pages = Integer.parseInt(dataArray[dataArray.length - 1]);
         }
 
         for (int i = 1; i <= pages; i++) {
@@ -80,13 +98,12 @@ public class Mangacow implements Site {
                 doc = JsoupHelper.getHTMLPage(manga.getLink() + "chapter-list/" + i + "/");
             }
 
-            Elements rows = doc.select("ul[class=lst mng_chp]").first()
-                    .select("li");
+            Elements rows = doc.select("ul[class^=lst]").first().select("li");
 
             for (Element row : rows) {
                 Element link = row.select("a").first();
 
-                chapters.add(new Chapter(link.attr("href"), link.attr("title")));
+                chapters.add(new Chapter(link.attr("href"), link.select("b[class=val]").first().text()));
             }
         }
 
