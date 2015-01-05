@@ -9,6 +9,7 @@ Little tool to download mangas from various sites.
 * LINEWebtoon
 * Mangacow
 * MangaFox
+* MangaHere
 * Mangajoy
 * Mangapanda
 * MangaReader
