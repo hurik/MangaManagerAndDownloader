@@ -24,6 +24,7 @@
 package de.andreasgiemza.mangadownloader.gui.chapter;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
+import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.UIManager;
@@ -42,7 +43,7 @@ public class ChapterTableCellRenderer extends DefaultTableCellRenderer {
         Chapter chapter = ((ChapterTableModel) table.getModel()).getChapterAt(table.convertRowIndexToModel(row));
 
         if (chapter.isAlreadyDownloaded()) {
-            c.setBackground(UIManager.getColor("Table.shadow"));
+            c.setBackground(Color.decode("#D2D2D2"));
         } else {
             c.setBackground(UIManager.getColor("Table.background"));
         }
