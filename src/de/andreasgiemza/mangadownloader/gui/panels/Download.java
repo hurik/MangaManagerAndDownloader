@@ -28,7 +28,9 @@ import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
+import de.andreasgiemza.mangadownloader.options.Options;
 import de.andreasgiemza.mangadownloader.sites.Site;
+import java.awt.event.WindowEvent;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -36,6 +38,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -48,6 +51,7 @@ public class Download extends javax.swing.JDialog {
     private final Manga selectedManga;
     private final List<Chapter> chapters;
     private int chapterCount = 0;
+    private Thread thread;
 
     public Download(java.awt.Frame parent, boolean modal, Site site, Manga selectedManga, List<Chapter> chapters) {
         super(parent, modal);
@@ -69,11 +73,30 @@ public class Download extends javax.swing.JDialog {
         }
         chapterProgressBar.setMaximum(chapterCount);
         chapterProgressBar.setString(0 + " of " + chapterCount);
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (thread.isAlive()) {
+                    JOptionPane.showMessageDialog(
+                            getOwner(),
+                            "Downloading in progress! Wait or cancel it.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else {
+                    dispose();
+                }
+
+            }
+
+        });
     }
 
     @Override
     public void setVisible(boolean b) {
-        new Thread(new Worker()).start();
+        thread = new Thread(new Worker());
+        thread.start();
 
         super.setVisible(b);
     }
@@ -99,7 +122,7 @@ public class Download extends javax.swing.JDialog {
         errorLogScrollPane = new javax.swing.JScrollPane();
         errorLogTextArea = new javax.swing.JTextArea();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Downloading ...");
         setResizable(false);
 
@@ -296,10 +319,17 @@ public class Download extends javax.swing.JDialog {
             }
 
             updateGui();
+
+            JOptionPane.showMessageDialog(
+                    getOwner(),
+                    "Done downloading chapter(s)!",
+                    "Information",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
 
         private void updateGui() {
             cancelButton.setEnabled(false);
+            setTitle(getTitle() + " Done!");
         }
 
         private void chapterError(Path mangaFile, Chapter chapter, String message) {
