@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.gui.panels;
+package de.andreasgiemza.mangadownloader.gui.dialogs;
 
 import de.andreasgiemza.mangadownloader.gui.Controller;
 import java.awt.Color;

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.gui.panels;
+package de.andreasgiemza.mangadownloader.gui.dialogs;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
@@ -199,8 +199,6 @@ public class Download extends javax.swing.JDialog {
                 .addComponent(errorLogPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
-        getAccessibleContext().setAccessibleName("Download");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
