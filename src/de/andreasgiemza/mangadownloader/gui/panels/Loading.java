@@ -24,6 +24,7 @@
 package de.andreasgiemza.mangadownloader.gui.panels;
 
 import de.andreasgiemza.mangadownloader.gui.Controller;
+import java.awt.Color;
 import javax.swing.ImageIcon;
 
 /**
@@ -38,6 +39,7 @@ public class Loading extends javax.swing.JDialog {
     public Loading(java.awt.Frame parent, boolean modal, Controller controller, LoadingJob loadingJob) {
         super(parent, modal);
         initComponents();
+        setBackground(new Color(0, 0, 0, 0));
         this.controller = controller;
         this.loadingJob = loadingJob;
     }
@@ -60,11 +62,13 @@ public class Loading extends javax.swing.JDialog {
 
         loadingImage = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Loading ...");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Loading");
+        setUndecorated(true);
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
+        loadingImage.setBackground(new Color(0, 0, 0, 0));
         loadingImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         loadingImage.setIcon(new ImageIcon(getClass().getClassLoader().getResource("de/andreasgiemza/mangadownloader/gui/icons/loading.gif")));
         getContentPane().add(loadingImage);

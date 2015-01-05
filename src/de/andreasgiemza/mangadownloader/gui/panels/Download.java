@@ -45,56 +45,42 @@ import javax.swing.JOptionPane;
  */
 public class Download extends javax.swing.JDialog {
 
-    private volatile boolean interrupted = false;
+    private final Download download = this;
+    // Data
     private final Site site;
-    private final Manga selectedManga;
+    private final Manga manga;
     private final List<Chapter> chapters;
-    private int chapterCount = 0;
-    private Thread thread;
+    // Thread
+    private final Thread thread = new Thread(new Worker());
+    private volatile boolean interrupted = false;
 
-    public Download(java.awt.Frame parent, boolean modal, Site site, Manga selectedManga, List<Chapter> chapters) {
+    public Download(java.awt.Frame parent, boolean modal, Site site, Manga manga, List<Chapter> chapters) {
         super(parent, modal);
-
-        this.site = site;
-        this.selectedManga = selectedManga;
-        this.chapters = chapters;
-
         initComponents();
 
-        // Setup manga info
-        mangaTitleLabel.setText(selectedManga.getTitle());
+        this.site = site;
+        this.manga = manga;
+        this.chapters = chapters;
 
-        // Setup Chapter info
-        for (Chapter chapter : chapters) {
-            if (chapter.isDownload()) {
-                chapterCount++;
-            }
-        }
-        chapterProgressBar.setMaximum(chapterCount);
-        chapterProgressBar.setString(0 + " of " + chapterCount);
-
+        // Only close window when thread is finished
         addWindowListener(new java.awt.event.WindowAdapter() {
-
             @Override
             public void windowClosing(WindowEvent e) {
                 if (thread.isAlive()) {
                     JOptionPane.showMessageDialog(
-                            getOwner(),
-                            "Downloading in progress! Wait or cancel it.",
+                            download,
+                            "Downloading in progress! Wait or cancel.",
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     dispose();
                 }
-
             }
-
         });
     }
 
     @Override
     public void setVisible(boolean b) {
-        thread = new Thread(new Worker());
         thread.start();
 
         super.setVisible(b);
@@ -122,7 +108,7 @@ public class Download extends javax.swing.JDialog {
         errorLogTextArea = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Downloading ...");
+        setTitle("Download");
         setResizable(false);
 
         mangaLabel.setText("Manga:");
@@ -214,6 +200,8 @@ public class Download extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        getAccessibleContext().setAccessibleName("Download");
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -242,17 +230,25 @@ public class Download extends javax.swing.JDialog {
 
         @Override
         public void run() {
+            // Setup manga info
+            mangaTitleLabel.setText(manga.getTitle());
+
+            // Setup Chapter info
+            int chapterCount = 0;
+
+            for (Chapter chapter : chapters) {
+                if (chapter.isDownload()) {
+                    chapterCount++;
+                }
+            }
+
+            chapterProgressBar.setMaximum(chapterCount);
+
             int chapterDone = 1;
 
             for (Chapter chapter : chapters) {
                 if (chapter.isDownload()) {
-                    Path mangaFile = FilenameHelper.buildChapterPath(selectedManga, chapter);
-
-                    if (interrupted) {
-                        chapterError(mangaFile, chapter, "Aborted while downloading: ");
-                        updateGui();
-                        return;
-                    }
+                    Path mangaFile = FilenameHelper.buildChapterPath(manga, chapter);
 
                     chapterTileLabel.setText(chapter.getTitle());
                     chapterProgressBar.setValue(chapterDone);
@@ -261,13 +257,18 @@ public class Download extends javax.swing.JDialog {
                     imageProgressBar.setValue(0);
                     imageProgressBar.setString("Getting image links ...");
 
+                    if (interrupted) {
+                        cancel(mangaFile, chapter);
+                        return;
+                    }
+
                     List<Image> imageLinks;
 
                     try {
                         imageLinks = site.getChapterImageLinks(chapter);
                     } catch (IOException ex) {
                         chapterDone++;
-                        chapterError(mangaFile, chapter, "Error while downloading: ");
+                        error(mangaFile, chapter);
                         continue;
                     }
 
@@ -286,8 +287,7 @@ public class Download extends javax.swing.JDialog {
                             for (int i = 0; i < imageLinks.size(); i++) {
                                 if (interrupted) {
                                     zos.close();
-                                    chapterError(mangaFile, chapter, "Aborted while downloading: ");
-                                    updateGui();
+                                    cancel(mangaFile, chapter);
                                     return;
                                 }
 
@@ -307,7 +307,7 @@ public class Download extends javax.swing.JDialog {
                         }
                     } catch (IOException ex) {
                         chapterDone++;
-                        chapterError(mangaFile, chapter, "Error while downloading: ");
+                        error(mangaFile, chapter);
                         continue;
                     }
 
@@ -317,21 +317,25 @@ public class Download extends javax.swing.JDialog {
                 }
             }
 
-            updateGui();
+            cancelButton.setEnabled(false);
 
             JOptionPane.showMessageDialog(
-                    getOwner(),
+                    download,
                     "Done downloading chapter(s)!",
                     "Information",
                     JOptionPane.INFORMATION_MESSAGE);
         }
 
-        private void updateGui() {
-            cancelButton.setEnabled(false);
-            setTitle(getTitle() + " Done!");
+        private void error(Path mangaFile, Chapter chapter) {
+            errorOrCancel(mangaFile, chapter, "Error while downloading: ");
         }
 
-        private void chapterError(Path mangaFile, Chapter chapter, String message) {
+        private void cancel(Path mangaFile, Chapter chapter) {
+            errorOrCancel(mangaFile, chapter, "Aborted while downloading: ");
+        }
+
+        private void errorOrCancel(Path mangaFile, Chapter chapter, String message) {
+            // Remove not finished file
             if (Files.exists(mangaFile)) {
                 try {
                     Files.delete(mangaFile);
@@ -339,6 +343,7 @@ public class Download extends javax.swing.JDialog {
                 }
             }
 
+            // Write error log
             if (errorLog == null) {
                 errorLog = message + chapter.getTitle();
             } else {
