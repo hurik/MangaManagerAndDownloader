@@ -30,6 +30,7 @@ package de.andreasgiemza.mangadownloader.data;
 public class Image {
 
     private final String link;
+    private final String linkFragment;
     private final String referrer;
     private final String extension;
 
@@ -37,10 +38,22 @@ public class Image {
         this.link = link;
         this.referrer = referrer;
         this.extension = extension;
+        this.linkFragment = null;
+    }
+
+    public Image(String link, String referrer, String extension, String linkFragment) {
+        this.link = link;
+        this.referrer = referrer;
+        this.extension = extension;
+        this.linkFragment = linkFragment;
     }
 
     public String getLink() {
         return link;
+    }
+
+    public String getLinkFragment() {
+        return linkFragment;
     }
 
     public String getReferrer() {

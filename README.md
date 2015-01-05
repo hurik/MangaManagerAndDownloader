@@ -15,6 +15,7 @@ Little tool to download mangas from various sites.
 * Mangapanda (English)
 * MangaReader (English)
 * MangaStream (English)
+* MeinManga (German)
 * Tapastic (English)
 
 ## Download

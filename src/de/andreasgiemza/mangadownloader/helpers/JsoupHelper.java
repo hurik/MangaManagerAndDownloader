@@ -24,7 +24,13 @@
 package de.andreasgiemza.mangadownloader.helpers;
 
 import de.andreasgiemza.mangadownloader.data.Image;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import javax.imageio.ImageIO;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -89,5 +95,66 @@ public final class JsoupHelper {
         }
 
         throw ex;
+    }
+
+    public static byte[] getImageWithFragment(Image images) throws IOException {
+        byte[] imgByte1 = null;
+        byte[] imgByte2 = null;
+
+        for (int i = 1; i <= 3; i++) {
+            try {
+                imgByte1 = Jsoup.connect(images.getLink())
+                        .maxBodySize(10 * 1024 * 1024)
+                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
+                        .referrer(images.getReferrer())
+                        .ignoreContentType(true)
+                        .execute()
+                        .bodyAsBytes();
+            } catch (IOException e) {
+                throw e;
+            }
+        }
+
+        for (int i = 1; i <= 3; i++) {
+            try {
+                imgByte2 = Jsoup.connect(images.getLinkFragment())
+                        .maxBodySize(10 * 1024 * 1024)
+                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
+                        .referrer(images.getReferrer())
+                        .ignoreContentType(true)
+                        .execute()
+                        .bodyAsBytes();
+            } catch (IOException e) {
+                throw e;
+            }
+        }
+
+        BufferedImage img1 = ImageIO.read(new ByteArrayInputStream(imgByte1));
+        BufferedImage img2 = ImageIO.read(new ByteArrayInputStream(imgByte2));
+
+        int width = Math.max(img1.getWidth(), img2.getWidth());
+        int height = img1.getHeight() + img2.getHeight();
+
+        //create a new buffer and draw two image into the new image
+        BufferedImage combinedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = combinedImg.createGraphics();
+        Color oldColor = g2.getColor();
+        //fill background
+        g2.setPaint(Color.WHITE);
+        g2.fillRect(0, 0, width, height);
+        //draw image
+        g2.setColor(oldColor);
+        g2.drawImage(img1, null, 0, 0);
+        g2.drawImage(img2, null, 0, img1.getHeight());
+        g2.dispose();
+
+        byte[] imageInByte;
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            ImageIO.write(combinedImg, images.getExtension(), baos);
+            baos.flush();
+            imageInByte = baos.toByteArray();
+        }
+
+        return imageInByte;
     }
 }

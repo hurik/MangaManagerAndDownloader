@@ -299,7 +299,11 @@ public class Download extends javax.swing.JDialog {
 
                                 byte[] image;
 
-                                image = JsoupHelper.getImage(imageLinks.get(i));
+                                if (imageLinks.get(i).getLinkFragment() == null) {
+                                    image = JsoupHelper.getImage(imageLinks.get(i));
+                                } else {
+                                    image = JsoupHelper.getImageWithFragment(imageLinks.get(i));
+                                }
 
                                 zos.write(image, 0, image.length);
                                 zos.closeEntry();
