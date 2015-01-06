@@ -30,7 +30,6 @@ import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -47,7 +46,7 @@ public class Tapastic implements Site {
     private final String baseUrl = "http://tapastic.com";
 
     @Override
-    public List<Manga> getMangaList() throws IOException {
+    public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
         Document doc = JsoupHelper.getHTMLPage(baseUrl + "/browse/list");
@@ -70,7 +69,7 @@ public class Tapastic implements Site {
     }
 
     @Override
-    public List<Chapter> getChapterList(Manga manga) throws IOException {
+    public List<Chapter> getChapterList(Manga manga) throws Exception {
         List<Chapter> chapters = new LinkedList<>();
 
         Document doc = JsoupHelper.getHTMLPage(baseUrl + manga.getLink());
@@ -104,7 +103,7 @@ public class Tapastic implements Site {
     }
 
     @Override
-    public List<Image> getChapterImageLinks(Chapter chapter) throws IOException {
+    public List<Image> getChapterImageLinks(Chapter chapter) throws Exception {
         List<Image> imageLinks = new LinkedList<>();
 
         String referrer = baseUrl + "/episode/" + chapter.getLink();

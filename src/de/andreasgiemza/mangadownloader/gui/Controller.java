@@ -24,13 +24,13 @@
 package de.andreasgiemza.mangadownloader.gui;
 
 import de.andreasgiemza.mangadownloader.MangaDownloader;
-import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableModel;
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.data.MangaList;
-import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
+import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableModel;
 import de.andreasgiemza.mangadownloader.gui.dialogs.Download;
 import de.andreasgiemza.mangadownloader.gui.dialogs.Loading;
+import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
 import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
 import de.andreasgiemza.mangadownloader.options.Options;
 import de.andreasgiemza.mangadownloader.sites.Site;
@@ -135,7 +135,7 @@ public class Controller {
 
         try {
             mangas.addAll(site.getMangaList());
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(
                     mangaDownloader,
                     "Cant't connect to " + source + "!",
@@ -181,7 +181,7 @@ public class Controller {
                     chapter.setAlreadyDownloaded(true);
                 }
             }
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(
                     mangaDownloader,
                     "Cant't connect to " + site.getClass().getSimpleName() + "!",

@@ -28,7 +28,6 @@ import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import org.jsoup.nodes.Document;
@@ -44,7 +43,7 @@ public class Mangajoy implements Site {
     private final String baseUrl = "http://mangajoy.com";
 
     @Override
-    public List<Manga> getMangaList() throws IOException {
+    public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
         Document doc = JsoupHelper.getHTMLPage(baseUrl + "/manga-list-all/");
@@ -61,7 +60,7 @@ public class Mangajoy implements Site {
     }
 
     @Override
-    public List<Chapter> getChapterList(Manga manga) throws IOException {
+    public List<Chapter> getChapterList(Manga manga) throws Exception {
         List<Chapter> chapters = new LinkedList<>();
 
         Document doc = JsoupHelper.getHTMLPage(manga.getLink());
@@ -76,7 +75,7 @@ public class Mangajoy implements Site {
     }
 
     @Override
-    public List<Image> getChapterImageLinks(Chapter chapter) throws IOException {
+    public List<Image> getChapterImageLinks(Chapter chapter) throws Exception {
         List<Image> images = new LinkedList<>();
 
         String referrer = chapter.getLink();

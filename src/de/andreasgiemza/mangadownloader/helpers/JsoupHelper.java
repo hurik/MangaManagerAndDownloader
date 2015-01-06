@@ -29,7 +29,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import javax.imageio.ImageIO;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -43,8 +42,8 @@ public final class JsoupHelper {
     private JsoupHelper() {
     }
 
-    public static Document getHTMLPage(String url) throws IOException {
-        IOException ex = null;
+    public static Document getHTMLPage(String url) throws Exception {
+        Exception ex = null;
 
         for (int i = 1; i <= 3; i++) {
             try {
@@ -52,7 +51,7 @@ public final class JsoupHelper {
                         .maxBodySize(10 * 1024 * 1024)
                         .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
                         .get();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 ex = e;
             }
         }
@@ -60,8 +59,8 @@ public final class JsoupHelper {
         throw ex;
     }
 
-    public static Document getHTMLPageMobile(String url) throws IOException {
-        IOException ex = null;
+    public static Document getHTMLPageMobile(String url) throws Exception {
+        Exception ex = null;
 
         for (int i = 1; i <= 3; i++) {
             try {
@@ -69,7 +68,7 @@ public final class JsoupHelper {
                         .maxBodySize(10 * 1024 * 1024)
                         .userAgent("Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19")
                         .get();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 ex = e;
             }
         }
@@ -77,8 +76,8 @@ public final class JsoupHelper {
         throw ex;
     }
 
-    public static byte[] getImage(Image image) throws IOException {
-        IOException ex = null;
+    public static byte[] getImage(Image image) throws Exception {
+        Exception ex = null;
 
         for (int i = 1; i <= 3; i++) {
             try {
@@ -89,7 +88,7 @@ public final class JsoupHelper {
                         .ignoreContentType(true)
                         .execute()
                         .bodyAsBytes();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 ex = e;
             }
         }
@@ -97,7 +96,7 @@ public final class JsoupHelper {
         throw ex;
     }
 
-    public static byte[] getImageWithFragment(Image images) throws IOException {
+    public static byte[] getImageWithFragment(Image images) throws Exception {
         byte[] imgByte1 = null;
         byte[] imgByte2 = null;
 
@@ -110,7 +109,7 @@ public final class JsoupHelper {
                         .ignoreContentType(true)
                         .execute()
                         .bodyAsBytes();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 throw e;
             }
         }
@@ -124,7 +123,7 @@ public final class JsoupHelper {
                         .ignoreContentType(true)
                         .execute()
                         .bodyAsBytes();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 throw e;
             }
         }

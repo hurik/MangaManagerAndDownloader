@@ -264,7 +264,7 @@ public class Download extends javax.swing.JDialog {
 
                     try {
                         imageLinks = site.getChapterImageLinks(chapter);
-                    } catch (IOException ex) {
+                    } catch (Exception ex) {
                         chapterDone++;
                         error(mangaFile, chapter);
                         continue;
@@ -307,7 +307,7 @@ public class Download extends javax.swing.JDialog {
                                 zos.closeEntry();
                             }
                         }
-                    } catch (IOException ex) {
+                    } catch (Exception ex) {
                         chapterDone++;
                         error(mangaFile, chapter);
                         continue;
