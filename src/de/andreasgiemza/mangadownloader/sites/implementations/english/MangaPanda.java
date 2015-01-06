@@ -30,9 +30,9 @@ import de.andreasgiemza.mangadownloader.sites.extend.MangaPandaAndReader;
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class MangaReader extends MangaPandaAndReader implements Site {
+public class MangaPanda extends MangaPandaAndReader implements Site {
 
-    public MangaReader() {
-        super("http://www.mangareader.net");
+    public MangaPanda() {
+        super("http://www.mangapanda.com");
     }
 }
