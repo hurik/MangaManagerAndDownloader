@@ -38,7 +38,7 @@ import org.jsoup.select.Elements;
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class Mangacow implements Site {
+public class MangaCow implements Site {
 
     private final String baseUrl = "http://mangacow.co/";
 
