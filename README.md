@@ -12,6 +12,7 @@ Little tool to download mangas from various sites.
 * EGscans
 * LINEWebtoon
 * Mangacow
+* MangaEdenEnglish
 * MangaFox
 * MangaHere
 * Mangajoy
@@ -23,6 +24,9 @@ Little tool to download mangas from various sites.
 ### German
 * DeManga
 * MeinManga
+
+### Italian
+* MangaEdenItalian
 
 ## Download
 [https://github.com/hurik/MangaDownloader/releases/latest](https://github.com/hurik/MangaDownloader/releases/latest)
