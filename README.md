@@ -24,8 +24,8 @@ Little tool to download mangas from various sites.
 * MangaStream
 * RedHawkScans
 * RoseliaScanlations
-* VortexScans
 * SilentSkyScans
+* VortexScans
 
 ### German
 * DeManga
