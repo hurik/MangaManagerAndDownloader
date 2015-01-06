@@ -35,7 +35,7 @@ Little tool to download mangas from various sites.
 [https://github.com/hurik/MangaDownloader/releases/latest](https://github.com/hurik/MangaDownloader/releases/latest)
 
 ## Requirements
-* Windows, Linux and Mac (Tested under Windows 8.1 64bis and Xubuntu 14.04 LTS)
+* Windows, Linux or Mac (Tested under Windows 8.1 64bit and Xubuntu 14.04 LTS 32 bit)
 * Java 7 or OpenJDK 7
 
 ## How to use
