@@ -51,18 +51,17 @@ public final class FilenameHelper {
 
     private static String checkForValidDirectoryName(String string) {
         if (os.contains("win")) {
-            while (string.endsWith(".")) {
+            while (string.endsWith(".") || string.endsWith(" ")) {
                 string = string.substring(0, string.length() - 1);
             }
-            return string;
+            return checkForIllegalCharacters(string);
         } else {
             return string;
         }
     }
 
     public static Path buildChapterPath(Manga manga, Chapter chapter) {
-        String mangaTitle = checkForIllegalCharacters(manga.getTitle());
-        mangaTitle = checkForValidDirectoryName(mangaTitle);
+        String mangaTitle = checkForValidDirectoryName(manga.getTitle());
         String chapterTitle = checkForIllegalCharacters(chapter.getTitle());
 
         return Paths.get(Options.INSTANCE.getMangaDir())
