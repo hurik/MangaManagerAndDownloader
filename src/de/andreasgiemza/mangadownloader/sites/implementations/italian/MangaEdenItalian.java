@@ -21,19 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites.implementations;
+package de.andreasgiemza.mangadownloader.sites.implementations.italian;
 
 import de.andreasgiemza.mangadownloader.sites.Site;
-import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
+import de.andreasgiemza.mangadownloader.sites.extend.MangaEden;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class VortexScans extends FoOlSlide implements Site {
+public class MangaEdenItalian extends MangaEden implements Site {
 
-    public VortexScans() {
-        super("http://reader.vortex-scans.com", "/directory/");
+    public MangaEdenItalian() {
+        super("http://www.mangaeden.com", "/it-directory/");
     }
-
 }

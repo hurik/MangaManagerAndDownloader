@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites.implementations;
+package de.andreasgiemza.mangadownloader.sites.implementations.international;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
@@ -38,26 +38,35 @@ import org.jsoup.select.Elements;
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class MangaFox implements Site {
+public class Batoto implements Site {
 
-    private final String baseUrl = "http://mangafox.me";
+    private final String baseUrl = "https://bato.to";
+    private final int loadCount = 1000;
 
     @Override
     public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/manga/");
+        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/comic/_/comics/?per_page=" + loadCount + "&st=0");
 
-        Elements rows = doc.select("div[class=left]").first().select("li");
+        int max = Integer.parseInt(doc.select("li[class=last]").first().select("a").first().attr("href").split("st=")[1]);
 
-        for (Element row : rows) {
-            Element link = row.select("a[class^=series_preview]").first();
-
-            if (link == null) {
-                continue;
+        for (int i = 0; i <= max; i += loadCount) {
+            if (i != 0) {
+                doc = JsoupHelper.getHTMLPage(baseUrl + "/comic/_/comics/?per_page=" + loadCount + "&st=" + i);
             }
 
-            mangas.add(new Manga(link.attr("href"), link.text()));
+            Elements rows = doc.select("table[class=ipb_table topic_list hover_rows]").first().select("tr");
+
+            for (Element row : rows) {
+                Elements cols = row.select("td");
+
+                if (cols.size() != 7) {
+                    continue;
+                }
+
+                mangas.add(new Manga(cols.get(1).select("a").first().attr("href"), cols.get(1).text()));
+            }
         }
 
         return mangas;
@@ -69,12 +78,22 @@ public class MangaFox implements Site {
 
         Document doc = JsoupHelper.getHTMLPage(manga.getLink());
 
-        Elements rows = doc.select("div[id=chapters]").first().select("li");
+        Elements rows = doc.select("table[class=ipb_table chapters_list]").first()
+                .select("tr");
 
         for (Element row : rows) {
-            chapters.add(new Chapter(
-                    row.select("a[class=tips]").first().attr("href"),
-                    row.select("a[class=tips]").first().text() + (row.select("span[class=title nowrap]").first() == null ? "" : " - " + row.select("span[class=title nowrap]").first().text())));
+            Elements cols = row.select("td");
+            if (cols.size() != 5) {
+                continue;
+            }
+
+            Element link = cols.get(0).select("a").first();
+
+            String title = cols.get(0).text()
+                    + " [" + cols.get(1).select("div").first().attr("title") + "]"
+                    + " [" + cols.get(2).text() + "]";
+
+            chapters.add(new Chapter(link.attr("href"), title));
         }
 
         return chapters;
@@ -84,21 +103,22 @@ public class MangaFox implements Site {
     public List<Image> getChapterImageLinks(Chapter chapter) throws Exception {
         List<Image> images = new LinkedList<>();
 
-        String referrer = chapter.getLink().endsWith("1.html") ? chapter.getLink() : chapter.getLink() + "1.html";
+        String referrer = chapter.getLink() + "?supress_webtoon=t";
         Document doc = JsoupHelper.getHTMLPage(referrer);
 
-        Elements nav = doc.select("select[onchange=change_page(this)]").first()
+        // Get pages linkes
+        Elements pages = doc.select("div[class=moderation_bar rounded clear]").first()
+                .select("ul").first()
+                .select("li").get(3)
                 .select("option");
 
-        int pages = nav.size() - 1;
-
-        for (int i = 1; i <= pages; i++) {
-            if (i != 1) {
-                referrer = chapter.getLink().replace("1.html", "") + i + ".html";
+        for (int i = 0; i < pages.size(); i++) {
+            if (i != 0) {
+                referrer = pages.get(i).attr("value") + "?supress_webtoon=t";
                 doc = JsoupHelper.getHTMLPage(referrer);
             }
 
-            String link = doc.select("img[id=image]").first().attr("src");
+            String link = doc.select("img[id=comic_page]").first().attr("src");
             String extension = link.substring(link.length() - 3, link.length());
 
             images.add(new Image(link, referrer, extension));

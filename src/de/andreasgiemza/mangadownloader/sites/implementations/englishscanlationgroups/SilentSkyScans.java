@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites.implementations;
+package de.andreasgiemza.mangadownloader.sites.implementations.englishscanlationgroups;
 
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;

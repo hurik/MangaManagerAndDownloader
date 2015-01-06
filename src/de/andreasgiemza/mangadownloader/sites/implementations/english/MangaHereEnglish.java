@@ -21,18 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites.implementations;
+package de.andreasgiemza.mangadownloader.sites.implementations.english;
 
 import de.andreasgiemza.mangadownloader.sites.Site;
-import de.andreasgiemza.mangadownloader.sites.extend.MangaEden;
+import de.andreasgiemza.mangadownloader.sites.extend.MangaHere;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class MangaEdenEnglish extends MangaEden implements Site {
+public class MangaHereEnglish extends MangaHere implements Site {
 
-    public MangaEdenEnglish() {
-        super("http://www.mangaeden.com", "/en-directory/");
+    public MangaHereEnglish() {
+        super("http://www.mangahere.co/");
     }
 }

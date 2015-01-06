@@ -21,19 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites.implementations;
+package de.andreasgiemza.mangadownloader.sites.implementations.english;
 
 import de.andreasgiemza.mangadownloader.sites.Site;
-import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
+import de.andreasgiemza.mangadownloader.sites.extend.MangaEden;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class RedHawkScans extends FoOlSlide implements Site {
+public class MangaEdenEnglish extends MangaEden implements Site {
 
-    public RedHawkScans() {
-        super("http://manga.redhawkscans.com", "/reader/list/");
+    public MangaEdenEnglish() {
+        super("http://www.mangaeden.com", "/en-directory/");
     }
-
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Andreas Giemza <andreas@giemza.net>.
+ * Copyright 2015 Andreas Giemza <andreas@giemza.net>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites.implementations;
+package de.andreasgiemza.mangadownloader.sites.implementations.german;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
@@ -38,23 +38,36 @@ import org.jsoup.select.Elements;
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class Mangapanda implements Site {
+public class DeManga implements Site {
 
-    private final String baseUrl = "http://www.mangapanda.com";
+    private final String baseUrl = "http://www.demanga.com/";
 
     @Override
     public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/alphabetical");
+        Document doc = JsoupHelper.getHTMLPage(baseUrl + "manga-list/all/any/name-az/");
 
-        Elements cols = doc.select("div[class=series_col]");
+        Element nav = doc.select("ul[class=pgg]").first();
 
-        for (Element col : cols) {
-            Elements rows = col.select("li");
+        int pages = 1;
+
+        if (nav != null) {
+            String data = nav.select("li").last().select("a").attr("href");
+            String[] dataArray = data.split("/");
+
+            pages = Integer.parseInt(dataArray[dataArray.length - 1]);
+        }
+
+        for (int i = 1; i <= pages; i++) {
+            if (i != 1) {
+                doc = JsoupHelper.getHTMLPage(baseUrl + "manga-list/all/any/name-az/" + i + "/");
+            }
+
+            Elements rows = doc.select("div[class=wpm_pag mng_lst tbn]").first().select("div[class^=nde]");
 
             for (Element row : rows) {
-                Element link = row.select("a").first();
+                Element link = row.select("div[class=det]").first().select("a").first();
                 mangas.add(new Manga(link.attr("href"), link.text()));
             }
         }
@@ -66,16 +79,31 @@ public class Mangapanda implements Site {
     public List<Chapter> getChapterList(Manga manga) throws Exception {
         List<Chapter> chapters = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + manga.getLink());
+        Document doc = JsoupHelper.getHTMLPage(manga.getLink());
 
-        Elements rows = doc.select("div[id=chapterlist]").first().select("tr");
+        Element nav = doc.select("ul[class=pgg]").first();
 
-        for (Element row : rows) {
-            if (row.select("a").first() == null) {
-                continue;
+        int pages = 1;
+
+        if (nav != null) {
+            String data = nav.select("li").last().select("a").attr("href");
+            String[] dataArray = data.split("/");
+
+            pages = Integer.parseInt(dataArray[dataArray.length - 1]);
+        }
+
+        for (int i = 1; i <= pages; i++) {
+            if (i != 1) {
+                doc = JsoupHelper.getHTMLPage(manga.getLink() + "chapter-list/" + i + "/");
             }
 
-            chapters.add(new Chapter(row.select("a").first().attr("href"), row.select("td").first().text()));
+            Elements rows = doc.select("ul[class^=lst]").first().select("li");
+
+            for (Element row : rows) {
+                Element link = row.select("a").first();
+
+                chapters.add(new Chapter(link.attr("href"), link.select("b[class=val]").first().text()));
+            }
         }
 
         return chapters;
@@ -85,21 +113,21 @@ public class Mangapanda implements Site {
     public List<Image> getChapterImageLinks(Chapter chapter) throws Exception {
         List<Image> images = new LinkedList<>();
 
-        String referrer = baseUrl + chapter.getLink();
+        String referrer = chapter.getLink();
         Document doc = JsoupHelper.getHTMLPage(referrer);
 
-        Elements nav = doc.select("select[id=pageMenu]").first()
+        Elements nav = doc.select("select[class=cbo_wpm_pag]").first()
                 .select("option");
 
         int pages = nav.size();
 
-        for (int i = 0; i < pages; i++) {
-            if (i != 0) {
-                referrer = baseUrl + nav.get(i).attr("value");
+        for (int i = 1; i <= pages; i++) {
+            if (i != 1) {
+                referrer = chapter.getLink() + (i) + "/";
                 doc = JsoupHelper.getHTMLPage(referrer);
             }
 
-            String link = doc.select("img[id=img]").first().attr("src");
+            String link = doc.select("img[class=manga-page]").first().attr("src");
             String extension = link.substring(link.length() - 3, link.length());
 
             images.add(new Image(link, referrer, extension));
@@ -107,4 +135,5 @@ public class Mangapanda implements Site {
 
         return images;
     }
+
 }
