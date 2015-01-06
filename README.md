@@ -24,6 +24,7 @@ Little tool to download mangas from various sites.
 * MangaStream
 * RedHawkScans
 * RoseliaScanlations
+* S2scans
 * SilentSkyScans
 * VortexScans
 
