@@ -29,6 +29,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Map;
 import javax.imageio.ImageIO;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -51,6 +52,24 @@ public final class JsoupHelper {
                         .maxBodySize(10 * 1024 * 1024)
                         .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
                         .get();
+            } catch (Exception e) {
+                ex = e;
+            }
+        }
+
+        throw ex;
+    }
+
+    public static Document getHTMLPageWithPost(String url, Map<String, String> post) throws Exception {
+        Exception ex = null;
+
+        for (int i = 1; i <= 3; i++) {
+            try {
+                return Jsoup.connect(url)
+                        .maxBodySize(10 * 1024 * 1024)
+                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
+                        .data(post)
+                        .post();
             } catch (Exception e) {
                 ex = e;
             }

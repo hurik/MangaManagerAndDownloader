@@ -9,17 +9,23 @@ Little tool to download mangas from various sites.
 * Batoto
 
 ### English
-* EGscans
 * LINEWebtoon
-* Mangacow
 * MangaEdenEnglish
 * MangaFox
 * MangaHereEnglish
 * Mangajoy
 * Mangapanda
 * MangaReader
-* MangaStream
 * Tapastic
+
+### English Scanlation Groups
+* EGscans
+* Mangacow
+* MangaStream
+* RedHawkScans
+* RoseliaScanlations
+* VortexScans
+* SilentSkyScans
 
 ### German
 * DeManga
