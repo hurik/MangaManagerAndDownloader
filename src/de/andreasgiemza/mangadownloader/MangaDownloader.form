@@ -139,6 +139,7 @@
       <SubComponents>
         <Component class="javax.swing.JComboBox" name="sourceComboBox">
           <Properties>
+            <Property name="maximumRowCount" type="int" value="25"/>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
             </Property>

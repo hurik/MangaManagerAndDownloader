@@ -23,13 +23,13 @@
  */
 package de.andreasgiemza.mangadownloader;
 
-import de.andreasgiemza.mangadownloader.gui.chapter.ChapterCheckBoxItemListener;
 import de.andreasgiemza.mangadownloader.data.Chapter;
-import de.andreasgiemza.mangadownloader.gui.chapter.ChapterListSearchDocumentListener;
-import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableModel;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.gui.Controller;
+import de.andreasgiemza.mangadownloader.gui.chapter.ChapterCheckBoxItemListener;
+import de.andreasgiemza.mangadownloader.gui.chapter.ChapterListSearchDocumentListener;
 import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableCellRenderer;
+import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableModel;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSearchDocumentListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSelectionListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
@@ -201,6 +201,8 @@ public class MangaDownloader extends javax.swing.JFrame {
         );
 
         sourcePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Source"));
+
+        sourceComboBox.setMaximumRowCount(25);
 
         sourceButton.setText("Update");
         sourceButton.addActionListener(new java.awt.event.ActionListener() {
