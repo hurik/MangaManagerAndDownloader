@@ -14,7 +14,7 @@ Little tool to download mangas from various sites.
 * Mangacow
 * MangaEdenEnglish
 * MangaFox
-* MangaHere
+* MangaHereEnglish
 * Mangajoy
 * Mangapanda
 * MangaReader
@@ -24,6 +24,9 @@ Little tool to download mangas from various sites.
 ### German
 * DeManga
 * MeinManga
+
+### Español
+* MangaHereEspañol
 
 ### Italian
 * MangaEdenItalian

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites.implementations;
+package de.andreasgiemza.mangadownloader.sites.extend;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
@@ -41,7 +41,11 @@ import org.jsoup.select.Elements;
  */
 public class MangaHere implements Site {
 
-    private final String baseUrl = "http://www.mangahere.co/";
+    private final String baseUrl;
+
+    public MangaHere(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
 
     @Override
     public List<Manga> getMangaList() throws IOException {
@@ -56,7 +60,7 @@ public class MangaHere implements Site {
 
             for (Element row : rows) {
                 Element link = row.select("a").first();
-                mangas.add(new Manga(link.attr("href"), link.attr("rel")));
+                mangas.add(new Manga(link.attr("abs:href"), link.attr("rel")));
             }
         }
 
@@ -89,7 +93,7 @@ public class MangaHere implements Site {
             }
 
             chapters.add(new Chapter(
-                    row.select("a").first().attr("href"),
+                    row.select("a").first().attr("abs:href"),
                     buildChapterName(row)));
         }
 
@@ -125,6 +129,9 @@ public class MangaHere implements Site {
         for (Element page : nav) {
             if (page != nav.first()) {
                 referrer = page.attr("value");
+                if (!referrer.startsWith("http://")) {
+                    referrer = baseUrl + referrer;
+                }
                 doc = JsoupHelper.getHTMLPage(referrer);
             }
 
