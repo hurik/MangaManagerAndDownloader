@@ -35,6 +35,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.swing.JOptionPane;
@@ -265,6 +267,7 @@ public class Download extends javax.swing.JDialog {
                     try {
                         imageLinks = site.getChapterImageLinks(chapter);
                     } catch (Exception ex) {
+                        Logger.getLogger(Download.class.getName()).log(Level.SEVERE, null, ex);
                         chapterDone++;
                         error(mangaFile, chapter);
                         continue;
@@ -308,6 +311,7 @@ public class Download extends javax.swing.JDialog {
                             }
                         }
                     } catch (Exception ex) {
+                        Logger.getLogger(Download.class.getName()).log(Level.SEVERE, null, ex);
                         chapterDone++;
                         error(mangaFile, chapter);
                         continue;
