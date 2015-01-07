@@ -81,7 +81,7 @@ public class FoOlSlide implements Site {
             Elements rows = doc.select("div[class=group]");
 
             for (Element row : rows) {
-                Element link = row.select("div[class=title]").first().select("a").first();
+                Element link = row.select("div[class^=title]").first().select("a").first();
                 mangas.add(new Manga(link.attr("abs:href"), link.text()));
             }
         }
