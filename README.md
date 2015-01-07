@@ -19,6 +19,7 @@ Little tool to download mangas from various sites.
 * Tapastic
 
 ### English Scanlation Groups
+* ChibiMangaScanlation
 * EGscans
 * Japanzai
 * JapanzaiEcchi
