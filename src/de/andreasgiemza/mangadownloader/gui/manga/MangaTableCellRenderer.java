@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Andreas Giemza <andreas@giemza.net>.
+ * Copyright 2015 Andreas Giemza <andreas@giemza.net>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,59 +24,34 @@
 package de.andreasgiemza.mangadownloader.gui.manga;
 
 import de.andreasgiemza.mangadownloader.data.Manga;
-import java.util.Arrays;
-import java.util.List;
-import javax.swing.table.AbstractTableModel;
+import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
+import java.awt.Color;
+import java.awt.Component;
+import java.nio.file.Files;
+import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class MangaTableModel extends AbstractTableModel {
-
-    private final List<Manga> mangas;
-    private final List<String> columnNames = Arrays.asList(
-            "Title");
-
-    public MangaTableModel(List<Manga> mangas) {
-        this.mangas = mangas;
-    }
+public class MangaTableCellRenderer extends DefaultTableCellRenderer {
 
     @Override
-    public int getRowCount() {
-        return mangas.size();
-    }
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-    @Override
-    public int getColumnCount() {
-        return columnNames.size();
-    }
+        Manga manga = ((MangaTableModel) table.getModel()).getMangaAt(table.convertRowIndexToModel(row));
 
-    @Override
-    public Class<?> getColumnClass(int columnIndex) {
-        if (columnIndex == 0) {
-            return String.class;
+        if (isSelected) {
+            c.setBackground(UIManager.getColor("Table.selectionBackground"));
+        } else if (Files.exists(FilenameHelper.buildMangaPath(manga))) {
+            c.setBackground(Color.decode("#D2D2D2"));
+        } else {
+            c.setBackground(UIManager.getColor("Table.background"));
         }
 
-        return super.getColumnClass(columnIndex);
-    }
-
-    @Override
-    public Object getValueAt(int row, int col) {
-        switch (col) {
-            case 0:
-                return mangas.get(row).getTitle();
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public String getColumnName(int col) {
-        return columnNames.get(col);
-    }
-
-    public Manga getMangaAt(int row) {
-        return mangas.get(row);
+        return c;
     }
 }

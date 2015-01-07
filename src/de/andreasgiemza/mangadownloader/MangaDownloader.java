@@ -32,6 +32,7 @@ import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableCellRenderer;
 import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableModel;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSearchDocumentListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSelectionListener;
+import de.andreasgiemza.mangadownloader.gui.manga.MangaTableCellRenderer;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
 import de.andreasgiemza.mangadownloader.options.Options;
 import de.andreasgiemza.mangadownloader.sites.SiteHelper;
@@ -105,6 +106,7 @@ public class MangaDownloader extends javax.swing.JFrame {
                         controller));
         mangaListTable.getSelectionModel().addListSelectionListener(
                 new MangaListSelectionListener(controller, mangaListTable));
+        mangaListTable.setDefaultRenderer(String.class, new MangaTableCellRenderer());
 
         // Setup Chapter List Table
         chapterListSearchTextField.getDocument().addDocumentListener(

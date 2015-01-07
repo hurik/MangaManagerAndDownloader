@@ -35,5 +35,4 @@ public class RedHawkScans extends FoOlSlide implements Site {
     public RedHawkScans() {
         super("http://manga.redhawkscans.com", "/reader/list/");
     }
-
 }

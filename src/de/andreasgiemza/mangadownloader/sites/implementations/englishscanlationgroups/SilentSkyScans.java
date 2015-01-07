@@ -35,5 +35,4 @@ public class SilentSkyScans extends FoOlSlide implements Site {
     public SilentSkyScans() {
         super("http://reader.silentsky-scans.net", "/directory/");
     }
-
 }

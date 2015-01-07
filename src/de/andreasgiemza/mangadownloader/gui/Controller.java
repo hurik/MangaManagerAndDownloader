@@ -36,7 +36,6 @@ import de.andreasgiemza.mangadownloader.options.Options;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.SiteHelper;
 import java.awt.Toolkit;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;

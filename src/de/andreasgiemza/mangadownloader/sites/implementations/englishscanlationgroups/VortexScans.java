@@ -35,5 +35,4 @@ public class VortexScans extends FoOlSlide implements Site {
     public VortexScans() {
         super("http://reader.vortex-scans.com", "/directory/");
     }
-
 }

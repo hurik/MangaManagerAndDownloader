@@ -35,5 +35,4 @@ public class RoseliaScanlations extends FoOlSlide implements Site {
     public RoseliaScanlations() {
         super("http://reader.roseliascans.com", "/directory/");
     }
-
 }

@@ -60,11 +60,13 @@ public final class FilenameHelper {
         }
     }
 
-    public static Path buildChapterPath(Manga manga, Chapter chapter) {
-        String mangaTitle = checkForValidDirectoryName(manga.getTitle());
-        String chapterTitle = checkForIllegalCharacters(chapter.getTitle());
-
+    public static Path buildMangaPath(Manga manga) {
         return Paths.get(Options.INSTANCE.getMangaDir())
-                .resolve(mangaTitle).resolve(chapterTitle + ".cbz");
+                .resolve(checkForValidDirectoryName(manga.getTitle()));
+    }
+
+    public static Path buildChapterPath(Manga manga, Chapter chapter) {
+        return buildMangaPath(manga)
+                .resolve(checkForIllegalCharacters(chapter.getTitle()) + ".cbz");
     }
 }
