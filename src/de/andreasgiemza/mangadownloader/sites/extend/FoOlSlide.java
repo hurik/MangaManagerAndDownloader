@@ -66,8 +66,11 @@ public class FoOlSlide implements Site {
         Element nav = doc.select("div[class=prevnext]").first();
 
         if (nav != null) {
-            String[] pagesData = nav.select("a[class=gbutton fright]").first().attr("href").split("/");
-            pages = Integer.parseInt(pagesData[pagesData.length - 1]);
+            Element button = nav.select("a[class=gbutton fright]").first();
+            if (button != null) {
+                String[] pagesData = button.attr("href").split("/");
+                pages = Integer.parseInt(pagesData[pagesData.length - 1]);
+            }
         }
 
         for (int i = 1; i <= pages; i++) {
