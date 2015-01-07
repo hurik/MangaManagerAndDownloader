@@ -75,7 +75,7 @@ public final class SiteHelper {
 
         for (Class<? extends Site> siteClasse : new Reflections(implementationsPackage)
                 .getSubTypesOf(Site.class)) {
-            if (siteClasse.getName().contains(source)) {
+            if (siteClasse.getName().endsWith(source)) {
                 try {
                     site = siteClasse.newInstance();
                     break;

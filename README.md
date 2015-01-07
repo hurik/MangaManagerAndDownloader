@@ -20,6 +20,9 @@ Little tool to download mangas from various sites.
 
 ### English Scanlation Groups
 * EGscans
+* Japanzai
+* JapanzaiEcchi
+* JapanzaiHentai
 * KireiCake
 * Mangacow
 * MangaStream
