@@ -27,6 +27,7 @@ Little tool to download mangas from various sites.
 * S2scans
 * SilentSkyScans
 * VortexScans
+* YuriProject
 
 ### German
 * DeManga
