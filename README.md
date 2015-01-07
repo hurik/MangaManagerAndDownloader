@@ -30,6 +30,9 @@ Little tool to download mangas from various sites.
 * VortexScans
 * YuriProject
 
+### Español and English Scanlation Groups
+* CaféConLenin
+
 ### German
 * DeManga
 * MeinManga
