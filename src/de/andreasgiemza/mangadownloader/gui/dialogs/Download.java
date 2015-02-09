@@ -273,7 +273,10 @@ public class Download extends javax.swing.JDialog {
                         continue;
                     }
 
-                    imageProgressBar.setMaximum(imageLinks.size());
+                    int numberOfImages = imageLinks.size();
+                    int numberOfImagesDigits = String.valueOf(numberOfImages).length();
+
+                    imageProgressBar.setMaximum(numberOfImages);
 
                     try {
                         if (!Files.exists(mangaFile.getParent())) {
@@ -295,7 +298,7 @@ public class Download extends javax.swing.JDialog {
                                 imageProgressBar.setValue(i + 1);
                                 imageProgressBar.setString((i + 1) + " of " + imageLinks.size());
 
-                                ZipEntry ze = new ZipEntry((i + 1) + "." + imageLinks.get(i).getExtension());
+                                ZipEntry ze = new ZipEntry(String.format("%0" + numberOfImagesDigits + "d", (i + 1)) + "." + imageLinks.get(i).getExtension());
                                 zos.putNextEntry(ze);
 
                                 byte[] image;
