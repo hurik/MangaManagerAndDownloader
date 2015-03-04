@@ -33,6 +33,6 @@ import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
 public class S2scans extends FoOlSlide implements Site {
 
     public S2scans() {
-        super("http://s2scanlations.com/online", "/directory/");
+        super("http://reader.s2smanga.com", "/directory/");
     }
 }
