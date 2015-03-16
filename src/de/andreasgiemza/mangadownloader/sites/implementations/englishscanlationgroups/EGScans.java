@@ -101,12 +101,12 @@ public class EGScans implements Site {
 
         List<String> data = new LinkedList<>();
 
-        Scanner scanner = new Scanner(rightJs.toString());
-
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            if (line.contains("img_url.push('")) {
-                data.add(line);
+        try (Scanner scanner = new Scanner(rightJs.toString())) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.contains("img_url.push('")) {
+                    data.add(line);
+                }
             }
         }
 

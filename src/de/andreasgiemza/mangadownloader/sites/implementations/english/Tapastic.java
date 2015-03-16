@@ -74,14 +74,14 @@ public class Tapastic implements Site {
 
         Document doc = JsoupHelper.getHTMLPage(baseUrl + manga.getLink());
 
-        Scanner scanner = new Scanner(doc.toString());
-
         String line = null;
 
-        while (scanner.hasNextLine()) {
-            line = scanner.nextLine();
-            if (line.contains("episodeList")) {
-                break;
+        try (Scanner scanner = new Scanner(doc.toString())) {
+            while (scanner.hasNextLine()) {
+                line = scanner.nextLine();
+                if (line.contains("episodeList")) {
+                    break;
+                }
             }
         }
 
