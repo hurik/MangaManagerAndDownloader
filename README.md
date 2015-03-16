@@ -25,6 +25,7 @@ Little tool to download mangas from various sites.
 * JapanzaiEcchi
 * JapanzaiHentai
 * KireiCake
+* KissManga
 * Mangacow
 * MangaStream
 * RedHawkScans
