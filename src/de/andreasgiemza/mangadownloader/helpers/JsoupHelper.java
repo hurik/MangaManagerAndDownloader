@@ -41,8 +41,8 @@ import org.jsoup.nodes.Document;
 public final class JsoupHelper {
 
     private final static int NUMBER_OF_TRIES = 10;
-    private final static int MAX_BODY_SIZE = 10 * 1024 * 1024; // 10 MB
-    private final static int TIMEOUT = 10 * 1000; // 10 seconds
+    private final static int MAX_BODY_SIZE = 0; // Unlimited (limited only by RAM)
+    private final static int TIMEOUT = 5 * 1000; // 5 seconds
 
     private JsoupHelper() {
     }
@@ -58,6 +58,7 @@ public final class JsoupHelper {
                         .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
                         .get();
             } catch (Exception e) {
+                System.err.println("Try " + (i + 1) + " of " + NUMBER_OF_TRIES + ". Link: " + url + ". Error: " + e.getMessage());
                 ex = e;
             }
         }
@@ -77,6 +78,7 @@ public final class JsoupHelper {
                         .data(post)
                         .post();
             } catch (Exception e) {
+                System.err.println("Try " + (i + 1) + " of " + NUMBER_OF_TRIES + ". Link: " + url + ". Error: " + e.getMessage());
                 ex = e;
             }
         }
@@ -95,6 +97,7 @@ public final class JsoupHelper {
                         .userAgent("Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19")
                         .get();
             } catch (Exception e) {
+                System.err.println("Try " + (i + 1) + " of " + NUMBER_OF_TRIES + ". Link: " + url + ". Error: " + e.getMessage());
                 ex = e;
             }
         }
@@ -116,6 +119,7 @@ public final class JsoupHelper {
                         .execute()
                         .bodyAsBytes();
             } catch (Exception e) {
+                System.err.println("Try " + (i + 1) + " of " + NUMBER_OF_TRIES + ". Link: " + imageLink + ". Error: " + e.getMessage());
                 ex = e;
             }
         }
