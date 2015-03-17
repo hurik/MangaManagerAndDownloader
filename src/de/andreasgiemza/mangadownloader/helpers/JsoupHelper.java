@@ -40,16 +40,21 @@ import org.jsoup.nodes.Document;
  */
 public final class JsoupHelper {
 
+    private final static int NUMBER_OF_TRIES = 10;
+    private final static int MAX_BODY_SIZE = 10 * 1024 * 1024; // 10 MB
+    private final static int TIMEOUT = 10 * 1000; // 10 seconds
+
     private JsoupHelper() {
     }
 
     public static Document getHTMLPage(String url) throws Exception {
         Exception ex = null;
 
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 0; i < NUMBER_OF_TRIES; i++) {
             try {
                 return Jsoup.connect(url)
-                        .maxBodySize(10 * 1024 * 1024)
+                        .maxBodySize(MAX_BODY_SIZE)
+                        .timeout(TIMEOUT)
                         .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
                         .get();
             } catch (Exception e) {
@@ -63,10 +68,11 @@ public final class JsoupHelper {
     public static Document getHTMLPageWithPost(String url, Map<String, String> post) throws Exception {
         Exception ex = null;
 
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 0; i < NUMBER_OF_TRIES; i++) {
             try {
                 return Jsoup.connect(url)
-                        .maxBodySize(10 * 1024 * 1024)
+                        .maxBodySize(MAX_BODY_SIZE)
+                        .timeout(TIMEOUT)
                         .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
                         .data(post)
                         .post();
@@ -81,10 +87,11 @@ public final class JsoupHelper {
     public static Document getHTMLPageMobile(String url) throws Exception {
         Exception ex = null;
 
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 0; i < NUMBER_OF_TRIES; i++) {
             try {
                 return Jsoup.connect(url)
-                        .maxBodySize(10 * 1024 * 1024)
+                        .maxBodySize(MAX_BODY_SIZE)
+                        .timeout(TIMEOUT)
                         .userAgent("Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19")
                         .get();
             } catch (Exception e) {
@@ -95,15 +102,16 @@ public final class JsoupHelper {
         throw ex;
     }
 
-    public static byte[] getImage(Image image) throws Exception {
+    public static byte[] getImage(String imageLink, String referrer) throws Exception {
         Exception ex = null;
 
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 0; i < NUMBER_OF_TRIES; i++) {
             try {
-                return Jsoup.connect(image.getLink())
-                        .maxBodySize(10 * 1024 * 1024)
+                return Jsoup.connect(imageLink)
+                        .maxBodySize(MAX_BODY_SIZE)
+                        .timeout(TIMEOUT)
                         .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                        .referrer(image.getReferrer())
+                        .referrer(referrer)
                         .ignoreContentType(true)
                         .execute()
                         .bodyAsBytes();
@@ -116,36 +124,8 @@ public final class JsoupHelper {
     }
 
     public static byte[] getImageWithFragment(Image images) throws Exception {
-        byte[] imgByte1 = null;
-        byte[] imgByte2 = null;
-
-        for (int i = 1; i <= 3; i++) {
-            try {
-                imgByte1 = Jsoup.connect(images.getLink())
-                        .maxBodySize(10 * 1024 * 1024)
-                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                        .referrer(images.getReferrer())
-                        .ignoreContentType(true)
-                        .execute()
-                        .bodyAsBytes();
-            } catch (Exception e) {
-                throw e;
-            }
-        }
-
-        for (int i = 1; i <= 3; i++) {
-            try {
-                imgByte2 = Jsoup.connect(images.getLinkFragment())
-                        .maxBodySize(10 * 1024 * 1024)
-                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                        .referrer(images.getReferrer())
-                        .ignoreContentType(true)
-                        .execute()
-                        .bodyAsBytes();
-            } catch (Exception e) {
-                throw e;
-            }
-        }
+        byte[] imgByte1 = getImage(images.getLink(), images.getReferrer());
+        byte[] imgByte2 = getImage(images.getLinkFragment(), images.getReferrer());
 
         BufferedImage img1 = ImageIO.read(new ByteArrayInputStream(imgByte1));
         BufferedImage img2 = ImageIO.read(new ByteArrayInputStream(imgByte2));

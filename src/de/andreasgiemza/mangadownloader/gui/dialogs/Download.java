@@ -304,7 +304,7 @@ public class Download extends javax.swing.JDialog {
                                 byte[] image;
 
                                 if (imageLinks.get(i).getLinkFragment() == null) {
-                                    image = JsoupHelper.getImage(imageLinks.get(i));
+                                    image = JsoupHelper.getImage(imageLinks.get(i).getLink(), imageLinks.get(i).getReferrer());
                                 } else {
                                     image = JsoupHelper.getImageWithFragment(imageLinks.get(i));
                                 }
