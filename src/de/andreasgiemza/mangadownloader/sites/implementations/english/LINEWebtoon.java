@@ -53,12 +53,13 @@ public class LINEWebtoon implements Site {
         Elements rows = doc.select("li");
 
         for (Element row : rows) {
-            Elements data = row.select("h3");
+            Element link = row.select("a").first();
+            Element name = row.select("p[class=subj]").first();
 
-            if (data.size() > 0) {
+            if (name != null) {
                 mangas.add(new Manga(
-                        row.select("a").first().attr("href"),
-                        row.select("h3").first().text()));
+                        link.attr("href"),
+                        name.text()));
             }
         }
 
@@ -69,12 +70,12 @@ public class LINEWebtoon implements Site {
     public List<Chapter> getChapterList(Manga manga) throws Exception {
         List<Chapter> chapters = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPageMobile(baseUrlMobile + manga.getLink());
+        Document doc = JsoupHelper.getHTMLPageMobile(manga.getLink().replace(baseUrl, baseUrlMobile));
 
         Elements pages = doc.select("li[id^=episode]");
 
         for (Element page : pages) {
-            chapters.add(new Chapter(baseUrl + page.select("a").first().attr("href"), page.select("span[class=ellipsis]").first().text()));
+            chapters.add(new Chapter(page.select("a").first().attr("href").replace(baseUrlMobile, baseUrl), page.select("span[class=ellipsis]").first().text()));
         }
 
         return chapters;
@@ -99,5 +100,4 @@ public class LINEWebtoon implements Site {
 
         return imageLinks;
     }
-
 }
