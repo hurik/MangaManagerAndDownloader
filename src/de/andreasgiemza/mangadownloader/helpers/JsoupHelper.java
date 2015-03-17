@@ -40,7 +40,7 @@ import org.jsoup.nodes.Document;
  */
 public final class JsoupHelper {
 
-    private final static int NUMBER_OF_TRIES = 10;
+    private final static int NUMBER_OF_TRIES = 5;
     private final static int MAX_BODY_SIZE = 0; // Unlimited (limited only by RAM)
     private final static int TIMEOUT = 5 * 1000; // 5 seconds
 
