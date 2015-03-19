@@ -23,13 +23,13 @@
  */
 package de.andreasgiemza.mangadownloader.sites;
 
+import com.google.common.reflect.ClassPath;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import org.reflections.Reflections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -37,13 +37,7 @@ import org.reflections.Reflections;
  */
 public final class SiteHelper {
 
-    private final static String implementationsPackage
-            = "de.andreasgiemza.mangadownloader.sites.implementations";
-    private final static PrintStream noErr = new PrintStream(new OutputStream() {
-        @Override
-        public void write(int b) throws IOException {
-        }
-    });
+    private final static String implementationsPackage = "de.andreasgiemza.mangadownloader.sites.implementations";
 
     private SiteHelper() {
     }
@@ -51,18 +45,20 @@ public final class SiteHelper {
     public static List<String> getSites() {
         List<String> sites = new LinkedList<>();
 
-        PrintStream err = System.err;
-        System.setErr(noErr);
+        try {
+            final ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
-        for (Class<? extends Site> site : new Reflections(implementationsPackage)
-                .getSubTypesOf(Site.class)) {
-            String[] packageAndName = site.getName().split("\\.");
-            sites.add(packageAndName[packageAndName.length - 1]);
+            for (final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses()) {
+                if (info.getName().startsWith(implementationsPackage)) {
+                    final Class<?> clazz = info.load();
+                    String[] packageAndName = clazz.getName().split("\\.");
+                    sites.add(packageAndName[packageAndName.length - 1]);
+                }
+            }
+
+            Collections.sort(sites, String.CASE_INSENSITIVE_ORDER);
+        } catch (IOException ex) {
         }
-
-        System.setErr(err);
-
-        Collections.sort(sites, String.CASE_INSENSITIVE_ORDER);
 
         return sites;
     }
@@ -70,21 +66,24 @@ public final class SiteHelper {
     public static Site getInstance(String source) {
         Site site = null;
 
-        PrintStream err = System.err;
-        System.setErr(noErr);
+        final ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
-        for (Class<? extends Site> siteClasse : new Reflections(implementationsPackage)
-                .getSubTypesOf(Site.class)) {
-            if (siteClasse.getName().endsWith(source)) {
-                try {
-                    site = siteClasse.newInstance();
-                    break;
-                } catch (InstantiationException | IllegalAccessException ex) {
+        try {
+            for (final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses()) {
+                if (info.getName().startsWith(implementationsPackage)) {
+                    final Class<?> clazz = info.load();
+
+                    if (clazz.getName().endsWith(source)) {
+                        try {
+                            site = (Site) clazz.newInstance();
+                            break;
+                        } catch (InstantiationException | IllegalAccessException ex) {
+                        }
+                    }
                 }
             }
+        } catch (IOException ex) {
         }
-
-        System.setErr(err);
 
         return site;
     }
