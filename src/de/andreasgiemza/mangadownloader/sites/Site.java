@@ -39,4 +39,12 @@ public interface Site {
     public List<Chapter> getChapterList(Manga manga) throws Exception;
 
     public List<Image> getChapterImageLinks(Chapter chapter) throws Exception;
+
+    public String getName();
+
+    public String getUrl();
+
+    public List<String> getLanguage();
+
+    public Boolean getOverlay();
 }

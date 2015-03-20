@@ -25,6 +25,7 @@ package de.andreasgiemza.mangadownloader.sites.implementations.englishscanlation
 
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
+import java.util.Arrays;
 
 /**
  *
@@ -33,6 +34,13 @@ import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
 public class ChibiMangaScanlation extends FoOlSlide implements Site {
 
     public ChibiMangaScanlation() {
-        super("http://www.cmreader.info", "/directory/");
+        super(
+                "Chibi Manga Scanlation",
+                "http://www.chibimanga.info",
+                Arrays.asList("English"),
+                false,
+                "http://www.cmreader.info",
+                "/directory/"
+        );
     }
 }

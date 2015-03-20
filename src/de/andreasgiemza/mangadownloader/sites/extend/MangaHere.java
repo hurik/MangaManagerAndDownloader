@@ -40,17 +40,23 @@ import org.jsoup.select.Elements;
  */
 public class MangaHere implements Site {
 
-    private final String baseUrl;
+    private final String name;
+    private final String url;
+    private final List<String> language;
+    private final Boolean overlay;
 
-    public MangaHere(String baseUrl) {
-        this.baseUrl = baseUrl;
+    public MangaHere(String name, String url, List<String> language, Boolean overlay) {
+        this.name = name;
+        this.url = url;
+        this.language = language;
+        this.overlay = overlay;
     }
 
     @Override
     public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "mangalist/");
+        Document doc = JsoupHelper.getHTMLPage(url + "/mangalist/");
 
         Elements cols = doc.select("div[class=list_manga]");
 
@@ -129,7 +135,8 @@ public class MangaHere implements Site {
             if (page != nav.first()) {
                 referrer = page.attr("value");
                 if (!referrer.startsWith("http://")) {
-                    referrer = baseUrl + referrer;
+                    // TODO: CHECK THIS!
+                    referrer = url + referrer;
                 }
                 doc = JsoupHelper.getHTMLPage(referrer);
             }
@@ -143,4 +150,25 @@ public class MangaHere implements Site {
 
         return images;
     }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public List<String> getLanguage() {
+        return language;
+    }
+
+    @Override
+    public Boolean getOverlay() {
+        return overlay;
+    }
+
 }

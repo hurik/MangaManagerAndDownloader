@@ -28,6 +28,7 @@ import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import org.jsoup.nodes.Document;
@@ -40,20 +41,24 @@ import org.jsoup.select.Elements;
  */
 public class Batoto implements Site {
 
-    private final String baseUrl = "https://bato.to";
+    private final String name = "Batoto";
+    private final String url = "https://bato.to";
+    private final List<String> language = Arrays.asList("International");
+    private final Boolean overlay = false;
+
     private final int loadCount = 1000;
 
     @Override
     public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/comic/_/comics/?per_page=" + loadCount + "&st=0");
+        Document doc = JsoupHelper.getHTMLPage(url + "/comic/_/comics/?per_page=" + loadCount + "&st=0");
 
         int max = Integer.parseInt(doc.select("li[class=last]").first().select("a").first().attr("href").split("st=")[1]);
 
         for (int i = 0; i <= max; i += loadCount) {
             if (i != 0) {
-                doc = JsoupHelper.getHTMLPage(baseUrl + "/comic/_/comics/?per_page=" + loadCount + "&st=" + i);
+                doc = JsoupHelper.getHTMLPage(url + "/comic/_/comics/?per_page=" + loadCount + "&st=" + i);
             }
 
             Elements rows = doc.select("table[class=ipb_table topic_list hover_rows]").first().select("tr");
@@ -125,5 +130,25 @@ public class Batoto implements Site {
         }
 
         return images;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public List<String> getLanguage() {
+        return language;
+    }
+
+    @Override
+    public Boolean getOverlay() {
+        return overlay;
     }
 }

@@ -25,6 +25,7 @@ package de.andreasgiemza.mangadownloader.sites.implementations.english;
 
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.MangaHere;
+import java.util.Arrays;
 
 /**
  *
@@ -33,6 +34,11 @@ import de.andreasgiemza.mangadownloader.sites.extend.MangaHere;
 public class MangaHereEnglish extends MangaHere implements Site {
 
     public MangaHereEnglish() {
-        super("http://www.mangahere.co/");
+        super(
+                "Manga Here",
+                "http://www.mangahere.co",
+                Arrays.asList("English"),
+                false
+        );
     }
 }

@@ -28,6 +28,7 @@ import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import org.jsoup.nodes.Document;
@@ -40,13 +41,16 @@ import org.jsoup.select.Elements;
  */
 public class DeManga implements Site {
 
-    private final String baseUrl = "http://www.demanga.com/";
+    private final String name = "DeManga";
+    private final String url = "http://www.demanga.com";
+    private final List<String> language = Arrays.asList("German");
+    private final Boolean overlay = false;
 
     @Override
     public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "manga-list/all/any/name-az/");
+        Document doc = JsoupHelper.getHTMLPage(url + "/manga-list/all/any/name-az/");
 
         Element nav = doc.select("ul[class=pgg]").first();
 
@@ -61,7 +65,7 @@ public class DeManga implements Site {
 
         for (int i = 1; i <= pages; i++) {
             if (i != 1) {
-                doc = JsoupHelper.getHTMLPage(baseUrl + "manga-list/all/any/name-az/" + i + "/");
+                doc = JsoupHelper.getHTMLPage(url + "/manga-list/all/any/name-az/" + i + "/");
             }
 
             Elements rows = doc.select("div[class=wpm_pag mng_lst tbn]").first().select("div[class^=nde]");
@@ -136,4 +140,23 @@ public class DeManga implements Site {
         return images;
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public List<String> getLanguage() {
+        return language;
+    }
+
+    @Override
+    public Boolean getOverlay() {
+        return overlay;
+    }
 }

@@ -28,6 +28,7 @@ import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import org.jsoup.nodes.Document;
@@ -40,13 +41,16 @@ import org.jsoup.select.Elements;
  */
 public class MangaFox implements Site {
 
-    private final String baseUrl = "http://mangafox.me";
+    private final String name = "Manga Fox";
+    private final String url = "http://mangafox.me";
+    private final List<String> language = Arrays.asList("English");
+    private final Boolean overlay = true;
 
     @Override
     public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/manga/");
+        Document doc = JsoupHelper.getHTMLPage(url + "/manga/");
 
         Elements rows = doc.select("div[class=left]").first().select("li");
 
@@ -105,5 +109,25 @@ public class MangaFox implements Site {
         }
 
         return images;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public List<String> getLanguage() {
+        return language;
+    }
+
+    @Override
+    public Boolean getOverlay() {
+        return overlay;
     }
 }

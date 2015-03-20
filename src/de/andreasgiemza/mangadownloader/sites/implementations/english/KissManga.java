@@ -28,6 +28,7 @@ import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -41,20 +42,23 @@ import org.jsoup.select.Elements;
  */
 public class KissManga implements Site {
 
-    private final String baseUrl = "http://kissmanga.com";
+    private final String name = "KissManga";
+    private final String url = "http://kissmanga.com";
+    private final List<String> language = Arrays.asList("English");
+    private final Boolean overlay = false;
 
     @Override
     public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/MangaList");
+        Document doc = JsoupHelper.getHTMLPage(url + "/MangaList");
 
         int numberOfPages = Integer.parseInt(doc.select("div[class=pagination pagination-left]").first()
                 .select("li").last().select("a").attr("page"));
 
         for (int page = 1; page <= numberOfPages; page++) {
             if (page != 1) {
-                doc = JsoupHelper.getHTMLPage(baseUrl + "/MangaList?page=" + page);
+                doc = JsoupHelper.getHTMLPage(url + "/MangaList?page=" + page);
             }
 
             Elements rows = doc.select("table[class=listing]").first().select("tr");
@@ -79,7 +83,7 @@ public class KissManga implements Site {
     public List<Chapter> getChapterList(Manga manga) throws Exception {
         List<Chapter> chapters = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + manga.getLink());
+        Document doc = JsoupHelper.getHTMLPage(url + manga.getLink());
 
         Elements rows = doc.select("table[class=listing]").first().select("tr");
 
@@ -102,7 +106,7 @@ public class KissManga implements Site {
     public List<Image> getChapterImageLinks(Chapter chapter) throws Exception {
         List<Image> images = new LinkedList<>();
 
-        String referrer = baseUrl + chapter.getLink();
+        String referrer = url + chapter.getLink();
         Document doc = JsoupHelper.getHTMLPage(referrer);
 
         Elements scripts = doc.select("script");
@@ -129,5 +133,25 @@ public class KissManga implements Site {
         }
 
         return images;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public List<String> getLanguage() {
+        return language;
+    }
+
+    @Override
+    public Boolean getOverlay() {
+        return overlay;
     }
 }

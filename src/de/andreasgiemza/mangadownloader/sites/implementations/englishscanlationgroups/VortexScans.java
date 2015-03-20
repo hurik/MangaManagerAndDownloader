@@ -25,6 +25,7 @@ package de.andreasgiemza.mangadownloader.sites.implementations.englishscanlation
 
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
+import java.util.Arrays;
 
 /**
  *
@@ -33,6 +34,13 @@ import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
 public class VortexScans extends FoOlSlide implements Site {
 
     public VortexScans() {
-        super("http://reader.vortex-scans.com", "/directory/");
+        super(
+                "Vortex-Scans",
+                "http://vortex-scans.com",
+                Arrays.asList("English"),
+                false,
+                "http://reader.vortex-scans.com",
+                "/directory/"
+        );
     }
 }

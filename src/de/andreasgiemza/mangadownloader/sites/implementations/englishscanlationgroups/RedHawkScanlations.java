@@ -25,14 +25,22 @@ package de.andreasgiemza.mangadownloader.sites.implementations.englishscanlation
 
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
+import java.util.Arrays;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class SilentSkyScans extends FoOlSlide implements Site {
+public class RedHawkScanlations extends FoOlSlide implements Site {
 
-    public SilentSkyScans() {
-        super("http://reader.silentsky-scans.net", "/directory/");
+    public RedHawkScanlations() {
+        super(
+                "Red Hawk Scanlations",
+                "http://www.redhawkscans.com",
+                Arrays.asList("English"),
+                false,
+                "http://manga.redhawkscans.com",
+                "/reader/list/"
+        );
     }
 }

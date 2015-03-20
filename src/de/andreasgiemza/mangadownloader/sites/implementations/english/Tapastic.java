@@ -30,6 +30,7 @@ import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -43,19 +44,22 @@ import org.jsoup.select.Elements;
  */
 public class Tapastic implements Site {
 
-    private final String baseUrl = "http://tapastic.com";
+    private final String name = "Tapastic";
+    private final String url = "http://tapastic.com";
+    private final List<String> language = Arrays.asList("English");
+    private final Boolean overlay = false;
 
     @Override
     public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/browse/list");
+        Document doc = JsoupHelper.getHTMLPage(url + "/browse/list");
 
         int max = Integer.parseInt(doc.select("div[class^=g-pagination-wrap]").first().select("a[class=page-num paging-btn g-act]").last().text());
 
         for (int i = 1; i <= max; i++) {
             if (i != 1) {
-                doc = JsoupHelper.getHTMLPage(baseUrl + "/browse/list?pageNumber=" + i);
+                doc = JsoupHelper.getHTMLPage(url + "/browse/list?pageNumber=" + i);
             }
 
             Elements rows = doc.select("ul[class=page-list-wrap]").first().select("li");
@@ -72,7 +76,7 @@ public class Tapastic implements Site {
     public List<Chapter> getChapterList(Manga manga) throws Exception {
         List<Chapter> chapters = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + manga.getLink());
+        Document doc = JsoupHelper.getHTMLPage(url + manga.getLink());
 
         String line = null;
 
@@ -106,7 +110,7 @@ public class Tapastic implements Site {
     public List<Image> getChapterImageLinks(Chapter chapter) throws Exception {
         List<Image> imageLinks = new LinkedList<>();
 
-        String referrer = baseUrl + "/episode/" + chapter.getLink();
+        String referrer = url + "/episode/" + chapter.getLink();
         Document doc = JsoupHelper.getHTMLPage(referrer);
 
         // Get pages linkes
@@ -120,5 +124,25 @@ public class Tapastic implements Site {
         }
 
         return imageLinks;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public List<String> getLanguage() {
+        return language;
+    }
+
+    @Override
+    public Boolean getOverlay() {
+        return overlay;
     }
 }

@@ -25,6 +25,7 @@ package de.andreasgiemza.mangadownloader.sites.implementations.italian;
 
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.MangaEden;
+import java.util.Arrays;
 
 /**
  *
@@ -33,6 +34,12 @@ import de.andreasgiemza.mangadownloader.sites.extend.MangaEden;
 public class MangaEdenItalian extends MangaEden implements Site {
 
     public MangaEdenItalian() {
-        super("http://www.mangaeden.com", "/it-directory/");
+        super(
+                "Manga Eden (Italian)",
+                "http://www.mangaeden.com",
+                Arrays.asList("Italian"),
+                true,
+                "/it-directory/"
+        );
     }
 }

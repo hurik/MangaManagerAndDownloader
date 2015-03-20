@@ -25,14 +25,22 @@ package de.andreasgiemza.mangadownloader.sites.implementations.englishscanlation
 
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
+import java.util.Arrays;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class S2scans extends FoOlSlide implements Site {
+public class SilentSky extends FoOlSlide implements Site {
 
-    public S2scans() {
-        super("http://reader.s2smanga.com", "/directory/");
+    public SilentSky() {
+        super(
+                "Silent Sky",
+                "http://www.silentsky-scans.net",
+                Arrays.asList("English"),
+                false,
+                "http://reader.silentsky-scans.net",
+                "/directory/"
+        );
     }
 }

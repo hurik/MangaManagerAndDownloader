@@ -43,11 +43,21 @@ import org.jsoup.select.Elements;
  */
 public class FoOlSlide implements Site {
 
+    private final String name;
+    private final String url;
+    private final List<String> language;
+    private final Boolean overlay;
+
     private final String baseUrl;
     private final String listUrl;
     private final Map<String, String> post = new HashMap<>();
 
-    public FoOlSlide(String baseUrl, String listUrl) {
+    public FoOlSlide(String name, String url, List<String> language, Boolean overlay, String baseUrl, String listUrl) {
+        this.name = name;
+        this.url = url;
+        this.language = language;
+        this.overlay = overlay;
+
         this.baseUrl = baseUrl;
         this.listUrl = listUrl;
 
@@ -128,5 +138,25 @@ public class FoOlSlide implements Site {
         }
 
         return images;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public List<String> getLanguage() {
+        return language;
+    }
+
+    @Override
+    public Boolean getOverlay() {
+        return overlay;
     }
 }

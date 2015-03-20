@@ -40,17 +40,23 @@ import org.jsoup.select.Elements;
  */
 public class MangaPandaAndReader implements Site {
 
-    private final String baseUrl;
+    private final String name;
+    private final String url;
+    private final List<String> language;
+    private final Boolean overlay;
 
-    public MangaPandaAndReader(String baseUrl) {
-        this.baseUrl = baseUrl;
+    public MangaPandaAndReader(String name, String url, List<String> language, Boolean overlay) {
+        this.name = name;
+        this.url = url;
+        this.language = language;
+        this.overlay = overlay;
     }
 
     @Override
     public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/alphabetical");
+        Document doc = JsoupHelper.getHTMLPage(url + "/alphabetical");
 
         Elements cols = doc.select("div[class=series_col]");
 
@@ -70,7 +76,7 @@ public class MangaPandaAndReader implements Site {
     public List<Chapter> getChapterList(Manga manga) throws Exception {
         List<Chapter> chapters = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + manga.getLink());
+        Document doc = JsoupHelper.getHTMLPage(url + manga.getLink());
 
         Elements rows = doc.select("div[id=chapterlist]").first().select("tr");
 
@@ -89,7 +95,7 @@ public class MangaPandaAndReader implements Site {
     public List<Image> getChapterImageLinks(Chapter chapter) throws Exception {
         List<Image> images = new LinkedList<>();
 
-        String referrer = baseUrl + chapter.getLink();
+        String referrer = url + chapter.getLink();
         Document doc = JsoupHelper.getHTMLPage(referrer);
 
         Elements nav = doc.select("select[id=pageMenu]").first()
@@ -99,7 +105,7 @@ public class MangaPandaAndReader implements Site {
 
         for (int i = 0; i < pages; i++) {
             if (i != 0) {
-                referrer = baseUrl + nav.get(i).attr("value");
+                referrer = url + nav.get(i).attr("value");
                 doc = JsoupHelper.getHTMLPage(referrer);
             }
 
@@ -110,5 +116,25 @@ public class MangaPandaAndReader implements Site {
         }
 
         return images;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public List<String> getLanguage() {
+        return language;
+    }
+
+    @Override
+    public Boolean getOverlay() {
+        return overlay;
     }
 }

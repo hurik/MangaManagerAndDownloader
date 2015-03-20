@@ -40,19 +40,27 @@ import org.jsoup.select.Elements;
  */
 public class MangaEden implements Site {
 
-    private final String baseUrl;
+    private final String name;
+    private final String url;
+    private final List<String> language;
+    private final Boolean overlay;
+
     private final String listUrl;
 
-    public MangaEden(String baseUrl, String list) {
-        this.baseUrl = baseUrl;
-        this.listUrl = list;
+    public MangaEden(String name, String url, List<String> language, Boolean overlay, String listUrl) {
+        this.name = name;
+        this.url = url;
+        this.language = language;
+        this.overlay = overlay;
+
+        this.listUrl = listUrl;
     }
 
     @Override
     public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + listUrl);
+        Document doc = JsoupHelper.getHTMLPage(url + listUrl);
 
         Elements nav = doc.select("div[class=pagination pagination_bottom]").first().select("a");
 
@@ -60,7 +68,7 @@ public class MangaEden implements Site {
 
         for (int i = 1; i <= pages; i++) {
             if (i != 1) {
-                doc = JsoupHelper.getHTMLPage(baseUrl + listUrl + "?page=" + i);
+                doc = JsoupHelper.getHTMLPage(url + listUrl + "?page=" + i);
             }
 
             Elements rows = doc.select("table[id=mangaList]").first().select("tbody").first().select("tr");
@@ -115,4 +123,25 @@ public class MangaEden implements Site {
 
         return images;
     }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public List<String> getLanguage() {
+        return language;
+    }
+
+    @Override
+    public Boolean getOverlay() {
+        return overlay;
+    }
+
 }

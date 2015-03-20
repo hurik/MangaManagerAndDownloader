@@ -25,6 +25,7 @@ package de.andreasgiemza.mangadownloader.sites.implementations.englishscanlation
 
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
+import java.util.Arrays;
 
 /**
  *
@@ -33,6 +34,13 @@ import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
 public class YuriProject extends FoOlSlide implements Site {
 
     public YuriProject() {
-        super("https://reader.yuriproject.net", "/directory/");
+        super(
+                "Yuri Projec",
+                "https://yuriproject.net",
+                Arrays.asList("English"),
+                false,
+                "https://reader.yuriproject.net",
+                "/directory/"
+        );
     }
 }

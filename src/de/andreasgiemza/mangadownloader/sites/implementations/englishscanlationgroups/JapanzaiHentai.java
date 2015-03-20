@@ -25,6 +25,7 @@ package de.andreasgiemza.mangadownloader.sites.implementations.englishscanlation
 
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
+import java.util.Arrays;
 
 /**
  *
@@ -33,6 +34,13 @@ import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
 public class JapanzaiHentai extends FoOlSlide implements Site {
 
     public JapanzaiHentai() {
-        super("http://h.japanzai.com", "/directory/");
+        super(
+                "Japanzai (Hentai)",
+                "http://japanzai.com",
+                Arrays.asList("English"),
+                false,
+                "http://h.japanzai.com",
+                "/directory/"
+        );
     }
 }

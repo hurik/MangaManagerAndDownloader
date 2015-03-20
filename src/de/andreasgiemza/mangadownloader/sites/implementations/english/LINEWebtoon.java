@@ -28,6 +28,7 @@ import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,25 +42,29 @@ import org.jsoup.select.Elements;
  */
 public class LINEWebtoon implements Site {
 
-    private final String baseUrl = "http://www.webtoons.com";
-    private final String baseUrlMobile = "http://m.webtoons.com";
+    private final String name = "LINE Webtoon";
+    private final String url = "http://www.webtoons.com";
+    private final List<String> language = Arrays.asList("English");
+    private final Boolean overlay = false;
+
+    private final String urlMobile = "http://m.webtoons.com";
 
     @Override
     public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(baseUrl + "/dailySchedule");
+        Document doc = JsoupHelper.getHTMLPage(url + "/dailySchedule");
 
         Elements rows = doc.select("li");
 
         for (Element row : rows) {
             Element link = row.select("a").first();
-            Element name = row.select("p[class=subj]").first();
+            Element mangaName = row.select("p[class=subj]").first();
 
-            if (name != null) {
+            if (mangaName != null) {
                 mangas.add(new Manga(
                         link.attr("href"),
-                        name.text()));
+                        mangaName.text()));
             }
         }
 
@@ -70,12 +75,12 @@ public class LINEWebtoon implements Site {
     public List<Chapter> getChapterList(Manga manga) throws Exception {
         List<Chapter> chapters = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPageMobile(manga.getLink().replace(baseUrl, baseUrlMobile));
+        Document doc = JsoupHelper.getHTMLPageMobile(manga.getLink().replace(url, urlMobile));
 
         Elements pages = doc.select("li[id^=episode]");
 
         for (Element page : pages) {
-            chapters.add(new Chapter(page.select("a").first().attr("href").replace(baseUrlMobile, baseUrl), page.select("span[class=ellipsis]").first().text()));
+            chapters.add(new Chapter(page.select("a").first().attr("href").replace(urlMobile, url), page.select("span[class=ellipsis]").first().text()));
         }
 
         return chapters;
@@ -99,5 +104,25 @@ public class LINEWebtoon implements Site {
         }
 
         return imageLinks;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public List<String> getLanguage() {
+        return language;
+    }
+
+    @Override
+    public Boolean getOverlay() {
+        return overlay;
     }
 }

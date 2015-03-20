@@ -25,6 +25,7 @@ package de.andreasgiemza.mangadownloader.sites.implementations.englishscanlation
 
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
+import java.util.Arrays;
 
 /**
  *
@@ -33,6 +34,13 @@ import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
 public class RoseliaScanlations extends FoOlSlide implements Site {
 
     public RoseliaScanlations() {
-        super("http://reader.roseliascans.com", "/directory/");
+        super(
+                "Roselia Scanlations",
+                "http://www.roseliascans.com",
+                Arrays.asList("English"),
+                false,
+                "http://reader.roseliascans.com",
+                "/directory/"
+        );
     }
 }
