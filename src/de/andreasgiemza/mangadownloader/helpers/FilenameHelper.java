@@ -41,7 +41,7 @@ public final class FilenameHelper {
     private FilenameHelper() {
     }
 
-    private static String checkForIllegalCharacters(String string) {
+    public static String checkForIllegalCharacters(String string) {
         if (os.contains("win")) {
             return string.replaceAll(windows, "_");
         } else {

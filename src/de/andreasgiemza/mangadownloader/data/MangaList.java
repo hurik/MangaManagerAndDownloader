@@ -23,6 +23,7 @@
  */
 package de.andreasgiemza.mangadownloader.data;
 
+import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
 import de.andreasgiemza.mangadownloader.options.Options;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.io.FileInputStream;
@@ -49,7 +50,8 @@ public final class MangaList {
 
     public static void save(Site site, List<Manga> mangas) {
         try {
-            Path sourceFile = Options.INSTANCE.getMangaListDir().resolve(site.getName() + sourcesExtension);
+            Path sourceFile = Options.INSTANCE.getMangaListDir().resolve(
+                    FilenameHelper.checkForIllegalCharacters(site.getName()) + sourcesExtension);
 
             if (!Files.exists(sourceFile.getParent())) {
                 Files.createDirectory(sourceFile.getParent());
@@ -71,7 +73,8 @@ public final class MangaList {
     public static List<Manga> load(Site site) {
         List<Manga> mangas = new LinkedList<>();
 
-        Path sourceFile = Options.INSTANCE.getMangaListDir().resolve(site.getName() + sourcesExtension);
+        Path sourceFile = Options.INSTANCE.getMangaListDir().resolve(
+                FilenameHelper.checkForIllegalCharacters(site.getName()) + sourcesExtension);
 
         if (Files.exists(sourceFile)) {
             try (FileInputStream fin = new FileInputStream(sourceFile.toFile())) {
@@ -85,10 +88,12 @@ public final class MangaList {
     }
 
     public static String getLastListUpdate(Site site) {
-        Path mangasListFile = Options.INSTANCE.getMangaListDir().resolve(site.getName() + sourcesExtension);
+        Path mangasListFile = Options.INSTANCE.getMangaListDir().resolve(
+                FilenameHelper.checkForIllegalCharacters(site.getName()) + sourcesExtension);
 
         try {
-            return new SimpleDateFormat("yyyy.MM.dd - HH:mm:ss").format(Files.getLastModifiedTime(mangasListFile).toMillis());
+            return new SimpleDateFormat("yyyy.MM.dd - HH:mm:ss").format(
+                    Files.getLastModifiedTime(mangasListFile).toMillis());
         } catch (IOException ex) {
             return null;
         }
