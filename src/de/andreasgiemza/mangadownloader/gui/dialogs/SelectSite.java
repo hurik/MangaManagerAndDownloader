@@ -157,6 +157,8 @@ public class SelectSite extends javax.swing.JDialog {
                     "Please update site before continuing!",
                     "Info",
                     JOptionPane.INFORMATION_MESSAGE);
+            
+            return;
         }
 
         ((MangaDownloader) parent).loadManga(selectedSite);
