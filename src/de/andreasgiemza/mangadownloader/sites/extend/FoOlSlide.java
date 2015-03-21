@@ -105,11 +105,17 @@ public class FoOlSlide implements Site {
 
         Document doc = JsoupHelper.getHTMLPageWithPost(manga.getLink(), post);
 
-        Elements rows = doc.select("div[class=element]");
+        Elements groups = doc.select("div[class=group]");
 
-        for (Element row : rows) {
-            Element link = row.select("div[class=title]").first().select("a").first();
-            chapters.add(new Chapter(link.attr("abs:href"), link.text()));
+        for (Element group : groups) {
+            String volume = group.select("div[class=title]").first().text();
+
+            Elements rows = group.select("div[class=element]");
+
+            for (Element row : rows) {
+                Element link = row.select("div[class=title]").first().select("a").first();
+                chapters.add(new Chapter(link.attr("abs:href"), volume + " - " + link.text()));
+            }
         }
 
         return chapters;
