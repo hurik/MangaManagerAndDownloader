@@ -43,13 +43,13 @@ public class MangaPandaAndReader implements Site {
     private final String name;
     private final String url;
     private final List<String> language;
-    private final Boolean overlay;
+    private final Boolean watermarks;
 
-    public MangaPandaAndReader(String name, String url, List<String> language, Boolean overlay) {
+    public MangaPandaAndReader(String name, String url, List<String> language, Boolean watermarks) {
         this.name = name;
         this.url = url;
         this.language = language;
-        this.overlay = overlay;
+        this.watermarks = watermarks;
     }
 
     @Override
@@ -134,7 +134,7 @@ public class MangaPandaAndReader implements Site {
     }
 
     @Override
-    public Boolean getOverlay() {
-        return overlay;
+    public Boolean hasWatermarks() {
+        return watermarks;
     }
 }

@@ -46,5 +46,5 @@ public interface Site {
 
     public List<String> getLanguage();
 
-    public Boolean getOverlay();
+    public Boolean hasWatermarks();
 }

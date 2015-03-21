@@ -44,7 +44,7 @@ public class Batoto implements Site {
     private final String name = "Batoto";
     private final String url = "https://bato.to";
     private final List<String> language = Arrays.asList("International");
-    private final Boolean overlay = false;
+    private final Boolean watermarks = false;
 
     private final int loadCount = 1000;
 
@@ -148,7 +148,7 @@ public class Batoto implements Site {
     }
 
     @Override
-    public Boolean getOverlay() {
-        return overlay;
+    public Boolean hasWatermarks() {
+        return watermarks;
     }
 }

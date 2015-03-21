@@ -25,25 +25,30 @@ package de.andreasgiemza.mangadownloader;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Manga;
-import de.andreasgiemza.mangadownloader.gui.Controller;
+import de.andreasgiemza.mangadownloader.data.MangaList;
 import de.andreasgiemza.mangadownloader.gui.chapter.ChapterCheckBoxItemListener;
 import de.andreasgiemza.mangadownloader.gui.chapter.ChapterListSearchDocumentListener;
 import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableCellRenderer;
 import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableModel;
+import de.andreasgiemza.mangadownloader.gui.dialogs.Download;
+import de.andreasgiemza.mangadownloader.gui.dialogs.Loading;
+import de.andreasgiemza.mangadownloader.gui.dialogs.SelectSite;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSearchDocumentListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSelectionListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableCellRenderer;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
+import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
 import de.andreasgiemza.mangadownloader.options.Options;
+import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.SiteHelper;
 import java.awt.Toolkit;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -56,7 +61,12 @@ public class MangaDownloader extends javax.swing.JFrame {
     private final MangaTableModel mangasTableModel = new MangaTableModel(mangas);
     private final List<Chapter> chapters = new LinkedList<>();
     private final ChapterTableModel chaptersTableModel = new ChapterTableModel(chapters);
-    private final Controller controller;
+
+    // Site
+    private Site selectedSite;
+    // Selected manga
+    private Manga selectedManga;
+    private Manga lastSelectedManga = null;
 
     /**
      * Creates new form Gui
@@ -65,62 +75,33 @@ public class MangaDownloader extends javax.swing.JFrame {
     public MangaDownloader() {
         initComponents();
 
-        setLocation(new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (this.getWidth() / 2)).intValue(),
-                new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (this.getHeight() / 2)).intValue());
-
-        // Setup controller
-        controller = new Controller(
-                this,
-                sourceComboBox,
-                mangaListSearchTextField,
-                mangaListTable,
-                chapterListSearchTextField,
-                chapterDeSelectAllCheckBox,
-                chapterListTable,
-                downloadButton,
-                mangas,
-                chapters);
-
-        // Setup Source ComboBox
-        List<String> supportedSites = SiteHelper.getSites();
-        sourceComboBox.setModel(new DefaultComboBoxModel<>(supportedSites.toArray()));
-
-        if (supportedSites.indexOf(Options.INSTANCE.getSelectedSource()) != -1) {
-            sourceComboBox.setSelectedIndex(supportedSites.indexOf(Options.INSTANCE.getSelectedSource()));
-        }
-
-        sourceComboBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    controller.loadMangaList();
-                }
-            }
-        });
+        setLocation(new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (getWidth() / 2)).intValue(),
+                new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (getHeight() / 2)).intValue());
 
         // Setup Manga List Table
         mangaListSearchTextField.getDocument().addDocumentListener(
                 new MangaListSearchDocumentListener(
+                        this,
                         mangaListSearchTextField,
-                        mangaListTable,
-                        controller));
+                        mangaListTable));
         mangaListTable.getSelectionModel().addListSelectionListener(
-                new MangaListSelectionListener(controller, mangaListTable));
+                new MangaListSelectionListener(this, mangaListTable));
         mangaListTable.setDefaultRenderer(String.class, new MangaTableCellRenderer());
 
         // Setup Chapter List Table
         chapterListSearchTextField.getDocument().addDocumentListener(
                 new ChapterListSearchDocumentListener(
+                        this,
                         chapterListSearchTextField,
-                        chapterListTable,
-                        controller));
+                        chapterListTable));
         chapterListTable.getColumnModel().getColumn(1).setMaxWidth(34);
         chapterListTable.getColumnModel().getColumn(1).setMinWidth(34);
         chapterListTable.setDefaultRenderer(String.class, new ChapterTableCellRenderer());
 
         // Setup DeSelectAll CheckBox
-        chapterDeSelectAllCheckBox.addItemListener(new ChapterCheckBoxItemListener(chapterListTable, controller));
+        chapterDeSelectAllCheckBox.addItemListener(new ChapterCheckBoxItemListener(this, chapterListTable));
 
+        // Save options before closing
         addWindowListener(new java.awt.event.WindowAdapter() {
 
             @Override
@@ -132,10 +113,126 @@ public class MangaDownloader extends javax.swing.JFrame {
 
         });
 
+        // Load mangas save directory
         mangasDirTextField.setText(Options.INSTANCE.getMangaDir());
 
         // Load Manga List
-        controller.loadMangaList();
+        loadManga(SiteHelper.getInstance(Options.INSTANCE.getSelectedSource()));
+    }
+
+    public final void loadManga(Site site) {
+        if (site == null) {
+            return;
+        }
+
+        if (site == selectedSite) {
+            return;
+        }
+
+        selectedSite = site;
+
+        resetMangaPanel();
+
+        selectedSiteLabel.setText(selectedSite.getName());
+        Options.INSTANCE.setSelectedSource(site.getClass().getSimpleName());
+
+        final Loading loading = new Loading(this, true);
+        loading.startRunnable(new Runnable() {
+
+            @Override
+            public void run() {
+                mangas.addAll(MangaList.load(selectedSite));
+
+                mangasTableModel.fireTableDataChanged();
+
+                loading.dispose();
+            }
+        });
+    }
+
+    public void mangaSelected(final Manga selectedManga) {
+        if (selectedManga != lastSelectedManga) {
+            this.selectedManga = selectedManga;
+            resetChapterPanel();
+
+            final MangaDownloader mangaDownloader = this;
+
+            final Loading loading = new Loading(this, true);
+            loading.startRunnable(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        chapters.addAll(selectedSite.getChapterList(selectedManga));
+
+                        for (Chapter chapter : chapters) {
+                            Path file = FilenameHelper.buildChapterPath(selectedManga, chapter);
+
+                            if (Files.exists(file)) {
+                                chapter.setAlreadyDownloaded(true);
+                            }
+                        }
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(
+                                mangaDownloader,
+                                "Cant't connect to " + selectedSite.getClass().getSimpleName() + "!",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        mangaListTable.clearSelection();
+                        lastSelectedManga = null;
+
+                        loading.dispose();
+                        return;
+                    }
+
+                    ((ChapterTableModel) chapterListTable.getModel()).fireTableDataChanged();
+
+                    downloadButton.setEnabled(true);
+
+                    lastSelectedManga = selectedManga;
+
+                    loading.dispose();
+                }
+            });
+        }
+    }
+
+    public void mangaSearchChanged() {
+        mangaListTable.clearSelection();
+        downloadButton.setEnabled(false);
+        lastSelectedManga = null;
+        resetChapterPanel();
+    }
+
+    public void chapterSearchChanged() {
+        chapterDeSelectAllCheckBox.setSelected(false);
+        deactivateDownloads();
+    }
+
+    public void deactivateDownloads() {
+        for (Chapter chapter : chapters) {
+            chapter.setDownload(false);
+        }
+
+        ((ChapterTableModel) chapterListTable.getModel()).fireTableDataChanged();
+    }
+
+    private void resetMangaPanel() {
+        mangas.clear();
+        ((MangaTableModel) mangaListTable.getModel()).fireTableDataChanged();
+        mangaListSearchTextField.setText("");
+        mangaListTable.clearSelection();
+        downloadButton.setEnabled(false);
+        selectedManga = null;
+
+        resetChapterPanel();
+    }
+
+    private void resetChapterPanel() {
+        chapters.clear();
+        ((ChapterTableModel) chapterListTable.getModel()).fireTableDataChanged();
+        chapterListSearchTextField.setText("");
+        chapterDeSelectAllCheckBox.setSelected(false);
     }
 
     /**
@@ -151,9 +248,9 @@ public class MangaDownloader extends javax.swing.JFrame {
         mangasDirPanel = new javax.swing.JPanel();
         mangasDirTextField = new javax.swing.JTextField();
         mangasDirButton = new javax.swing.JButton();
-        sourcePanel = new javax.swing.JPanel();
-        sourceComboBox = new javax.swing.JComboBox();
-        sourceButton = new javax.swing.JButton();
+        sitePanel = new javax.swing.JPanel();
+        selectedSiteLabel = new javax.swing.JTextField();
+        selectSiteButton = new javax.swing.JButton();
         MangaChapterPanel = new javax.swing.JPanel();
         mangaListPanel = new javax.swing.JPanel();
         mangaListSearchLabel = new javax.swing.JLabel();
@@ -202,31 +299,32 @@ public class MangaDownloader extends javax.swing.JFrame {
                 .addComponent(mangasDirButton))
         );
 
-        sourcePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Source"));
+        sitePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Site"));
 
-        sourceComboBox.setMaximumRowCount(25);
+        selectedSiteLabel.setEditable(false);
+        selectedSiteLabel.setText("No site selected");
 
-        sourceButton.setText("Update");
-        sourceButton.addActionListener(new java.awt.event.ActionListener() {
+        selectSiteButton.setText("Select site");
+        selectSiteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sourceButtonActionPerformed(evt);
+                selectSiteButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout sourcePanelLayout = new javax.swing.GroupLayout(sourcePanel);
-        sourcePanel.setLayout(sourcePanelLayout);
-        sourcePanelLayout.setHorizontalGroup(
-            sourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sourcePanelLayout.createSequentialGroup()
-                .addComponent(sourceComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        javax.swing.GroupLayout sitePanelLayout = new javax.swing.GroupLayout(sitePanel);
+        sitePanel.setLayout(sitePanelLayout);
+        sitePanelLayout.setHorizontalGroup(
+            sitePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sitePanelLayout.createSequentialGroup()
+                .addComponent(selectedSiteLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(selectSiteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-        sourcePanelLayout.setVerticalGroup(
-            sourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(sourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(sourceButton)
-                .addComponent(sourceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        sitePanelLayout.setVerticalGroup(
+            sitePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sitePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(selectSiteButton)
+                .addComponent(selectedSiteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         MangaChapterPanel.setLayout(new javax.swing.BoxLayout(MangaChapterPanel, javax.swing.BoxLayout.X_AXIS));
@@ -315,7 +413,7 @@ public class MangaDownloader extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(sitePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(MangaChapterPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(downloadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(mangasDirPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -327,7 +425,7 @@ public class MangaDownloader extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(mangasDirPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourcePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(sitePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(MangaChapterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -338,12 +436,33 @@ public class MangaDownloader extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void sourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sourceButtonActionPerformed
-        controller.updateMangaList();
-    }//GEN-LAST:event_sourceButtonActionPerformed
+    private void selectSiteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectSiteButtonActionPerformed
+        SelectSite siteManager = new SelectSite(this, true);
+        siteManager.setVisible(true);
+    }//GEN-LAST:event_selectSiteButtonActionPerformed
 
     private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
-        controller.download();
+        boolean oneSelected = false;
+
+        for (Chapter chapter : chapters) {
+            if (chapter.isDownload()) {
+                oneSelected = true;
+                break;
+            }
+        }
+
+        if (oneSelected) {
+            Download download = new Download(this, true, selectedSite, selectedManga, chapters);
+            download.setVisible(true);
+
+            ((ChapterTableModel) chapterListTable.getModel()).fireTableDataChanged();
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select one or more chapters!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_downloadButtonActionPerformed
 
     private void mangasDirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mangasDirButtonActionPerformed
@@ -404,8 +523,8 @@ public class MangaDownloader extends javax.swing.JFrame {
     private javax.swing.JFileChooser mangasDirFileChooser;
     private javax.swing.JPanel mangasDirPanel;
     private javax.swing.JTextField mangasDirTextField;
-    private javax.swing.JButton sourceButton;
-    private javax.swing.JComboBox sourceComboBox;
-    private javax.swing.JPanel sourcePanel;
+    private javax.swing.JButton selectSiteButton;
+    private javax.swing.JTextField selectedSiteLabel;
+    private javax.swing.JPanel sitePanel;
     // End of variables declaration//GEN-END:variables
 }

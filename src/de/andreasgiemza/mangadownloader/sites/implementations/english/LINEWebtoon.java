@@ -45,7 +45,7 @@ public class LINEWebtoon implements Site {
     private final String name = "LINE Webtoon";
     private final String url = "http://www.webtoons.com";
     private final List<String> language = Arrays.asList("English");
-    private final Boolean overlay = false;
+    private final Boolean watermarks = false;
 
     private final String urlMobile = "http://m.webtoons.com";
 
@@ -122,7 +122,7 @@ public class LINEWebtoon implements Site {
     }
 
     @Override
-    public Boolean getOverlay() {
-        return overlay;
+    public Boolean hasWatermarks() {
+        return watermarks;
     }
 }

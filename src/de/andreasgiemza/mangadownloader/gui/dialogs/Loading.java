@@ -23,8 +23,8 @@
  */
 package de.andreasgiemza.mangadownloader.gui.dialogs;
 
-import de.andreasgiemza.mangadownloader.gui.Controller;
 import java.awt.Color;
+import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 
 /**
@@ -33,22 +33,22 @@ import javax.swing.ImageIcon;
  */
 public class Loading extends javax.swing.JDialog {
 
-    private final Controller controller;
-    private final LoadingJob loadingJob;
-
-    public Loading(java.awt.Frame parent, boolean modal, Controller controller, LoadingJob loadingJob) {
+    public Loading(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+
         setBackground(new Color(0, 0, 0, 0));
-        this.controller = controller;
-        this.loadingJob = loadingJob;
+        setLocation(
+                new Double((Toolkit.getDefaultToolkit().getScreenSize()
+                        .getWidth() / 2) - (getWidth() / 2)).intValue(),
+                new Double((Toolkit.getDefaultToolkit().getScreenSize()
+                        .getHeight() / 2) - (getHeight() / 2)).intValue());
     }
 
-    @Override
-    public void setVisible(boolean b) {
-        new Thread(new Worker(this)).start();
+    public void startRunnable(Runnable runnable) {
+        new Thread(runnable).start();
 
-        super.setVisible(b);
+        setVisible(true);
     }
 
     /**
@@ -79,35 +79,4 @@ public class Loading extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel loadingImage;
     // End of variables declaration//GEN-END:variables
-
-    private class Worker implements Runnable {
-
-        private final Loading loading;
-
-        public Worker(Loading loading) {
-            this.loading = loading;
-        }
-
-        @Override
-        public void run() {
-            switch (loadingJob) {
-                case SiteSelected:
-                    controller.loadMangaListWorker();
-                    break;
-                case MangaListUpdate:
-                    controller.updateMangaListWorker();
-                    break;
-                case MangaSelected:
-                    controller.mangaSelectedWorker();
-                    break;
-            }
-
-            loading.dispose();
-        }
-    }
-
-    public enum LoadingJob {
-
-        SiteSelected, MangaListUpdate, MangaSelected;
-    }
 }

@@ -43,13 +43,13 @@ public class MangaHere implements Site {
     private final String name;
     private final String url;
     private final List<String> language;
-    private final Boolean overlay;
+    private final Boolean watermarks;
 
-    public MangaHere(String name, String url, List<String> language, Boolean overlay) {
+    public MangaHere(String name, String url, List<String> language, Boolean watermarks) {
         this.name = name;
         this.url = url;
         this.language = language;
-        this.overlay = overlay;
+        this.watermarks = watermarks;
     }
 
     @Override
@@ -167,8 +167,8 @@ public class MangaHere implements Site {
     }
 
     @Override
-    public Boolean getOverlay() {
-        return overlay;
+    public Boolean hasWatermarks() {
+        return watermarks;
     }
 
 }

@@ -47,7 +47,7 @@ public class Tapastic implements Site {
     private final String name = "Tapastic";
     private final String url = "http://tapastic.com";
     private final List<String> language = Arrays.asList("English");
-    private final Boolean overlay = false;
+    private final Boolean watermarks = false;
 
     @Override
     public List<Manga> getMangaList() throws Exception {
@@ -142,7 +142,7 @@ public class Tapastic implements Site {
     }
 
     @Override
-    public Boolean getOverlay() {
-        return overlay;
+    public Boolean hasWatermarks() {
+        return watermarks;
     }
 }

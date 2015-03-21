@@ -45,7 +45,7 @@ public class MangaStream implements Site {
     private final String name = "MangaStream";
     private final String url = "http://mangastream.com";
     private final List<String> language = Arrays.asList("English");
-    private final Boolean overlay = false;
+    private final Boolean watermarks = false;
 
     @Override
     public List<Manga> getMangaList() throws Exception {
@@ -131,7 +131,7 @@ public class MangaStream implements Site {
     }
 
     @Override
-    public Boolean getOverlay() {
-        return overlay;
+    public Boolean hasWatermarks() {
+        return watermarks;
     }
 }

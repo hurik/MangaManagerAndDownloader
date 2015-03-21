@@ -44,7 +44,7 @@ public class DeManga implements Site {
     private final String name = "DeManga";
     private final String url = "http://www.demanga.com";
     private final List<String> language = Arrays.asList("German");
-    private final Boolean overlay = false;
+    private final Boolean watermarks = false;
 
     @Override
     public List<Manga> getMangaList() throws Exception {
@@ -156,7 +156,7 @@ public class DeManga implements Site {
     }
 
     @Override
-    public Boolean getOverlay() {
-        return overlay;
+    public Boolean hasWatermarks() {
+        return watermarks;
     }
 }

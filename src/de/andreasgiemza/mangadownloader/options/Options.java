@@ -39,26 +39,26 @@ public enum Options {
 
     INSTANCE;
 
-    private final Path OPTIONS_DIR = Paths.get(System.getProperty("user.home"))
-            .resolve(".MangaDownloader");
-    private final Path OPTIONS_FILE = OPTIONS_DIR.resolve("MangaDownloader.properties");
-    private final String MANGAS_DIR = "mangaasDir";
-    private final String SELECTED_SOURCE = "selectedSource";
     private final Properties properties = new Properties();
+    private final Path optionsDir = Paths.get(System.getProperty("user.home")).resolve(".MangaDownloader");
+    private final Path optionsFile = optionsDir.resolve("MangaDownloader.properties");
+    private final String mangasDir = "mangasDir";
+    private final String selectedSource = "selectedSource";
+    private final Path mangaListDir = optionsDir.resolve("sources");
 
     Options() {
         try {
-            properties.load(new FileInputStream(OPTIONS_FILE.toFile()));
+            properties.load(new FileInputStream(optionsFile.toFile()));
         } catch (IOException ex) {
         }
     }
 
     public void setMangaDir(String mangaDir) {
-        properties.setProperty(MANGAS_DIR, mangaDir);
+        properties.setProperty(mangasDir, mangaDir);
     }
 
     public String getMangaDir() {
-        String mangaDir = properties.getProperty(MANGAS_DIR, "");
+        String mangaDir = properties.getProperty(mangasDir, "");
         if (mangaDir.isEmpty()) {
             return Paths.get(System.getProperty("user.home")).resolve("Mangas").toString();
         } else {
@@ -66,31 +66,35 @@ public enum Options {
         }
     }
 
-    public void setSelectedSource(String selectedSource) {
-        properties.setProperty(SELECTED_SOURCE, selectedSource);
+    public void setSelectedSource(String siteClass) {
+        properties.setProperty(selectedSource, siteClass);
     }
 
     public String getSelectedSource() {
-        return properties.getProperty(SELECTED_SOURCE, "");
+        return properties.getProperty(selectedSource, "");
     }
 
     public void saveOptions() {
         try {
             getOptionsDir();
-            properties.store(new FileOutputStream(OPTIONS_FILE.toFile()), null);
+            properties.store(new FileOutputStream(optionsFile.toFile()), null);
         } catch (IOException ex) {
         }
     }
 
     public Path getOptionsDir() {
-        if (!Files.exists(OPTIONS_DIR)) {
+        if (!Files.exists(optionsDir)) {
             try {
-                Files.createDirectory(OPTIONS_DIR);
-                Files.setAttribute(OPTIONS_DIR, "dos:hidden", true);
+                Files.createDirectory(optionsDir);
+                Files.setAttribute(optionsDir, "dos:hidden", true);
             } catch (IOException ex) {
             }
         }
 
-        return OPTIONS_DIR;
+        return optionsDir;
+    }
+
+    public Path getMangaListDir() {
+        return mangaListDir;
     }
 }

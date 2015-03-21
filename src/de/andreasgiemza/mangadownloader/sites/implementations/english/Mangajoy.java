@@ -44,7 +44,7 @@ public class Mangajoy implements Site {
     private final String name = "Mangajoy";
     private final String url = "http://mangajoy.com";
     private final List<String> language = Arrays.asList("English");
-    private final Boolean overlay = false;
+    private final Boolean watermarks = false;
 
     @Override
     public List<Manga> getMangaList() throws Exception {
@@ -121,7 +121,7 @@ public class Mangajoy implements Site {
     }
 
     @Override
-    public Boolean getOverlay() {
-        return overlay;
+    public Boolean hasWatermarks() {
+        return watermarks;
     }
 }

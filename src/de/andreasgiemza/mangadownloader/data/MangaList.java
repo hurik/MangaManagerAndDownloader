@@ -24,6 +24,7 @@
 package de.andreasgiemza.mangadownloader.data;
 
 import de.andreasgiemza.mangadownloader.options.Options;
+import de.andreasgiemza.mangadownloader.sites.Site;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,6 +32,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,16 +42,14 @@ import java.util.List;
  */
 public final class MangaList {
 
-    private final static Path sourcesDir = Options.INSTANCE.getOptionsDir().resolve("sources");
     private final static String sourcesExtension = ".list";
 
     private MangaList() {
     }
 
-    public static void save(String source, List<Manga> mangas) {
+    public static void save(Site site, List<Manga> mangas) {
         try {
-            Path sourceFile
-                    = sourcesDir.resolve(source + sourcesExtension);
+            Path sourceFile = Options.INSTANCE.getMangaListDir().resolve(site.getName() + sourcesExtension);
 
             if (!Files.exists(sourceFile.getParent())) {
                 Files.createDirectory(sourceFile.getParent());
@@ -68,10 +68,10 @@ public final class MangaList {
     }
 
     @SuppressWarnings("unchecked")
-    public static List<Manga> load(String source) {
+    public static List<Manga> load(Site site) {
         List<Manga> mangas = new LinkedList<>();
 
-        Path sourceFile = sourcesDir.resolve(source + sourcesExtension);
+        Path sourceFile = Options.INSTANCE.getMangaListDir().resolve(site.getName() + sourcesExtension);
 
         if (Files.exists(sourceFile)) {
             try (FileInputStream fin = new FileInputStream(sourceFile.toFile())) {
@@ -82,5 +82,15 @@ public final class MangaList {
         }
 
         return mangas;
+    }
+
+    public static String getLastListUpdate(Site site) {
+        Path mangasListFile = Options.INSTANCE.getMangaListDir().resolve(site.getName() + sourcesExtension);
+
+        try {
+            return new SimpleDateFormat("yyyy.MM.dd - HH:mm:ss").format(Files.getLastModifiedTime(mangasListFile).toMillis());
+        } catch (IOException ex) {
+            return null;
+        }
     }
 }

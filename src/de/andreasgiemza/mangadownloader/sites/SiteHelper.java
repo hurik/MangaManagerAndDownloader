@@ -26,10 +26,9 @@ package de.andreasgiemza.mangadownloader.sites;
 import com.google.common.reflect.ClassPath;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -42,30 +41,31 @@ public final class SiteHelper {
     private SiteHelper() {
     }
 
-    public static List<String> getSites() {
-        List<String> sites = new LinkedList<>();
+    public static List<Site> getSites() {
+        List<Site> sites = new LinkedList<>();
 
         try {
             final ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
             for (final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses()) {
                 if (info.getName().startsWith(implementationsPackage)) {
-                    final Class<?> clazz = info.load();
-                    String[] packageAndName = clazz.getName().split("\\.");
-                    sites.add(packageAndName[packageAndName.length - 1]);
+                    sites.add((Site) info.load().newInstance());
                 }
             }
-
-            Collections.sort(sites, String.CASE_INSENSITIVE_ORDER);
-        } catch (IOException ex) {
+        } catch (InstantiationException | IllegalAccessException | IOException ex) {
         }
+
+        Collections.sort(sites, new Comparator<Site>() {
+            @Override
+            public int compare(Site site1, Site site2) {
+                return site1.getName().compareTo(site2.getName());
+            }
+        });
 
         return sites;
     }
 
     public static Site getInstance(String source) {
-        Site site = null;
-
         final ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
         try {
@@ -73,10 +73,9 @@ public final class SiteHelper {
                 if (info.getName().startsWith(implementationsPackage)) {
                     final Class<?> clazz = info.load();
 
-                    if (clazz.getName().endsWith(source)) {
+                    if (clazz.getSimpleName().equals(source)) {
                         try {
-                            site = (Site) clazz.newInstance();
-                            break;
+                            return (Site) clazz.newInstance();
                         } catch (InstantiationException | IllegalAccessException ex) {
                         }
                     }
@@ -85,6 +84,6 @@ public final class SiteHelper {
         } catch (IOException ex) {
         }
 
-        return site;
+        return null;
     }
 }

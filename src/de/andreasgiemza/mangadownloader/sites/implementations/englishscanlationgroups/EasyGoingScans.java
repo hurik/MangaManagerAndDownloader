@@ -45,7 +45,7 @@ public class EasyGoingScans implements Site {
     private final String name = "Easy Going Scans";
     private final String url = "http://egscans.com";
     private final List<String> language = Arrays.asList("English");
-    private final Boolean overlay = false;
+    private final Boolean watermarks = false;
 
     private final String baseUrl = "http://read.egscans.com/";
 
@@ -146,7 +146,7 @@ public class EasyGoingScans implements Site {
     }
 
     @Override
-    public Boolean getOverlay() {
-        return overlay;
+    public Boolean hasWatermarks() {
+        return watermarks;
     }
 }

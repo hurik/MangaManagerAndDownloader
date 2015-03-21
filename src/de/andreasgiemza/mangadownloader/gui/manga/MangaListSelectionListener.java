@@ -23,8 +23,8 @@
  */
 package de.andreasgiemza.mangadownloader.gui.manga;
 
+import de.andreasgiemza.mangadownloader.MangaDownloader;
 import de.andreasgiemza.mangadownloader.data.Manga;
-import de.andreasgiemza.mangadownloader.gui.Controller;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -35,11 +35,11 @@ import javax.swing.event.ListSelectionListener;
  */
 public class MangaListSelectionListener implements ListSelectionListener {
 
-    final private Controller controller;
-    final private JTable mangaListTable;
+    private final MangaDownloader mangaDownloader;
+    private final JTable mangaListTable;
 
-    public MangaListSelectionListener(Controller controller, JTable mangaListTable) {
-        this.controller = controller;
+    public MangaListSelectionListener(MangaDownloader mangaDownloader, JTable mangaListTable) {
+        this.mangaDownloader = mangaDownloader;
         this.mangaListTable = mangaListTable;
     }
 
@@ -48,7 +48,7 @@ public class MangaListSelectionListener implements ListSelectionListener {
         try {
             Manga selectedManga = ((MangaTableModel) mangaListTable.getModel()).getMangaAt(mangaListTable.convertRowIndexToModel(mangaListTable.getSelectedRow()));
 
-            controller.mangaSelected(selectedManga);
+            mangaDownloader.mangaSelected(selectedManga);
         } catch (IndexOutOfBoundsException ex) {
         }
     }

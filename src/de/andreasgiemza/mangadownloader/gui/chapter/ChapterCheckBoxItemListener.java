@@ -23,8 +23,8 @@
  */
 package de.andreasgiemza.mangadownloader.gui.chapter;
 
+import de.andreasgiemza.mangadownloader.MangaDownloader;
 import de.andreasgiemza.mangadownloader.data.Chapter;
-import de.andreasgiemza.mangadownloader.gui.Controller;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import javax.swing.JTable;
@@ -35,14 +35,15 @@ import javax.swing.JTable;
  */
 public class ChapterCheckBoxItemListener implements ItemListener {
 
+    private final MangaDownloader mangaDownloader;
     private final JTable chapterListTable;
     private final ChapterTableModel chapterTableModel;
-    private final Controller controller;
 
-    public ChapterCheckBoxItemListener(JTable chapterListTable, Controller controller) {
+    public ChapterCheckBoxItemListener(MangaDownloader mangaDownloader, JTable chapterListTable) {
+        this.mangaDownloader = mangaDownloader;
         this.chapterListTable = chapterListTable;
         chapterTableModel = (ChapterTableModel) chapterListTable.getModel();
-        this.controller = controller;
+
     }
 
     @Override
@@ -57,7 +58,7 @@ public class ChapterCheckBoxItemListener implements ItemListener {
             }
             chapterTableModel.fireTableDataChanged();
         } else if (e.getStateChange() == ItemEvent.DESELECTED) {
-            controller.deactivateDownloads();
+            mangaDownloader.deactivateDownloads();
         }
     }
 }

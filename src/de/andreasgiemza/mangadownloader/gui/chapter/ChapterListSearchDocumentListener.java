@@ -23,7 +23,7 @@
  */
 package de.andreasgiemza.mangadownloader.gui.chapter;
 
-import de.andreasgiemza.mangadownloader.gui.Controller;
+import de.andreasgiemza.mangadownloader.MangaDownloader;
 import de.andreasgiemza.mangadownloader.helpers.RegexHelper;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -38,15 +38,15 @@ import javax.swing.table.TableRowSorter;
  */
 public class ChapterListSearchDocumentListener implements DocumentListener {
 
+    private final MangaDownloader mangaDownloader;
     private final JTextField chapterListSearchTextField;
     private final TableRowSorter<ChapterTableModel> chapterTableRowSorter;
-    private final Controller controller;
 
     @SuppressWarnings("unchecked")
-    public ChapterListSearchDocumentListener(JTextField chapterListSearchTextField, JTable chapterListTable, Controller controller) {
+    public ChapterListSearchDocumentListener(MangaDownloader mangaDownloader, JTextField chapterListSearchTextField, JTable chapterListTable) {
+        this.mangaDownloader = mangaDownloader;
         this.chapterListSearchTextField = chapterListSearchTextField;
         chapterTableRowSorter = (TableRowSorter<ChapterTableModel>) chapterListTable.getRowSorter();
-        this.controller = controller;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ChapterListSearchDocumentListener implements DocumentListener {
     }
 
     private void changed() {
-        controller.chapterSearchChanged();
+        mangaDownloader.chapterSearchChanged();
 
         final String searchText = chapterListSearchTextField.getText();
 

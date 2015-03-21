@@ -43,15 +43,15 @@ public class MangaEden implements Site {
     private final String name;
     private final String url;
     private final List<String> language;
-    private final Boolean overlay;
+    private final Boolean watermarks;
 
     private final String listUrl;
 
-    public MangaEden(String name, String url, List<String> language, Boolean overlay, String listUrl) {
+    public MangaEden(String name, String url, List<String> language, Boolean watermarks, String listUrl) {
         this.name = name;
         this.url = url;
         this.language = language;
-        this.overlay = overlay;
+        this.watermarks = watermarks;
 
         this.listUrl = listUrl;
     }
@@ -140,8 +140,8 @@ public class MangaEden implements Site {
     }
 
     @Override
-    public Boolean getOverlay() {
-        return overlay;
+    public Boolean hasWatermarks() {
+        return watermarks;
     }
 
 }
