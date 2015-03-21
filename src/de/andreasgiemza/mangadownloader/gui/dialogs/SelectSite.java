@@ -202,7 +202,7 @@ public class SelectSite extends javax.swing.JDialog {
 
         ((SiteTableModel) sitesTable.getModel()).fireTableDataChanged();
 
-        int selectedRow = sitesTable.convertRowIndexToView(((SiteTableModel) sitesTable.getModel()).getIndexOf(selectedSite));;
+        int selectedRow = sitesTable.convertRowIndexToView(((SiteTableModel) sitesTable.getModel()).getIndexOf(selectedSite));
         sitesTable.setRowSelectionInterval(selectedRow, selectedRow);
     }//GEN-LAST:event_updateButtonActionPerformed
 
