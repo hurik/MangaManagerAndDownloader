@@ -34,7 +34,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author hurik
+ * @author Andreas Giemza <andreas@giemza.net>
  */
 public class SelectSite extends javax.swing.JDialog {
 
@@ -157,7 +157,7 @@ public class SelectSite extends javax.swing.JDialog {
                     "Please update site before continuing!",
                     "Info",
                     JOptionPane.INFORMATION_MESSAGE);
-            
+
             return;
         }
 
