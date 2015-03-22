@@ -121,6 +121,9 @@ public class MangaDownloader extends javax.swing.JFrame {
         leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
         downloadTable.getColumnModel().getColumn(0).setCellRenderer(leftRenderer);
 
+        downloadTable.getColumnModel().getColumn(0).setMaxWidth(30);
+        downloadTable.getColumnModel().getColumn(0).setMinWidth(30);
+
         // Setup DeSelectAll CheckBox
         chapterDeSelectAllCheckBox.addItemListener(new ChapterCheckBoxItemListener(this, chapterListTable));
 
