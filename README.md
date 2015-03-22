@@ -77,4 +77,6 @@ Developed with [NetBeans 8.0.2 (Java SE)](https://netbeans.org/downloads/).
 ##  Program screenshots
 ![MangaDownloader - Gui](https://raw.github.com/hurik/MangaDownloader/master/images/gui.png)
 
+![MangaDownloader - Gui Select Source](https://raw.github.com/hurik/MangaDownloader/master/images/gui-select-source.png)
+
 ![MangaDownloader - Gui Download](https://raw.github.com/hurik/MangaDownloader/master/images/gui-download.png)
