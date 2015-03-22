@@ -42,7 +42,6 @@ public final class JsoupHelper {
 
     private final static int NUMBER_OF_TRIES = 5;
     private final static int MAX_BODY_SIZE = 0; // Unlimited (limited only by RAM)
-    private final static int TIMEOUT = 5 * 1000; // 5 seconds
 
     private JsoupHelper() {
     }
@@ -54,7 +53,7 @@ public final class JsoupHelper {
             try {
                 return Jsoup.connect(url)
                         .maxBodySize(MAX_BODY_SIZE)
-                        .timeout(TIMEOUT)
+                        .timeout((i + 1) * 3000)
                         .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
                         .get();
             } catch (Exception e) {
@@ -73,7 +72,7 @@ public final class JsoupHelper {
             try {
                 return Jsoup.connect(url)
                         .maxBodySize(MAX_BODY_SIZE)
-                        .timeout(TIMEOUT)
+                        .timeout((i + 1) * 3000)
                         .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
                         .data(post)
                         .post();
@@ -93,7 +92,7 @@ public final class JsoupHelper {
             try {
                 return Jsoup.connect(url)
                         .maxBodySize(MAX_BODY_SIZE)
-                        .timeout(TIMEOUT)
+                        .timeout((i + 1) * 3000)
                         .userAgent("Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19")
                         .get();
             } catch (Exception e) {
@@ -112,7 +111,7 @@ public final class JsoupHelper {
             try {
                 return Jsoup.connect(imageLink)
                         .maxBodySize(MAX_BODY_SIZE)
-                        .timeout(TIMEOUT)
+                        .timeout((i + 1) * 3000)
                         .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
                         .referrer(referrer)
                         .ignoreContentType(true)
