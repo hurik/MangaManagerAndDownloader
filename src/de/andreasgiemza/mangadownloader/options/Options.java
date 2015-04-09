@@ -76,13 +76,12 @@ public enum Options {
 
     public void saveOptions() {
         try {
-            getOptionsDir();
             properties.store(new FileOutputStream(optionsFile.toFile()), null);
         } catch (IOException ex) {
         }
     }
 
-    public Path getOptionsDir() {
+    public void createOptionsDir() {
         if (!Files.exists(optionsDir)) {
             try {
                 Files.createDirectory(optionsDir);
@@ -90,8 +89,6 @@ public enum Options {
             } catch (IOException ex) {
             }
         }
-
-        return optionsDir;
     }
 
     public Path getMangaListDir() {

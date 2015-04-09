@@ -151,6 +151,9 @@ public class MangaDownloader extends javax.swing.JFrame {
 
         // Load Manga List
         loadManga(SiteHelper.getInstance(Options.INSTANCE.getSelectedSource()));
+
+        // Create options dir when not there
+        Options.INSTANCE.createOptionsDir();
     }
 
     public final void loadManga(Site site) {
