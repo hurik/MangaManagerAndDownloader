@@ -28,9 +28,13 @@ import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.data.MangaList;
 import de.andreasgiemza.mangadownloader.gui.site.SiteTableModel;
 import de.andreasgiemza.mangadownloader.sites.Site;
+import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 
 /**
  *
@@ -38,7 +42,7 @@ import javax.swing.JOptionPane;
  */
 public class SelectSite extends javax.swing.JDialog {
 
-    private final java.awt.Frame parent;
+    private final java.awt.Frame parentFrame;
 
     public SelectSite(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -49,7 +53,23 @@ public class SelectSite extends javax.swing.JDialog {
                 new Double((Toolkit.getDefaultToolkit().getScreenSize()
                         .getHeight() / 2) - (getHeight() / 2)).intValue());
 
-        this.parent = parent;
+        this.parentFrame = parent;
+
+        sitesTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent me) {
+                JTable table = (JTable) me.getSource();
+                Point p = me.getPoint();
+                int row = table.rowAtPoint(p);
+                if (me.getClickCount() == 2) {
+                    Site selectedSite = ((SiteTableModel) sitesTable.getModel()).getSite(sitesTable.convertRowIndexToModel(row));
+
+                    ((MangaDownloader) parentFrame).loadManga(selectedSite);
+
+                    dispose();
+                }
+            }
+        });
     }
 
     private Site getSelectedSite() {
@@ -57,7 +77,7 @@ public class SelectSite extends javax.swing.JDialog {
 
         if (selectedRow < 0) {
             JOptionPane.showMessageDialog(
-                    parent,
+                    parentFrame,
                     "Please select a site!",
                     "Info",
                     JOptionPane.INFORMATION_MESSAGE);
@@ -164,7 +184,7 @@ public class SelectSite extends javax.swing.JDialog {
 
         if (MangaList.getLastListUpdate(selectedSite) == null) {
             JOptionPane.showMessageDialog(
-                    parent,
+                    parentFrame,
                     "Please update site before continuing!",
                     "Info",
                     JOptionPane.INFORMATION_MESSAGE);
@@ -172,7 +192,7 @@ public class SelectSite extends javax.swing.JDialog {
             return;
         }
 
-        ((MangaDownloader) parent).loadManga(selectedSite);
+        ((MangaDownloader) parentFrame).loadManga(selectedSite);
 
         dispose();
     }//GEN-LAST:event_selectButtonActionPerformed
@@ -184,7 +204,7 @@ public class SelectSite extends javax.swing.JDialog {
             return;
         }
 
-        final Loading loading = new Loading(parent, true);
+        final Loading loading = new Loading(parentFrame, true);
         loading.startRunnable(new Runnable() {
 
             @Override
@@ -228,7 +248,7 @@ public class SelectSite extends javax.swing.JDialog {
             return;
         }
 
-        final Loading loading = new Loading(parent, true);
+        final Loading loading = new Loading(parentFrame, true);
         loading.startRunnable(new Runnable() {
 
             @Override
