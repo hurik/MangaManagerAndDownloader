@@ -96,4 +96,8 @@ public class SiteTableModel extends AbstractTableModel {
     public int getIndexOf(Site site) {
         return sites.indexOf(site);
     }
+
+    public List<Site> getSites() {
+        return sites;
+    }
 }

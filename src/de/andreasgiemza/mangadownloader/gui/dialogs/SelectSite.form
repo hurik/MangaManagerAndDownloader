@@ -31,6 +31,8 @@
                       <Component id="selectButton" min="-2" pref="67" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="updateButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="updateAllButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="cancelButton" min="-2" pref="67" max="-2" attributes="0"/>
                   </Group>
@@ -49,6 +51,7 @@
                   <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="selectButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="updateButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="updateAllButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -90,6 +93,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="updateButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="updateAllButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Update all"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="updateAllButtonActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="cancelButton">

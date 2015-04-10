@@ -82,6 +82,7 @@ public class SelectSite extends javax.swing.JDialog {
         sitesTable = new javax.swing.JTable();
         selectButton = new javax.swing.JButton();
         updateButton = new javax.swing.JButton();
+        updateAllButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -105,6 +106,13 @@ public class SelectSite extends javax.swing.JDialog {
             }
         });
 
+        updateAllButton.setText("Update all");
+        updateAllButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateAllButtonActionPerformed(evt);
+            }
+        });
+
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -124,6 +132,8 @@ public class SelectSite extends javax.swing.JDialog {
                         .addComponent(selectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(updateButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(updateAllButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -137,7 +147,8 @@ public class SelectSite extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(selectButton)
-                    .addComponent(updateButton))
+                    .addComponent(updateButton)
+                    .addComponent(updateAllButton))
                 .addContainerGap())
         );
 
@@ -197,24 +208,67 @@ public class SelectSite extends javax.swing.JDialog {
                 MangaList.save(selectedSite, mangas);
 
                 loading.dispose();
+
+                ((SiteTableModel) sitesTable.getModel()).fireTableDataChanged();
+
+                int selectedRow = sitesTable.convertRowIndexToView(((SiteTableModel) sitesTable.getModel()).getIndexOf(selectedSite));
+                sitesTable.setRowSelectionInterval(selectedRow, selectedRow);
             }
         });
-
-        ((SiteTableModel) sitesTable.getModel()).fireTableDataChanged();
-
-        int selectedRow = sitesTable.convertRowIndexToView(((SiteTableModel) sitesTable.getModel()).getIndexOf(selectedSite));
-        sitesTable.setRowSelectionInterval(selectedRow, selectedRow);
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    private void updateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateAllButtonActionPerformed
+        final List<Site> sites = ((SiteTableModel) sitesTable.getModel()).getSites();
+
+        if (sites == null) {
+            return;
+        }
+
+        final Loading loading = new Loading(parent, true);
+        loading.startRunnable(new Runnable() {
+
+            @Override
+            public void run() {
+                String errors = "";
+
+                for (Site site : sites) {
+                    List<Manga> mangas;
+
+                    try {
+                        mangas = site.getMangaList();
+
+                        // Save data to file
+                        MangaList.save(site, mangas);
+                    } catch (Exception ex) {
+                        errors += "Cant't connect to " + site.getName() + "!\n";
+                    }
+                }
+
+                if (!errors.isEmpty()) {
+                    JOptionPane.showMessageDialog(
+                            loading,
+                            errors,
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+
+                loading.dispose();
+
+                ((SiteTableModel) sitesTable.getModel()).fireTableDataChanged();
+            }
+        });
+    }//GEN-LAST:event_updateAllButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton selectButton;
     private javax.swing.JScrollPane sitesScrollPane;
     private javax.swing.JTable sitesTable;
+    private javax.swing.JButton updateAllButton;
     private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
 }
