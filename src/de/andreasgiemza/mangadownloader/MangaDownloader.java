@@ -154,6 +154,9 @@ public class MangaDownloader extends javax.swing.JFrame {
 
         // Create options dir when not there
         Options.INSTANCE.createOptionsDir();
+
+        // Deactivate certificate check
+        JsoupHelper.deactivateCertificateCheck();
     }
 
     public final void loadManga(Site site) {
