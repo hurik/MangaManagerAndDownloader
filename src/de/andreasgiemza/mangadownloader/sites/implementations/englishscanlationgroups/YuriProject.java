@@ -35,7 +35,7 @@ public class YuriProject extends FoOlSlide implements Site {
 
     public YuriProject() {
         super(
-                "Yuri Projec",
+                "Yuri Project",
                 "https://yuriproject.net",
                 Arrays.asList("English"),
                 false,
