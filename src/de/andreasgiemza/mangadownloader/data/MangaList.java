@@ -71,7 +71,7 @@ public final class MangaList {
 
     @SuppressWarnings("unchecked")
     public static List<Manga> load(Site site) {
-        List<Manga> mangas = new LinkedList<>();
+        List<Manga> mangas = null;
 
         Path sourceFile = Options.INSTANCE.getMangaListDir().resolve(
                 FilenameHelper.checkForIllegalCharacters(site.getName()) + sourcesExtension);
@@ -82,6 +82,10 @@ public final class MangaList {
                 mangas = (LinkedList<Manga>) ois.readObject();
             } catch (IOException | ClassNotFoundException ex) {
             }
+        }
+
+        if (mangas == null) {
+            return new LinkedList<>();
         }
 
         return mangas;
