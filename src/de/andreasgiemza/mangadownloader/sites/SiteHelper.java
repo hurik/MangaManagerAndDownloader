@@ -23,8 +23,8 @@
  */
 package de.andreasgiemza.mangadownloader.sites;
 
-import com.google.common.reflect.ClassPath;
-import java.io.IOException;
+import de.andreasgiemza.mangadownloader.helpers.ClassesInPackageHelper;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -45,14 +45,12 @@ public final class SiteHelper {
         List<Site> sites = new LinkedList<>();
 
         try {
-            final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            ArrayList<Class<?>> clazzes = ClassesInPackageHelper.getClassesForPackage(implementationsPackage);
 
-            for (final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses()) {
-                if (info.getName().startsWith(implementationsPackage)) {
-                    sites.add((Site) info.load().newInstance());
-                }
+            for (Class<?> clazz : clazzes) {
+                sites.add((Site) clazz.newInstance());
             }
-        } catch (InstantiationException | IllegalAccessException | IOException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
         }
 
         Collections.sort(sites, new Comparator<Site>() {
@@ -66,22 +64,16 @@ public final class SiteHelper {
     }
 
     public static Site getInstance(String source) {
-        final ClassLoader loader = Thread.currentThread().getContextClassLoader();
-
         try {
-            for (final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses()) {
-                if (info.getName().startsWith(implementationsPackage)) {
-                    final Class<?> clazz = info.load();
+            ArrayList<Class<?>> clazzes = ClassesInPackageHelper.getClassesForPackage(implementationsPackage);
 
-                    if (clazz.getSimpleName().equals(source)) {
-                        try {
-                            return (Site) clazz.newInstance();
-                        } catch (InstantiationException | IllegalAccessException ex) {
-                        }
-                    }
+            for (Class<?> clazz : clazzes) {
+                if (clazz.getSimpleName().equals(source)) {
+                    return (Site) clazz.newInstance();
                 }
             }
-        } catch (IOException ex) {
+
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
         }
 
         return null;
