@@ -31,16 +31,16 @@ import java.util.Arrays;
  *
  * @author Daniel Biesecke <dbiesecke@gmail.com>
  */
-public class MangaTube extends FoOlSlide implements Site {
+public class tokido extends FoOlSlide implements Site {
 
-    public MangaTube() {
+    public tokido() {
         super(
-                "manga-tube.org",
-                "http://www.manga-tube.org/",
+                "tokido-scans",
+                "http://tokido-scans.blogspot.de/",
                 Arrays.asList("German"),
                 false,
-                "http://www.manga-tube.org/reader",
-                "/latest/"
+                "http://tokido.bplaced.net/Reader/",
+                "/directory/"
         );
     }
 }

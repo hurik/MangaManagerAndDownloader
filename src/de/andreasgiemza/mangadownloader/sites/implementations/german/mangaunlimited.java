@@ -31,16 +31,16 @@ import java.util.Arrays;
  *
  * @author Daniel Biesecke <dbiesecke@gmail.com>
  */
-public class MangaTube extends FoOlSlide implements Site {
+public class mangaunlimited extends FoOlSlide implements Site {
 
-    public MangaTube() {
+    public mangaunlimited() {
         super(
-                "manga-tube.org",
-                "http://www.manga-tube.org/",
+                "MangaUnlimited",
+                "http://mangaunlimited.com/",
                 Arrays.asList("German"),
                 false,
-                "http://www.manga-tube.org/reader",
-                "/latest/"
+                "http://reader.mangaunlimited.com",
+                "/directory/"
         );
     }
 }

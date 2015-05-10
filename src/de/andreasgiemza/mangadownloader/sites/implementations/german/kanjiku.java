@@ -30,17 +30,18 @@ import java.util.Arrays;
 /**
  *
  * @author Daniel Biesecke <dbiesecke@gmail.com>
+ * DONT WORK ATM!
  */
-public class MangaTube extends FoOlSlide implements Site {
+public class kanjiku extends FoOlSlide implements Site {
 
-    public MangaTube() {
+    public kanjiku() {
         super(
-                "manga-tube.org",
-                "http://www.manga-tube.org/",
+                "kanjiku",
+                "http://kanjiku.net/",
                 Arrays.asList("German"),
                 false,
-                "http://www.manga-tube.org/reader",
-                "/latest/"
+                "http://reader.kanjiku.net",
+                "/directory/"
         );
     }
 }
