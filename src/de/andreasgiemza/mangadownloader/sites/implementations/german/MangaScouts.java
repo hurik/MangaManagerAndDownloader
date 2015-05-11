@@ -31,15 +31,15 @@ import java.util.Arrays;
  *
  * @author Daniel Biesecke <dbiesecke@gmail.com>
  */
-public class tokido extends FoOlSlide implements Site {
+public class MangaScouts extends FoOlSlide implements Site {
 
-    public tokido() {
+    public MangaScouts() {
         super(
-                "tokido-scans",
-                "http://tokido-scans.blogspot.de/",
+                "Manga Scouts",
+                "http://mangascouts.org",
                 Arrays.asList("German"),
                 false,
-                "http://tokido.bplaced.net/Reader/",
+                "http://onlinereader.mangascouts.org",
                 "/directory/"
         );
     }

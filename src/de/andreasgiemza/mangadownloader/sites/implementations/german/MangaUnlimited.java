@@ -30,17 +30,16 @@ import java.util.Arrays;
 /**
  *
  * @author Daniel Biesecke <dbiesecke@gmail.com>
- * DONT WORK ATM!
  */
-public class kanjiku extends FoOlSlide implements Site {
+public class MangaUnlimited extends FoOlSlide implements Site {
 
-    public kanjiku() {
+    public MangaUnlimited() {
         super(
-                "kanjiku",
-                "http://kanjiku.net/",
+                "MangaUnlimited",
+                "http://mangaunlimited.com/",
                 Arrays.asList("German"),
                 false,
-                "http://reader.kanjiku.net",
+                "http://reader.mangaunlimited.com",
                 "/directory/"
         );
     }

@@ -31,11 +31,11 @@ import java.util.Arrays;
  *
  * @author Daniel Biesecke <dbiesecke@gmail.com>
  */
-public class thrillerbarkcafe extends FoOlSlide implements Site {
+public class ThrillerBarkCafé extends FoOlSlide implements Site {
 
-    public thrillerbarkcafe() {
+    public ThrillerBarkCafé() {
         super(
-                "thrillerbarkcafe",
+                "Thriller Bark Café",
                 "http://www.thrillerbarkcafe.de/",
                 Arrays.asList("German"),
                 false,
