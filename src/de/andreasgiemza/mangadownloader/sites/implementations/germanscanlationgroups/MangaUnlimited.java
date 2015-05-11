@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites.implementations.german;
+package de.andreasgiemza.mangadownloader.sites.implementations.germanscanlationgroups;
 
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
@@ -31,15 +31,15 @@ import java.util.Arrays;
  *
  * @author Daniel Biesecke <dbiesecke@gmail.com>
  */
-public class ThrillerBarkCafé extends FoOlSlide implements Site {
+public class MangaUnlimited extends FoOlSlide implements Site {
 
-    public ThrillerBarkCafé() {
+    public MangaUnlimited() {
         super(
-                "Thriller Bark Café",
-                "http://www.thrillerbarkcafe.de/",
+                "MangaUnlimited",
+                "http://mangaunlimited.com/",
                 Arrays.asList("German"),
                 false,
-                "http://reader.thrillerbarkcafe.de/",
+                "http://reader.mangaunlimited.com",
                 "/directory/"
         );
     }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.andreasgiemza.mangadownloader.sites.implementations.german;
+package de.andreasgiemza.mangadownloader.sites.implementations.germanscanlationgroups;
 
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
@@ -31,15 +31,15 @@ import java.util.Arrays;
  *
  * @author Daniel Biesecke <dbiesecke@gmail.com>
  */
-public class TokidoTranslations extends FoOlSlide implements Site {
+public class ThrillerBarkCafé extends FoOlSlide implements Site {
 
-    public TokidoTranslations() {
+    public ThrillerBarkCafé() {
         super(
-                "Tokido Translations",
-                "http://tokido-scans.blogspot.de/",
+                "Thriller Bark Café",
+                "http://www.thrillerbarkcafe.de/",
                 Arrays.asList("German"),
                 false,
-                "http://tokido.bplaced.net/Reader/",
+                "http://reader.thrillerbarkcafe.de/",
                 "/directory/"
         );
     }
