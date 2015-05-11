@@ -31,6 +31,7 @@ import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -53,13 +54,13 @@ public class Tapastic implements Site {
     public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(url + "/browse/list");
+        Document doc = JsoupHelper.getHTMLPage(url + "/browse?browse=ALL");
 
-        int max = Integer.parseInt(doc.select("div[class^=g-pagination-wrap]").first().select("a[class=page-num paging-btn g-act]").last().text());
+        int max = Integer.parseInt(doc.select("div[class^=g-pagination-wrap]").first().select("a[class=paging-btn page-num g-act force mln size-up]").first().text());
 
         for (int i = 1; i <= max; i++) {
             if (i != 1) {
-                doc = JsoupHelper.getHTMLPage(url + "/browse/list?pageNumber=" + i);
+                doc = JsoupHelper.getHTMLPage(url + "/browse?pageNumber=" + i + "&browse=ALL");
             }
 
             Elements rows = doc.select("ul[class=page-list-wrap]").first().select("li");
@@ -69,6 +70,8 @@ public class Tapastic implements Site {
             }
         }
 
+        Collections.sort(mangas);
+        
         return mangas;
     }
 
