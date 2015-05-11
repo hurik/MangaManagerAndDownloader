@@ -72,6 +72,10 @@ public class Mangajoy implements Site {
         Elements rows = doc.select("ul[class=chp_lst]").first().select("li");
 
         for (Element row : rows) {
+            if (row.select("a").first() == null) {
+                continue;
+            }
+
             chapters.add(new Chapter(row.select("a").first().attr("href"), row.select("span[class=val]").first().text()));
         }
 

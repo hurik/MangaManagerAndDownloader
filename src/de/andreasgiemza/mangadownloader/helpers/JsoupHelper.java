@@ -53,6 +53,9 @@ public final class JsoupHelper {
     private final static int NUMBER_OF_TRIES = 5;
     private final static int MAX_BODY_SIZE = 0; // Unlimited (limited only by RAM)
 
+    private final static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0";
+    private final static String USER_AGENT_MOBILE = "Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19";
+
     private JsoupHelper() {
     }
 
@@ -64,7 +67,8 @@ public final class JsoupHelper {
                 return Jsoup.connect(url)
                         .maxBodySize(MAX_BODY_SIZE)
                         .timeout((i + 1) * 3000)
-                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
+                        .userAgent(USER_AGENT)
+                        .ignoreHttpErrors(true)
                         .get();
             } catch (Exception e) {
                 System.err.println("Try " + (i + 1) + " of " + NUMBER_OF_TRIES + ". Link: " + url + ". Error: " + e.getMessage());
@@ -83,7 +87,8 @@ public final class JsoupHelper {
                 return Jsoup.connect(url)
                         .maxBodySize(MAX_BODY_SIZE)
                         .timeout((i + 1) * 3000)
-                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
+                        .userAgent(USER_AGENT)
+                        .ignoreHttpErrors(true)
                         .data(post)
                         .post();
             } catch (Exception e) {
@@ -103,7 +108,8 @@ public final class JsoupHelper {
                 return Jsoup.connect(url)
                         .maxBodySize(MAX_BODY_SIZE)
                         .timeout((i + 1) * 3000)
-                        .userAgent("Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19")
+                        .userAgent(USER_AGENT_MOBILE)
+                        .ignoreHttpErrors(true)
                         .get();
             } catch (Exception e) {
                 System.err.println("Try " + (i + 1) + " of " + NUMBER_OF_TRIES + ". Link: " + url + ". Error: " + e.getMessage());
@@ -122,7 +128,8 @@ public final class JsoupHelper {
                 return Jsoup.connect(imageLink)
                         .maxBodySize(MAX_BODY_SIZE)
                         .timeout((i + 1) * 3000)
-                        .userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
+                        .userAgent(USER_AGENT)
+                        .ignoreHttpErrors(true)
                         .referrer(referrer)
                         .ignoreContentType(true)
                         .execute()
