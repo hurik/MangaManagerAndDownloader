@@ -38,7 +38,7 @@ public class MangaHereEnglish extends MangaHere implements Site {
                 "Manga Here",
                 "http://www.mangahere.co",
                 Arrays.asList("English"),
-                false
+                true
         );
     }
 }
