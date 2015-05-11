@@ -36,10 +36,10 @@ public class YuriProject extends FoOlSlide implements Site {
     public YuriProject() {
         super(
                 "Yuri Project",
-                "https://yuriproject.net",
+                "http://yuriproject.net",
                 Arrays.asList("English"),
                 false,
-                "https://reader.yuriproject.net",
+                "http://reader.yuriproject.net",
                 "/directory/"
         );
     }
