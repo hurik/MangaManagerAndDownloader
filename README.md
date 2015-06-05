@@ -40,8 +40,13 @@ Little tool to download mangas from various sites.
 * CaféConLenin
 
 ### German
-* DeManga
-* MeinManga
+* MangaTube
+
+### German Scanlation Groups
+* Manga Scouts
+* MangaUnlimited
+* Thriller Bark Café
+* Tokido Translations
 
 ### Español
 * MangaHereEspañol
@@ -59,11 +64,11 @@ Little tool to download mangas from various sites.
 ## How to use
 1. Download and extract in a folder.
 2. Start `MangaDownloader.jar`, with a doubleclick or `java -jar MangaDownloader.jar`.
-3. Select a site and update the manga list.
-5. Select a manga and the chapters to download.
-6. Click on download and start in the download window.
-7. Wait ...
-8. Downloaded mangas are in the mangas folder in the programm directory.
+3. Click `Select Site`, mark the desired site and click `Update` and then `Select`.
+4. Select a manga and the chapters to download and click `Add`.
+5. Click on `Start` to start the download.
+
+While downloading you can add more mangas. You can also add mangas from different sites.
 
 ## Feature requests and bug report
 [https://github.com/hurik/MangaDownloader/issues](https://github.com/hurik/MangaDownloader/issues)
@@ -75,8 +80,8 @@ Developed with [NetBeans 8.0.2 (Java SE)](https://netbeans.org/downloads/).
 
 
 ##  Program screenshots
-![MangaDownloader - Gui](https://raw.github.com/hurik/MangaDownloader/master/images/gui.png)
-
 ![MangaDownloader - Gui Select Source](https://raw.github.com/hurik/MangaDownloader/master/images/gui-select-source.png)
+
+![MangaDownloader - Gui](https://raw.github.com/hurik/MangaDownloader/master/images/gui.png)
 
 ![MangaDownloader - Gui Download](https://raw.github.com/hurik/MangaDownloader/master/images/gui-download.png)
