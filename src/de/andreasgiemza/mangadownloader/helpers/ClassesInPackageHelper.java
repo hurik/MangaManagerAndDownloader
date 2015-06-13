@@ -154,4 +154,32 @@ public class ClassesInPackageHelper {
 
         return classes;
     }
+
+    /**
+     * Attempts to list all the classes with a interface in the specified
+     * package as determined by the context class loader
+     *
+     * @param pckgname the package name to search
+     * @param intface the interface which the classes must implement
+     * @return a list of classes that exist within that package
+     * @throws ClassNotFoundException if something went wrong
+     */
+    public static ArrayList<Class<?>> getClassesForPackageWithInterface(String pckgname, Class intface) throws ClassNotFoundException {
+        ArrayList<Class<?>> classes = getClassesForPackage(pckgname);
+
+        final ArrayList<Class<?>> classesWitInterface = new ArrayList<>();
+
+        for (Class<?> clazz : classes) {
+            Class<?>[] interfaces = clazz.getInterfaces();
+
+            for (Class<?> interfaze : interfaces) {
+                if (interfaze == intface) {
+                    classesWitInterface.add(clazz);
+                    break;
+                }
+            }
+        }
+
+        return classesWitInterface;
+    }
 }

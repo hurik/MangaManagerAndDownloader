@@ -45,7 +45,7 @@ public final class SiteHelper {
         List<Site> sites = new LinkedList<>();
 
         try {
-            ArrayList<Class<?>> clazzes = ClassesInPackageHelper.getClassesForPackage(implementationsPackage);
+            ArrayList<Class<?>> clazzes = ClassesInPackageHelper.getClassesForPackageWithInterface(implementationsPackage, Site.class);
 
             for (Class<?> clazz : clazzes) {
                 sites.add((Site) clazz.newInstance());
@@ -65,7 +65,7 @@ public final class SiteHelper {
 
     public static Site getInstance(String source) {
         try {
-            ArrayList<Class<?>> clazzes = ClassesInPackageHelper.getClassesForPackage(implementationsPackage);
+            ArrayList<Class<?>> clazzes = ClassesInPackageHelper.getClassesForPackageWithInterface(implementationsPackage, Site.class);
 
             for (Class<?> clazz : clazzes) {
                 if (clazz.getSimpleName().equals(source)) {
