@@ -16,6 +16,7 @@ Little tool to download mangas from various sites.
 * Mangajoy
 * Mangapanda
 * MangaReader
+* ReadManga Today
 * Tapastic
 
 ### English Scanlation Groups
