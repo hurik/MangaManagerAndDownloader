@@ -21,6 +21,7 @@ Little tool to download mangas from various sites.
 
 ### English Scanlation Groups
 * ChibiMangaScanlation
+* Death Toll Scans
 * EGscans
 * Japanzai
 * JapanzaiEcchi

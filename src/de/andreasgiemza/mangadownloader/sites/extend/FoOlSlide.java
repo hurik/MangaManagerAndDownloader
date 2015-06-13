@@ -50,7 +50,7 @@ public class FoOlSlide implements Site {
 
     private final String baseUrl;
     private final String listUrl;
-    private final Map<String, String> post = new HashMap<>();
+    public final Map<String, String> post = new HashMap<>();
 
     public FoOlSlide(String name, String url, List<String> language, Boolean watermarks, String baseUrl, String listUrl) {
         this.name = name;
