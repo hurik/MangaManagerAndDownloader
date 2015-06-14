@@ -23,13 +23,14 @@
  */
 package de.andreasgiemza.mangadownloader.sites.implementations.english;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -71,7 +72,7 @@ public class Tapastic implements Site {
         }
 
         Collections.sort(mangas);
-        
+
         return mangas;
     }
 
@@ -96,14 +97,15 @@ public class Tapastic implements Site {
             return chapters;
         }
 
-        line = line.split("episodeList : \\[")[1];
-        line = line.substring(0, line.length() - 2);
+        line = line.replace("        episodeList : ", "").replace(";", "").trim();
 
-        String[] jsons = line.replace("},{", "}},{{").split("\\},\\{");
+        JsonReader jsonReader = new JsonReader(new StringReader(line));
+        jsonReader.setLenient(true);
 
-        for (int i = 0; i < jsons.length; i++) {
-            JsonObject jsonObject = new JsonParser().parse(jsons[i]).getAsJsonObject();
-            chapters.add(new Chapter(jsonObject.get("id").toString(), "(" + i + ") " + jsonObject.get("title").toString()));
+        Wrapper[] dataArray = new Gson().fromJson(jsonReader, Wrapper[].class);
+
+        for (int i = 0; i < dataArray.length; i++) {
+            chapters.add(new Chapter(dataArray[i].id, "(" + i + ") " + dataArray[i].title));
         }
 
         return chapters;
@@ -147,5 +149,11 @@ public class Tapastic implements Site {
     @Override
     public Boolean hasWatermarks() {
         return watermarks;
+    }
+
+    class Wrapper {
+
+        public String id;
+        public String title;
     }
 }
