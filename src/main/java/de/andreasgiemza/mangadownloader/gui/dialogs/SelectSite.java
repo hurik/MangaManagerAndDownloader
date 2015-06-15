@@ -94,6 +94,7 @@ public class SelectSite extends javax.swing.JDialog {
 
 		selectButton.setText("Select");
 		selectButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				selectButtonActionPerformed(evt);
 			}
@@ -101,6 +102,7 @@ public class SelectSite extends javax.swing.JDialog {
 
 		updateButton.setText("Update");
 		updateButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				updateButtonActionPerformed(evt);
 			}
@@ -108,6 +110,7 @@ public class SelectSite extends javax.swing.JDialog {
 
 		updateAllButton.setText("Update all");
 		updateAllButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				updateAllButtonActionPerformed(evt);
 			}
@@ -115,6 +118,7 @@ public class SelectSite extends javax.swing.JDialog {
 
 		cancelButton.setText("Cancel");
 		cancelButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				cancelButtonActionPerformed(evt);
 			}

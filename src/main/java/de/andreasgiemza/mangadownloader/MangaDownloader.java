@@ -22,13 +22,13 @@ import de.andreasgiemza.mangadownloader.data.Download;
 import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.data.MangaList;
-import de.andreasgiemza.mangadownloader.data.gui.download.DownloadTableModel;
 import de.andreasgiemza.mangadownloader.gui.chapter.ChapterCheckBoxItemListener;
 import de.andreasgiemza.mangadownloader.gui.chapter.ChapterListSearchDocumentListener;
 import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableCellRenderer;
 import de.andreasgiemza.mangadownloader.gui.chapter.ChapterTableModel;
 import de.andreasgiemza.mangadownloader.gui.dialogs.Loading;
 import de.andreasgiemza.mangadownloader.gui.dialogs.SelectSite;
+import de.andreasgiemza.mangadownloader.gui.download.DownloadTableModel;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSearchDocumentListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaListSelectionListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableCellRenderer;
@@ -312,6 +312,7 @@ public class MangaDownloader extends javax.swing.JFrame {
 
 		mangasDirButton.setText("Select");
 		mangasDirButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				mangasDirButtonActionPerformed(evt);
 			}
@@ -358,6 +359,7 @@ public class MangaDownloader extends javax.swing.JFrame {
 
 		selectSiteButton.setText("Select site");
 		selectSiteButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				selectSiteButtonActionPerformed(evt);
 			}
@@ -473,6 +475,7 @@ public class MangaDownloader extends javax.swing.JFrame {
 		downloadButton.setText("Add download");
 		downloadButton.setEnabled(false);
 		downloadButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				downloadButtonActionPerformed(evt);
 			}
@@ -553,6 +556,7 @@ public class MangaDownloader extends javax.swing.JFrame {
 		startDownloadButton.setText("Start");
 		startDownloadButton
 				.addActionListener(new java.awt.event.ActionListener() {
+					@Override
 					public void actionPerformed(java.awt.event.ActionEvent evt) {
 						startDownloadButtonActionPerformed(evt);
 					}
@@ -562,6 +566,7 @@ public class MangaDownloader extends javax.swing.JFrame {
 		stopDownloadButton.setEnabled(false);
 		stopDownloadButton
 				.addActionListener(new java.awt.event.ActionListener() {
+					@Override
 					public void actionPerformed(java.awt.event.ActionEvent evt) {
 						stopDownloadButtonActionPerformed(evt);
 					}
@@ -570,6 +575,7 @@ public class MangaDownloader extends javax.swing.JFrame {
 		removeDownloadButton.setText("Remove");
 		removeDownloadButton
 				.addActionListener(new java.awt.event.ActionListener() {
+					@Override
 					public void actionPerformed(java.awt.event.ActionEvent evt) {
 						removeDownloadButtonActionPerformed(evt);
 					}
