@@ -1,10 +1,11 @@
 package de.andreasgiemza.mangadownloader.helpers;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.options.Options;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  *

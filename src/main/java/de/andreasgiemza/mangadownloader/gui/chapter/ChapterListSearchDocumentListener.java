@@ -1,13 +1,14 @@
 package de.andreasgiemza.mangadownloader.gui.chapter;
 
-import de.andreasgiemza.mangadownloader.MangaDownloader;
-import de.andreasgiemza.mangadownloader.helpers.RegexHelper;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
+
+import de.andreasgiemza.mangadownloader.MangaDownloader;
+import de.andreasgiemza.mangadownloader.helpers.RegexHelper;
 
 /**
  *

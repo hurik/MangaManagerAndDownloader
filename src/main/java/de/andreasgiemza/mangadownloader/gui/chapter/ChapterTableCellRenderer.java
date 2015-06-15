@@ -1,11 +1,13 @@
 package de.andreasgiemza.mangadownloader.gui.chapter;
 
-import de.andreasgiemza.mangadownloader.data.Chapter;
 import java.awt.Color;
 import java.awt.Component;
+
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
+
+import de.andreasgiemza.mangadownloader.data.Chapter;
 
 /**
  *

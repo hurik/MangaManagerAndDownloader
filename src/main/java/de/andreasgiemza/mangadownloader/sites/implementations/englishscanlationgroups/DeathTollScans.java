@@ -1,16 +1,19 @@
 package de.andreasgiemza.mangadownloader.sites.implementations.englishscanlationgroups;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+
+import org.jsoup.nodes.Document;
+
 import com.google.gson.Gson;
+
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
-import org.jsoup.nodes.Document;
 
 /**
  *

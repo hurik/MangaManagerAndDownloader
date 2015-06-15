@@ -1,6 +1,5 @@
 package de.andreasgiemza.mangadownloader.helpers;
 
-import de.andreasgiemza.mangadownloader.data.Image;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -12,14 +11,18 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Map;
+
 import javax.imageio.ImageIO;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+
+import de.andreasgiemza.mangadownloader.data.Image;
 
 /**
  *

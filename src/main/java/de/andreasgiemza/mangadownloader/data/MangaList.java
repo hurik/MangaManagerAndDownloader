@@ -1,8 +1,5 @@
 package de.andreasgiemza.mangadownloader.data;
 
-import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
-import de.andreasgiemza.mangadownloader.options.Options;
-import de.andreasgiemza.mangadownloader.sites.Site;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,6 +10,10 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
+
+import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
+import de.andreasgiemza.mangadownloader.options.Options;
+import de.andreasgiemza.mangadownloader.sites.Site;
 
 /**
  *

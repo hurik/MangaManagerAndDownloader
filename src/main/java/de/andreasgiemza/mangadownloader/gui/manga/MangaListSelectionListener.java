@@ -1,10 +1,11 @@
 package de.andreasgiemza.mangadownloader.gui.manga;
 
-import de.andreasgiemza.mangadownloader.MangaDownloader;
-import de.andreasgiemza.mangadownloader.data.Manga;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import de.andreasgiemza.mangadownloader.MangaDownloader;
+import de.andreasgiemza.mangadownloader.data.Manga;
 
 /**
  *

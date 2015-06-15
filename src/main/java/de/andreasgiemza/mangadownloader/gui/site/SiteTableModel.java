@@ -1,11 +1,13 @@
 package de.andreasgiemza.mangadownloader.gui.site;
 
+import java.util.Arrays;
+import java.util.List;
+
+import javax.swing.table.AbstractTableModel;
+
 import de.andreasgiemza.mangadownloader.data.MangaList;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.SiteHelper;
-import java.util.Arrays;
-import java.util.List;
-import javax.swing.table.AbstractTableModel;
 
 /**
  *

@@ -1,9 +1,10 @@
 package de.andreasgiemza.mangadownloader.sites;
 
+import java.util.List;
+
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
-import java.util.List;
 
 /**
  *

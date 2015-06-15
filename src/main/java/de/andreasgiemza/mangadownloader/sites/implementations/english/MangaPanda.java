@@ -1,8 +1,9 @@
 package de.andreasgiemza.mangadownloader.sites.implementations.english;
 
+import java.util.Arrays;
+
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.MangaPandaAndReader;
-import java.util.Arrays;
 
 /**
  *

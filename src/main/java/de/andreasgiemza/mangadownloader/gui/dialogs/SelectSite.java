@@ -1,17 +1,19 @@
 package de.andreasgiemza.mangadownloader.gui.dialogs;
 
-import de.andreasgiemza.mangadownloader.MangaDownloader;
-import de.andreasgiemza.mangadownloader.data.Manga;
-import de.andreasgiemza.mangadownloader.data.MangaList;
-import de.andreasgiemza.mangadownloader.gui.site.SiteTableModel;
-import de.andreasgiemza.mangadownloader.sites.Site;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+
+import de.andreasgiemza.mangadownloader.MangaDownloader;
+import de.andreasgiemza.mangadownloader.data.Manga;
+import de.andreasgiemza.mangadownloader.data.MangaList;
+import de.andreasgiemza.mangadownloader.gui.site.SiteTableModel;
+import de.andreasgiemza.mangadownloader.sites.Site;
 
 /**
  *

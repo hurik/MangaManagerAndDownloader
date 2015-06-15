@@ -1,9 +1,11 @@
 package de.andreasgiemza.mangadownloader.gui.chapter;
 
-import de.andreasgiemza.mangadownloader.data.Chapter;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.swing.table.AbstractTableModel;
+
+import de.andreasgiemza.mangadownloader.data.Chapter;
 
 /**
  *

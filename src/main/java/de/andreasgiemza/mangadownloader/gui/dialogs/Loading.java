@@ -2,6 +2,7 @@ package de.andreasgiemza.mangadownloader.gui.dialogs;
 
 import java.awt.Color;
 import java.awt.Toolkit;
+
 import javax.swing.ImageIcon;
 
 /**

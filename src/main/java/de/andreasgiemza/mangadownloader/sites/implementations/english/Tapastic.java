@@ -1,21 +1,24 @@
 package de.andreasgiemza.mangadownloader.sites.implementations.english;
 
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
-import de.andreasgiemza.mangadownloader.data.Chapter;
-import de.andreasgiemza.mangadownloader.data.Image;
-import de.andreasgiemza.mangadownloader.data.Manga;
-import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
-import de.andreasgiemza.mangadownloader.sites.Site;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
+
+import de.andreasgiemza.mangadownloader.data.Chapter;
+import de.andreasgiemza.mangadownloader.data.Image;
+import de.andreasgiemza.mangadownloader.data.Manga;
+import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
+import de.andreasgiemza.mangadownloader.sites.Site;
 
 /**
  *

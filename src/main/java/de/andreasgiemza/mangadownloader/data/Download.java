@@ -1,7 +1,8 @@
 package de.andreasgiemza.mangadownloader.data;
 
-import de.andreasgiemza.mangadownloader.sites.Site;
 import java.util.Objects;
+
+import de.andreasgiemza.mangadownloader.sites.Site;
 
 /**
  *

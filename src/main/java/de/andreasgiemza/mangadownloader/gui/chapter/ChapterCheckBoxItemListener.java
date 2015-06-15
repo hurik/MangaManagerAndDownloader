@@ -1,10 +1,12 @@
 package de.andreasgiemza.mangadownloader.gui.chapter;
 
-import de.andreasgiemza.mangadownloader.MangaDownloader;
-import de.andreasgiemza.mangadownloader.data.Chapter;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+
 import javax.swing.JTable;
+
+import de.andreasgiemza.mangadownloader.MangaDownloader;
+import de.andreasgiemza.mangadownloader.data.Chapter;
 
 /**
  *
