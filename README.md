@@ -38,8 +38,8 @@ Little tool to download mangas from various sites.
 * VortexScans
 * YuriProject
 
-### Espa√±ol and English Scanlation Groups
-* Caf√©ConLenin
+### EspaÒol and English Scanlation Groups
+* CafÈConLenin
 
 ### German
 * MangaTube
@@ -47,11 +47,11 @@ Little tool to download mangas from various sites.
 ### German Scanlation Groups
 * Manga Scouts
 * MangaUnlimited
-* Thriller Bark Caf√©
+* Thriller Bark CafÈ
 * Tokido Translations
 
-### Espa√±ol
-* MangaHereEspa√±ol
+### EspaÒol
+* MangaHereEspaÒol
 
 ### Italian
 * MangaEdenItalian
@@ -78,7 +78,7 @@ While downloading you can add more mangas. You can also add mangas from differen
 ## Contribute
 Your help is greatly appreciated.
 
-Developed with [NetBeans 8.0.2 (Java SE)](https://netbeans.org/downloads/).
+Developed with [Eclipse IDE for Java Developers](http://www.eclipse.org/downloads/).
 
 
 ##  Program screenshots
