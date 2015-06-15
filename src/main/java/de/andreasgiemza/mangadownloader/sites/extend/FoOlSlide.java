@@ -5,11 +5,15 @@ import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
+
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -74,8 +78,10 @@ public class FoOlSlide implements Site {
 				mangas.add(new Manga(link.attr("abs:href"), link.text()));
 			}
 		}
+		
+		Collections.sort(mangas);
 
-		return new LinkedList<>(new HashSet<>(mangas));
+		return mangas;
 	}
 
 	@Override
