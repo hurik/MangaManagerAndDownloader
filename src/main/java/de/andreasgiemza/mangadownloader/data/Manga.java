@@ -1,4 +1,4 @@
-package de.andreasgiemza.mangadownloader.data;
+﻿package de.andreasgiemza.mangadownloader.data;
 
 import java.io.Serializable;
 import java.util.Objects;

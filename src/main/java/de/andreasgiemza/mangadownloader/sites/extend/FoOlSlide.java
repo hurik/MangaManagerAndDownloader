@@ -1,4 +1,4 @@
-package de.andreasgiemza.mangadownloader.sites.extend;
+﻿package de.andreasgiemza.mangadownloader.sites.extend;
 
 import java.util.Collections;
 import java.util.HashMap;

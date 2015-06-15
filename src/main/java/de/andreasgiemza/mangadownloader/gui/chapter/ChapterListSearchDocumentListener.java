@@ -1,4 +1,4 @@
-package de.andreasgiemza.mangadownloader.gui.chapter;
+﻿package de.andreasgiemza.mangadownloader.gui.chapter;
 
 import javax.swing.JTable;
 import javax.swing.JTextField;

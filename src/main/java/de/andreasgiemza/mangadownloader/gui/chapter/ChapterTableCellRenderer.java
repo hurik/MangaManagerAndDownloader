@@ -1,4 +1,4 @@
-package de.andreasgiemza.mangadownloader.gui.chapter;
+﻿package de.andreasgiemza.mangadownloader.gui.chapter;
 
 import java.awt.Color;
 import java.awt.Component;

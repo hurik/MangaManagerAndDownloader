@@ -1,4 +1,4 @@
-# MangaDownloader
+Ôªø# MangaDownloader
 
 ## Information
 Little tool to download mangas from various sites.
@@ -38,8 +38,8 @@ Little tool to download mangas from various sites.
 * VortexScans
 * YuriProject
 
-### EspaÒol and English Scanlation Groups
-* CafÈConLenin
+### Espa√±ol and English Scanlation Groups
+* Caf√©ConLenin
 
 ### German
 * MangaTube
@@ -47,11 +47,11 @@ Little tool to download mangas from various sites.
 ### German Scanlation Groups
 * Manga Scouts
 * MangaUnlimited
-* Thriller Bark CafÈ
+* Thriller Bark Caf√©
 * Tokido Translations
 
-### EspaÒol
-* MangaHereEspaÒol
+### Espa√±ol
+* MangaHereEspa√±ol
 
 ### Italian
 * MangaEdenItalian

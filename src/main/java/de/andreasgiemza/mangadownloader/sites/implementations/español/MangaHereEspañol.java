@@ -1,4 +1,4 @@
-package de.andreasgiemza.mangadownloader.sites.implementations.espa�ol;
+﻿package de.andreasgiemza.mangadownloader.sites.implementations.español;
 
 import java.util.Arrays;
 
@@ -9,10 +9,10 @@ import de.andreasgiemza.mangadownloader.sites.extend.MangaHere;
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class MangaHereEspa�ol extends MangaHere implements Site {
+public class MangaHereEspañol extends MangaHere implements Site {
 
-	public MangaHereEspa�ol() {
-		super("Manga Here (Espa�ol)", "http://es.mangahere.co", Arrays
-				.asList("Espa�ol"), false);
+	public MangaHereEspañol() {
+		super("Manga Here (Español)", "http://es.mangahere.co", Arrays
+				.asList("Español"), false);
 	}
 }

@@ -1,4 +1,4 @@
-package de.andreasgiemza.mangadownloader.gui.dialogs;
+﻿package de.andreasgiemza.mangadownloader.gui.dialogs;
 
 import java.awt.Point;
 import java.awt.Toolkit;

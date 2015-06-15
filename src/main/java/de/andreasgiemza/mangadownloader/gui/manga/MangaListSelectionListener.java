@@ -1,4 +1,4 @@
-package de.andreasgiemza.mangadownloader.gui.manga;
+﻿package de.andreasgiemza.mangadownloader.gui.manga;
 
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;

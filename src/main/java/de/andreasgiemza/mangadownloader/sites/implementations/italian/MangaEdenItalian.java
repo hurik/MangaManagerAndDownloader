@@ -1,4 +1,4 @@
-package de.andreasgiemza.mangadownloader.sites.implementations.italian;
+﻿package de.andreasgiemza.mangadownloader.sites.implementations.italian;
 
 import java.util.Arrays;
 

@@ -1,4 +1,4 @@
-package de.andreasgiemza.mangadownloader.sites.extend;
+﻿package de.andreasgiemza.mangadownloader.sites.extend;
 
 import java.util.LinkedList;
 import java.util.List;
