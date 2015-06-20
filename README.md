@@ -1,4 +1,4 @@
-﻿# MangaDownloader
+# MangaDownloader
 
 ## Information
 Little tool to download mangas from various sites.

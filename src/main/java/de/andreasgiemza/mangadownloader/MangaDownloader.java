@@ -1,4 +1,4 @@
-﻿package de.andreasgiemza.mangadownloader;
+package de.andreasgiemza.mangadownloader;
 
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;

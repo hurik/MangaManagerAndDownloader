@@ -1,4 +1,4 @@
-﻿package de.andreasgiemza.mangadownloader.helpers;
+package de.andreasgiemza.mangadownloader.helpers;
 
 import java.io.File;
 import java.io.IOException;

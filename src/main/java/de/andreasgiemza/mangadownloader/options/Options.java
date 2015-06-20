@@ -1,4 +1,4 @@
-﻿package de.andreasgiemza.mangadownloader.options;
+package de.andreasgiemza.mangadownloader.options;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

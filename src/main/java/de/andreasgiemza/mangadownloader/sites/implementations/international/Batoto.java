@@ -1,4 +1,4 @@
-﻿package de.andreasgiemza.mangadownloader.sites.implementations.international;
+package de.andreasgiemza.mangadownloader.sites.implementations.international;
 
 import java.util.Arrays;
 import java.util.LinkedList;

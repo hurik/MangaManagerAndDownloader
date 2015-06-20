@@ -1,4 +1,4 @@
-﻿package de.andreasgiemza.mangadownloader.helpers;
+package de.andreasgiemza.mangadownloader.helpers;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

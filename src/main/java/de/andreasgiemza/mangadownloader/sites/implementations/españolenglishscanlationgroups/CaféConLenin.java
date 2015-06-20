@@ -1,4 +1,4 @@
-﻿package de.andreasgiemza.mangadownloader.sites.implementations.españolenglishscanlationgroups;
+package de.andreasgiemza.mangadownloader.sites.implementations.españolenglishscanlationgroups;
 
 import java.util.Arrays;
 

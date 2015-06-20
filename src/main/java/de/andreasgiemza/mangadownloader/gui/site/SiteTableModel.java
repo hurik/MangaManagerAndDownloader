@@ -1,4 +1,4 @@
-﻿package de.andreasgiemza.mangadownloader.gui.site;
+package de.andreasgiemza.mangadownloader.gui.site;
 
 import java.util.Arrays;
 import java.util.List;

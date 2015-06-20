@@ -1,4 +1,4 @@
-﻿package de.andreasgiemza.mangadownloader.helpers;
+package de.andreasgiemza.mangadownloader.helpers;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
