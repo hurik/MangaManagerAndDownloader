@@ -1,7 +1,6 @@
 package de.andreasgiemza.mangadownloader.gui.dialogs;
 
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -26,14 +25,10 @@ public class SelectSite extends javax.swing.JDialog {
 
 	public SelectSite(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
-		initComponents();
-		setLocation(new Double((Toolkit.getDefaultToolkit().getScreenSize()
-				.getWidth() / 2)
-				- (getWidth() / 2)).intValue(), new Double((Toolkit
-				.getDefaultToolkit().getScreenSize().getHeight() / 2)
-				- (getHeight() / 2)).intValue());
-
 		this.parentFrame = parent;
+		initComponents();
+		setLocation(parent.getX() + (parent.getWidth() / 2) - (getWidth() / 2),
+				parent.getY() + (parent.getHeight() / 2) - (getHeight() / 2));
 
 		sitesTable.addMouseListener(new MouseAdapter() {
 			@Override
