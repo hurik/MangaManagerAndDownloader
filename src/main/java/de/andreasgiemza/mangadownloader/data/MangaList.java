@@ -41,10 +41,9 @@ public final class MangaList {
 			}
 
 			try (FileOutputStream fout = new FileOutputStream(
-					sourceFile.toFile())) {
-				ObjectOutputStream oos = new ObjectOutputStream(fout);
+					sourceFile.toFile());
+					ObjectOutputStream oos = new ObjectOutputStream(fout)) {
 				oos.writeObject(mangas);
-				oos.close();
 			}
 		} catch (IOException ex) {
 		}
@@ -59,10 +58,9 @@ public final class MangaList {
 						+ sourcesExtension);
 
 		if (Files.exists(sourceFile)) {
-			try (FileInputStream fin = new FileInputStream(sourceFile.toFile())) {
-				ObjectInputStream ois = new ObjectInputStream(fin);
+			try (FileInputStream fin = new FileInputStream(sourceFile.toFile());
+					ObjectInputStream ois = new ObjectInputStream(fin)) {
 				mangas = (LinkedList<Manga>) ois.readObject();
-				ois.close();
 			} catch (IOException | ClassNotFoundException ex) {
 			}
 		}

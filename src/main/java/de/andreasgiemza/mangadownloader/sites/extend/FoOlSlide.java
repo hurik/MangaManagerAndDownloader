@@ -1,6 +1,5 @@
 package de.andreasgiemza.mangadownloader.sites.extend;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -76,8 +75,6 @@ public class FoOlSlide implements Site {
 				mangas.add(new Manga(link.attr("abs:href"), link.text()));
 			}
 		}
-
-		Collections.sort(mangas);
 
 		return mangas;
 	}

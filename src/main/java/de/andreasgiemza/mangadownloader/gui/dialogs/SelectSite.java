@@ -3,6 +3,7 @@ package de.andreasgiemza.mangadownloader.gui.dialogs;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -211,6 +212,10 @@ public class SelectSite extends javax.swing.JDialog {
 
 				try {
 					mangas = selectedSite.getMangaList();
+					Collections.sort(mangas);
+
+					// Save data to file
+					MangaList.save(selectedSite, mangas);
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(loading, "Cant't connect to "
 							+ selectedSite.getName() + "!", "Error",
@@ -219,9 +224,6 @@ public class SelectSite extends javax.swing.JDialog {
 					loading.dispose();
 					return;
 				}
-
-				// Save data to file
-				MangaList.save(selectedSite, mangas);
 
 				loading.dispose();
 
@@ -260,6 +262,7 @@ public class SelectSite extends javax.swing.JDialog {
 
 					try {
 						mangas = site.getMangaList();
+						Collections.sort(mangas);
 
 						// Save data to file
 						MangaList.save(site, mangas);

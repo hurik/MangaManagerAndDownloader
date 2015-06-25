@@ -2,7 +2,6 @@ package de.andreasgiemza.mangadownloader.sites.implementations.english;
 
 import java.io.StringReader;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -57,8 +56,6 @@ public class Tapastic implements Site {
 						.text()));
 			}
 		}
-
-		Collections.sort(mangas);
 
 		return mangas;
 	}

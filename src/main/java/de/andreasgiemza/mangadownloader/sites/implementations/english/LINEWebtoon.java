@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -30,7 +31,7 @@ public class LINEWebtoon implements Site {
 
 	@Override
 	public List<Manga> getMangaList() throws Exception {
-		List<Manga> mangas = new LinkedList<>();
+		Set<Manga> mangas = new HashSet<>();
 
 		Document doc = JsoupHelper.getHTMLPage(url + "/dailySchedule");
 
@@ -45,7 +46,7 @@ public class LINEWebtoon implements Site {
 			}
 		}
 
-		return new LinkedList<>(new HashSet<>(mangas));
+		return new LinkedList<>(mangas);
 	}
 
 	@Override
