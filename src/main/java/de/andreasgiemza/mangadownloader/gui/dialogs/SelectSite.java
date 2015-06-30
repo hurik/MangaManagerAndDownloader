@@ -41,6 +41,14 @@ public class SelectSite extends javax.swing.JDialog {
 					Site selectedSite = ((SiteTableModel) sitesTable.getModel())
 							.getSite(sitesTable.convertRowIndexToModel(row));
 
+					if (MangaList.getLastListUpdate(selectedSite) == null) {
+						JOptionPane.showMessageDialog(parentFrame,
+								"Please update site before continuing!",
+								"Info", JOptionPane.INFORMATION_MESSAGE);
+
+						return;
+					}
+
 					((MangaDownloader) parentFrame).loadManga(selectedSite);
 
 					dispose();
