@@ -9,34 +9,38 @@ Little tool to download mangas from various sites.
 * Batoto
 
 ### English
-* LINEWebtoon
-* MangaEdenEnglish
-* MangaFox
-* MangaHereEnglish
+* KissManga
+* LINE Webtoon
+* Manga Eden
+* Manga Fox
+* Manga Here
+* Manga Panda
+* Manga Reader
 * Mangajoy
-* Mangapanda
-* MangaReader
 * ReadManga Today
 * Tapastic
 
 ### English Scanlation Groups
-* ChibiMangaScanlation
+* Chibi Manga Scanlation
 * Death Toll Scans
-* EGscans
+* Demonic Scanlations
+* Easy Going Scans
 * Japanzai
-* JapanzaiEcchi
-* JapanzaiHentai
+* Japanzai (Ecchi)
+* Japanzai (Hentai)
 * KireiCake
-* KissManga
-* Mangacow
 * MangaStream
-* RedHawkScans
-* RoseliaScanlations
+* Mangacow
+* Red Hawk Scanlations
+* Roselia Scanlations
 * S2scans
-* SenseScans
-* SilentSkyScans
-* VortexScans
-* YuriProject
+* Sense-Scans
+* Silent Sky
+* Vortex-Scans
+* Yuri Project
+
+### Español
+* Manga Here (Español)
 
 ### Español and English Scanlation Groups
 * CaféConLenin
@@ -50,11 +54,8 @@ Little tool to download mangas from various sites.
 * Thriller Bark Café
 * Tokido Translations
 
-### Español
-* MangaHereEspañol
-
 ### Italian
-* MangaEdenItalian
+* Manga Eden (Italian)
 
 ## Download
 [https://github.com/hurik/MangaDownloader/releases/latest](https://github.com/hurik/MangaDownloader/releases/latest)
