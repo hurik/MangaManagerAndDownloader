@@ -79,7 +79,7 @@ While downloading you can add more mangas. You can also add mangas from differen
 ## Contribute
 Your help is greatly appreciated.
 
-Developed with [Eclipse IDE for Java Developers](http://www.eclipse.org/downloads/).
+Developed with [NetBeans IDE 8.0.2](https://netbeans.org/downloads/).
 
 
 ##  Program screenshots
