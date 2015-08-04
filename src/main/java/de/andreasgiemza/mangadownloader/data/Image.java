@@ -6,39 +6,39 @@ package de.andreasgiemza.mangadownloader.data;
  */
 public class Image {
 
-	private final String link;
-	private final String linkFragment;
-	private final String referrer;
-	private final String extension;
+    private final String link;
+    private final String linkFragment;
+    private final String referrer;
+    private final String extension;
 
-	public Image(String link, String referrer, String extension) {
-		this.link = link;
-		this.referrer = referrer;
-		this.extension = extension;
-		this.linkFragment = null;
-	}
+    public Image(String link, String referrer, String extension) {
+        this.link = link;
+        this.referrer = referrer;
+        this.extension = extension;
+        this.linkFragment = null;
+    }
 
-	public Image(String link, String referrer, String extension,
-			String linkFragment) {
-		this.link = link;
-		this.referrer = referrer;
-		this.extension = extension;
-		this.linkFragment = linkFragment;
-	}
+    public Image(String link, String referrer, String extension,
+            String linkFragment) {
+        this.link = link;
+        this.referrer = referrer;
+        this.extension = extension;
+        this.linkFragment = linkFragment;
+    }
 
-	public String getLink() {
-		return link;
-	}
+    public String getLink() {
+        return link;
+    }
 
-	public String getLinkFragment() {
-		return linkFragment;
-	}
+    public String getLinkFragment() {
+        return linkFragment;
+    }
 
-	public String getReferrer() {
-		return referrer;
-	}
+    public String getReferrer() {
+        return referrer;
+    }
 
-	public String getExtension() {
-		return extension;
-	}
+    public String getExtension() {
+        return extension;
+    }
 }

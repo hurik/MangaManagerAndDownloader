@@ -1,9 +1,8 @@
 package de.andreasgiemza.mangadownloader.sites.implementations.english;
 
-import java.util.Arrays;
-
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.MangaEden;
+import java.util.Arrays;
 
 /**
  *
@@ -11,8 +10,8 @@ import de.andreasgiemza.mangadownloader.sites.extend.MangaEden;
  */
 public class MangaEdenEnglish extends MangaEden implements Site {
 
-	public MangaEdenEnglish() {
-		super("Manga Eden", "http://www.mangaeden.com", Arrays
-				.asList("English"), false, "/en-directory/");
-	}
+    public MangaEdenEnglish() {
+        super("Manga Eden", "http://www.mangaeden.com", Arrays
+                .asList("English"), false, "/en-directory/");
+    }
 }

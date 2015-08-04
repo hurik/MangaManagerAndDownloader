@@ -8,20 +8,20 @@ import java.util.regex.Pattern;
  */
 public final class RegexHelper {
 
-	private RegexHelper() {
-	}
+    private RegexHelper() {
+    }
 
-	public static String build(String string) {
-		final String[] searchTextAray = string.split(" ");
+    public static String build(String string) {
+        final String[] searchTextAray = string.split(" ");
 
-		String regexExpression = "(?i)";
+        String regexExpression = "(?i)";
 
-		for (String word : searchTextAray) {
-			if (word.length() > 0) {
-				regexExpression += "(?=.*" + Pattern.quote(word) + ")";
-			}
-		}
+        for (String word : searchTextAray) {
+            if (word.length() > 0) {
+                regexExpression += "(?=.*" + Pattern.quote(word) + ")";
+            }
+        }
 
-		return regexExpression;
-	}
+        return regexExpression;
+    }
 }
