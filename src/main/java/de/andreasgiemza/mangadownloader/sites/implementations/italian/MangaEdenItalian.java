@@ -11,7 +11,11 @@ import java.util.Arrays;
 public class MangaEdenItalian extends MangaEden implements Site {
 
     public MangaEdenItalian() {
-        super("Manga Eden (Italian)", "http://www.mangaeden.com", Arrays
-                .asList("Italian"), true, "/it-directory/");
+        super(
+                "Manga Eden (Italian)",
+                "http://www.mangaeden.com/it/",
+                Arrays.asList("Italian"),
+                true,
+                "it-directory/");
     }
 }

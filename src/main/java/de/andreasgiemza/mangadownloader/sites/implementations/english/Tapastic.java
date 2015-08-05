@@ -9,6 +9,7 @@ import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.io.StringReader;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -90,6 +91,8 @@ public class Tapastic implements Site {
             chapters.add(new Chapter(dataArray[i].id, "(" + i + ") "
                     + dataArray[i].title));
         }
+
+        Collections.reverse(chapters);
 
         return chapters;
     }

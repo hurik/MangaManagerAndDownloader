@@ -6,6 +6,7 @@ import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -59,6 +60,8 @@ public class EasyGoingScans implements Site {
             chapters.add(new Chapter(manga.getLink() + "/" + row.attr("value"),
                     row.text()));
         }
+
+        Collections.reverse(chapters);
 
         return chapters;
     }

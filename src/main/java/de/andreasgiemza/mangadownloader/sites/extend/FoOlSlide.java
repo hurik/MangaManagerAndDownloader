@@ -19,14 +19,14 @@ import org.jsoup.select.Elements;
  */
 public class FoOlSlide implements Site {
 
-    private final String name;
-    private final String url;
-    private final List<String> language;
-    private final Boolean watermarks;
+    protected final String name;
+    protected final String url;
+    protected final List<String> language;
+    protected final Boolean watermarks;
 
-    private final String baseUrl;
-    private final String listUrl;
-    public final Map<String, String> post = new HashMap<>();
+    protected final String baseUrl;
+    protected final String listUrl;
+    protected final Map<String, String> post = new HashMap<>();
 
     public FoOlSlide(String name, String url, List<String> language,
             Boolean watermarks, String baseUrl, String listUrl) {
