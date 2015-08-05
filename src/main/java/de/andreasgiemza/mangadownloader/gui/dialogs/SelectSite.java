@@ -11,6 +11,8 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -202,7 +204,7 @@ public class SelectSite extends javax.swing.JDialog {
                 List<Manga> mangas;
 
                 try {
-                    mangas = selectedSite.getMangaList();
+                    mangas = new LinkedList<>(new HashSet<>(selectedSite.getMangaList()));
                     Collections.sort(mangas);
 
                     // Save data to file
@@ -248,7 +250,7 @@ public class SelectSite extends javax.swing.JDialog {
                     List<Manga> mangas;
 
                     try {
-                        mangas = site.getMangaList();
+                        mangas = new LinkedList<>(new HashSet<>(site.getMangaList()));
                         Collections.sort(mangas);
 
                         // Save data to file
