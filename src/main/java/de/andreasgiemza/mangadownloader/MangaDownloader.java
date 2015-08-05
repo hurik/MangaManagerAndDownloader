@@ -295,6 +295,8 @@ public class MangaDownloader extends javax.swing.JFrame {
         mangasDirFileChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("MangaDownloader");
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("images/icon.png")));
 
         mangasDirPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Mangas Directory"));
 
