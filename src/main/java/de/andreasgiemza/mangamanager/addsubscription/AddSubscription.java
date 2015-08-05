@@ -244,7 +244,7 @@ public final class AddSubscription extends javax.swing.JDialog {
 
     private void addSubscriptionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSubscriptionButtonActionPerformed
         ((MangaManager) parent).addSubscription(new Subscription(site, manga, filterTextField.getText()));
-        
+
         dispose();
     }//GEN-LAST:event_addSubscriptionButtonActionPerformed
 
