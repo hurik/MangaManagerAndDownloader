@@ -44,7 +44,7 @@ Little tool to download mangas from various sites.
 * Manga Here (Español)
 
 ### Español and English Scanlation Groups
-* CaféConLenin
+* Café con IRST
 
 ### German
 * MangaTube
