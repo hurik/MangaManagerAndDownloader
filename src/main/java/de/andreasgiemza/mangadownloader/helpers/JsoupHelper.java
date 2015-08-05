@@ -28,8 +28,7 @@ import org.jsoup.nodes.Document;
 public final class JsoupHelper {
 
     private final static int NUMBER_OF_TRIES = 5;
-    private final static int MAX_BODY_SIZE = 0; // Unlimited (limited only by
-    // RAM)
+    private final static int MAX_BODY_SIZE = 0; // Unlimited (limited only by RAM)
 
     private final static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0";
     private final static String USER_AGENT_MOBILE = "Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19";
