@@ -21,6 +21,7 @@ import java.util.List;
 public final class MangaList {
 
     private final static String sourcesExtension = ".list";
+    private final static String sourcesCountExtension = ".count";
 
     private MangaList() {
     }
@@ -31,6 +32,10 @@ public final class MangaList {
                     FilenameHelper.checkForIllegalCharacters(site.getName())
                     + sourcesExtension);
 
+            Path sourceCountFile = Options.INSTANCE.getMangaListDir().resolve(
+                    FilenameHelper.checkForIllegalCharacters(site.getName())
+                    + sourcesCountExtension);
+
             if (!Files.exists(sourceFile.getParent())) {
                 Files.createDirectory(sourceFile.getParent());
             }
@@ -39,10 +44,18 @@ public final class MangaList {
                 Files.delete(sourceFile);
             }
 
-            try (FileOutputStream fout = new FileOutputStream(
-                    sourceFile.toFile());
+            if (Files.exists(sourceCountFile)) {
+                Files.delete(sourceCountFile);
+            }
+
+            try (FileOutputStream fout = new FileOutputStream(sourceFile.toFile());
                     ObjectOutputStream oos = new ObjectOutputStream(fout)) {
                 oos.writeObject(mangas);
+            }
+
+            try (FileOutputStream fout = new FileOutputStream(sourceCountFile.toFile());
+                    ObjectOutputStream oos = new ObjectOutputStream(fout)) {
+                oos.writeObject(mangas.size());
             }
         } catch (IOException ex) {
         }
@@ -83,4 +96,24 @@ public final class MangaList {
             return null;
         }
     }
+
+    @SuppressWarnings("unchecked")
+    public static int getMangaCount(Site site) {
+        int mangaCount = 0;
+
+        Path sourceCountFile = Options.INSTANCE.getMangaListDir().resolve(
+                FilenameHelper.checkForIllegalCharacters(site.getName())
+                + sourcesCountExtension);
+
+        if (Files.exists(sourceCountFile)) {
+            try (FileInputStream fin = new FileInputStream(sourceCountFile.toFile());
+                    ObjectInputStream ois = new ObjectInputStream(fin)) {
+                mangaCount = (int) ois.readObject();
+            } catch (IOException | ClassNotFoundException ex) {
+            }
+        }
+
+        return mangaCount;
+    }
+
 }

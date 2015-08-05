@@ -531,7 +531,7 @@ public class MangaDownloader extends javax.swing.JFrame {
     }//GEN-LAST:event_mangasDirButtonActionPerformed
 
     private void selectSiteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectSiteButtonActionPerformed
-        SelectSite siteManager = new SelectSite(this, true);
+        SelectSite siteManager = new SelectSite(this, true, null);
         siteManager.setVisible(true);
     }//GEN-LAST:event_selectSiteButtonActionPerformed
 

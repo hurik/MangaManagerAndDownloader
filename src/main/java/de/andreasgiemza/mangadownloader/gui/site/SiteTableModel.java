@@ -13,10 +13,13 @@ import javax.swing.table.AbstractTableModel;
  */
 public class SiteTableModel extends AbstractTableModel {
 
-    private static final long serialVersionUID = 1L;
     private final List<Site> sites = SiteHelper.getSites();
-    private final List<String> columnNames = Arrays.asList("Name", "Language",
-            "Watermarks", "Last List update");
+    private final List<String> columnNames = Arrays.asList(
+            "Name",
+            "Manga Count",
+            "Language",
+            "Watermarks",
+            "Last List update");
 
     @Override
     public int getRowCount() {
@@ -30,11 +33,14 @@ public class SiteTableModel extends AbstractTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        if (columnIndex == 2) {
-            return Boolean.class;
+        switch (columnIndex) {
+            case 1:
+                return Integer.class;
+            case 3:
+                return Boolean.class;
+            default:
+                return super.getColumnClass(columnIndex);
         }
-
-        return super.getColumnClass(columnIndex);
     }
 
     @Override
@@ -43,11 +49,18 @@ public class SiteTableModel extends AbstractTableModel {
             case 0:
                 return sites.get(row).getName();
             case 1:
-                return sites.get(row).getLanguage().toString().replace("[", "")
-                        .replace("]", "");
+                int count = MangaList.getMangaCount(sites.get(row));
+
+                if (count == 0) {
+                    return null;
+                } else {
+                    return MangaList.getMangaCount(sites.get(row));
+                }
             case 2:
-                return sites.get(row).hasWatermarks();
+                return sites.get(row).getLanguage().toString().replace("[", "").replace("]", "");
             case 3:
+                return sites.get(row).hasWatermarks();
+            case 4:
                 String time = MangaList.getLastListUpdate(sites.get(row));
 
                 if (time != null) {

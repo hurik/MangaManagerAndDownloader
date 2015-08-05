@@ -5,6 +5,7 @@ import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.data.MangaList;
 import de.andreasgiemza.mangadownloader.gui.site.SiteTableModel;
 import de.andreasgiemza.mangadownloader.sites.Site;
+import de.andreasgiemza.mangamanager.addsubscription.AddSubscription;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -21,10 +22,12 @@ import javax.swing.JTable;
 public class SelectSite extends javax.swing.JDialog {
 
     private final Frame parentFrame;
+    private final AddSubscription addSubscription;
 
-    public SelectSite(Frame parent, boolean modal) {
+    public SelectSite(Frame parent, boolean modal, final AddSubscription addSubscription) {
         super(parent, modal);
         this.parentFrame = parent;
+        this.addSubscription = addSubscription;
         initComponents();
         setLocation(parent.getX() + (parent.getWidth() / 2) - (getWidth() / 2),
                 parent.getY() + (parent.getHeight() / 2) - (getHeight() / 2));
@@ -47,7 +50,11 @@ public class SelectSite extends javax.swing.JDialog {
                         return;
                     }
 
-                    ((MangaDownloader) parentFrame).loadManga(selectedSite);
+                    if (addSubscription == null) {
+                        ((MangaDownloader) parentFrame).loadManga(selectedSite);
+                    } else {
+                        addSubscription.loadMangas(selectedSite);
+                    }
 
                     dispose();
                 }
@@ -170,7 +177,11 @@ public class SelectSite extends javax.swing.JDialog {
             return;
         }
 
-        ((MangaDownloader) parentFrame).loadManga(selectedSite);
+        if (addSubscription == null) {
+            ((MangaDownloader) parentFrame).loadManga(selectedSite);
+        } else {
+            addSubscription.loadMangas(selectedSite);
+        }
 
         dispose();
     }//GEN-LAST:event_selectButtonActionPerformed
