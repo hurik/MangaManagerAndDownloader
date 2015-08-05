@@ -10,12 +10,14 @@ public class Image {
     private final String linkFragment;
     private final String referrer;
     private final String extension;
+    private final ImageType imageType;
 
     public Image(String link, String referrer, String extension) {
         this.link = link;
         this.referrer = referrer;
         this.extension = extension;
         this.linkFragment = null;
+        this.imageType = ImageType.NORMAL;
     }
 
     public Image(String link, String referrer, String extension,
@@ -24,6 +26,15 @@ public class Image {
         this.referrer = referrer;
         this.extension = extension;
         this.linkFragment = linkFragment;
+        this.imageType = ImageType.FRAGEMENT;
+    }
+
+    public Image(String link, String referrer, String extension, ImageType imageType) {
+        this.link = link;
+        this.referrer = referrer;
+        this.extension = extension;
+        this.linkFragment = null;
+        this.imageType = imageType;
     }
 
     public String getLink() {
@@ -40,5 +51,9 @@ public class Image {
 
     public String getExtension() {
         return extension;
+    }
+
+    public ImageType getImageType() {
+        return imageType;
     }
 }

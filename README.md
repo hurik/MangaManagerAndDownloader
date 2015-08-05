@@ -29,6 +29,7 @@ Little tool to download mangas from various sites.
 * Japanzai (Ecchi)
 * Japanzai (Hentai)
 * KireiCake
+* LoneManga
 * MangaStream
 * Mangacow
 * Red Hawk Scanlations

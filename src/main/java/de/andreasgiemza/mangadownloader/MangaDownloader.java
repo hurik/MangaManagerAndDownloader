@@ -17,6 +17,7 @@ import de.andreasgiemza.mangadownloader.gui.manga.MangaListSelectionListener;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableCellRenderer;
 import de.andreasgiemza.mangadownloader.gui.manga.MangaTableModel;
 import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
+import de.andreasgiemza.mangadownloader.helpers.HTMLUnitHelper;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.options.Options;
 import de.andreasgiemza.mangadownloader.sites.Site;
@@ -602,9 +603,7 @@ public class MangaDownloader extends javax.swing.JFrame {
                         List<Image> imageLinks;
 
                         try {
-                            imageLinks = download
-                                    .getSite()
-                                    .getChapterImageLinks(download.getChapter());
+                            imageLinks = download.getSite().getChapterImageLinks(download.getChapter());
                         } catch (Exception ex) {
                             download.setState(Download.State.ERROR);
                             setMessage(download,
@@ -665,14 +664,16 @@ public class MangaDownloader extends javax.swing.JFrame {
 
                                     byte[] image;
 
-                                    if (imageLinks.get(i).getLinkFragment() == null) {
-                                        image = JsoupHelper.getImage(imageLinks
-                                                .get(i).getLink(), imageLinks
-                                                .get(i).getReferrer());
-                                    } else {
-                                        image = JsoupHelper
-                                                .getImageWithFragment(imageLinks
-                                                        .get(i));
+                                    switch (imageLinks.get(i).getImageType()) {
+                                        case FRAGEMENT:
+                                            image = JsoupHelper.getImageWithFragment(imageLinks.get(i));
+                                            break;
+                                        case HTMLUNIT:
+                                            image = HTMLUnitHelper.getImage(imageLinks.get(i));
+                                            break;
+                                        default: // NORMAL
+                                            image = JsoupHelper.getImage(imageLinks.get(i).getLink(), imageLinks.get(i).getReferrer());
+                                            break;
                                     }
 
                                     zos.write(image, 0, image.length);
