@@ -46,4 +46,8 @@ public class SubscriptionsTableModel extends AbstractTableModel {
                 return null;
         }
     }
+
+    public Subscription getSubscription(int row) {
+        return subscriptions.get(row);
+    }
 }

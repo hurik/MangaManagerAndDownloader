@@ -2,13 +2,14 @@ package de.andreasgiemza.mangadownloader.sites.implementations.englishscanlation
 
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class SilentSky extends FoOlSlide implements Site {
+public class SilentSky extends FoOlSlide implements Site, Serializable {
 
     public SilentSky() {
         super("Silent Sky", "http://www.silentsky-scans.net", Arrays

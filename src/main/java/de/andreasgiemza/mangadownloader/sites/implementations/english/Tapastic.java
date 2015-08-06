@@ -7,6 +7,7 @@ import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,7 +22,7 @@ import org.jsoup.select.Elements;
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class Tapastic implements Site {
+public class Tapastic implements Site, Serializable {
 
     private final String name = "Tapastic";
     private final String url = "http://tapastic.com";

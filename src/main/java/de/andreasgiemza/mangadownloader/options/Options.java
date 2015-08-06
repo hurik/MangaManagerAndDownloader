@@ -24,6 +24,7 @@ public enum Options {
     private final String mangasDir = "mangasDir";
     private final String selectedSource = "selectedSource";
     private final Path mangaListDir = optionsDir.resolve("sources");
+    private final Path subscriptionsFile = optionsDir.resolve("subscriptions.list");
 
     Options() {
         try {
@@ -73,5 +74,9 @@ public enum Options {
 
     public Path getMangaListDir() {
         return mangaListDir;
+    }
+
+    public Path getSubscriptionsFile() {
+        return subscriptionsFile;
     }
 }

@@ -5,6 +5,7 @@ import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,7 +17,7 @@ import org.jsoup.select.Elements;
  *
  * @author hurik
  */
-public class ReadMangaToday implements Site {
+public class ReadMangaToday implements Site, Serializable {
 
     private final String name = "ReadManga Today";
     private final String url = "http://www.readmanga.today";

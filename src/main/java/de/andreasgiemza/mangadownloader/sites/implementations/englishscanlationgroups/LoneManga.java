@@ -6,6 +6,7 @@ import de.andreasgiemza.mangadownloader.data.ImageType;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.HTMLUnitHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +18,7 @@ import org.jsoup.select.Elements;
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class LoneManga implements Site {
+public class LoneManga implements Site, Serializable {
 
     private final String name = "LoneManga";
     private final String url = "http://lonemanga.com/";

@@ -2,9 +2,11 @@ package de.andreasgiemza.mangamanager;
 
 import de.andreasgiemza.mangamanager.addsubscription.AddSubscription;
 import de.andreasgiemza.mangamanager.data.Subscription;
+import de.andreasgiemza.mangamanager.data.SubscriptionsList;
 import java.awt.Toolkit;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -22,11 +24,33 @@ public class MangaManager extends javax.swing.JFrame {
                 new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (getWidth() / 2)).intValue(),
                 new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (getHeight() / 2)).intValue()
         );
+
+        subscriptions.addAll(SubscriptionsList.load());
+        subscriptionsTableModel.fireTableDataChanged();
     }
 
-    public void addSubscription(Subscription subscription) {
+    public boolean addSubscription(Subscription subscription) {
+        if (subscriptions.contains(subscription)) {
+            return false;
+        }
+
         subscriptions.add(subscription);
         subscriptionsTableModel.fireTableDataChanged();
+
+        return true;
+    }
+
+    private Subscription getSelectedSite() {
+        int selectedRow = subscriptionsTable.getSelectedRow();
+
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a subscription!",
+                    "Info", JOptionPane.INFORMATION_MESSAGE);
+
+            return null;
+        }
+
+        return ((SubscriptionsTableModel) subscriptionsTable.getModel()).getSubscription(subscriptionsTable.convertRowIndexToModel(selectedRow));
     }
 
     /**
@@ -54,6 +78,11 @@ public class MangaManager extends javax.swing.JFrame {
         updateButton.setText("Update");
 
         removeSubscriptionButton.setText("Remove subscription");
+        removeSubscriptionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeSubscriptionButtonActionPerformed(evt);
+            }
+        });
 
         addSubscriptionButton.setText("Add subscription");
         addSubscriptionButton.addActionListener(new java.awt.event.ActionListener() {
@@ -97,7 +126,30 @@ public class MangaManager extends javax.swing.JFrame {
     private void addSubscriptionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSubscriptionButtonActionPerformed
         AddSubscription addSubscription = new AddSubscription(this, true);
         addSubscription.setVisible(true);
+
+        SubscriptionsList.save(subscriptions);
     }//GEN-LAST:event_addSubscriptionButtonActionPerformed
+
+    private void removeSubscriptionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeSubscriptionButtonActionPerformed
+        Subscription subscription = getSelectedSite();
+
+        if (subscription == null) {
+            return;
+        }
+
+        int result = JOptionPane.showConfirmDialog(
+                this,
+                "Do you really want to remove " + subscription.getManga().getTitle() + "?",
+                "Remove subscription",
+                JOptionPane.OK_CANCEL_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            subscriptions.remove(subscription);
+            subscriptionsTableModel.fireTableDataChanged();
+
+            SubscriptionsList.save(subscriptions);
+        }
+    }//GEN-LAST:event_removeSubscriptionButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -118,8 +170,6 @@ public class MangaManager extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MangaManager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
         //</editor-fold>
 
         /* Create and display the form */
