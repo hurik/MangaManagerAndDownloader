@@ -29,6 +29,7 @@ public class Subscription implements Serializable {
 
     public void newChapters(List<Chapter> chapterList) {
         Collections.reverse(chapterList);
+        Collections.reverse(chapters);
 
         for (Chapter chapter : chapterList) {
             if (filter.isEmpty() || chapter.getTitle().contains(filter)) {
@@ -39,6 +40,8 @@ public class Subscription implements Serializable {
                 }
             }
         }
+
+        Collections.reverse(chapters);
     }
 
     public Site getSite() {
