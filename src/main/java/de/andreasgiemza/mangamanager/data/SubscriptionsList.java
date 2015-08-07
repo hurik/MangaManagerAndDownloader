@@ -9,6 +9,8 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,6 +33,7 @@ public class SubscriptionsList {
                 oos.writeObject(subscriptions);
             }
         } catch (IOException ex) {
+            Logger.getLogger(SubscriptionsList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -42,6 +45,7 @@ public class SubscriptionsList {
             try (FileInputStream fin = new FileInputStream(Options.INSTANCE.getSubscriptionsFile().toFile()); ObjectInputStream ois = new ObjectInputStream(fin)) {
                 subscriptions = (LinkedList<Subscription>) ois.readObject();
             } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(SubscriptionsList.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 

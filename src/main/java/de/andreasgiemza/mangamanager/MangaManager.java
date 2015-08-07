@@ -1,12 +1,18 @@
 package de.andreasgiemza.mangamanager;
 
+import de.andreasgiemza.mangadownloader.gui.dialogs.Loading;
 import de.andreasgiemza.mangamanager.addsubscription.AddSubscription;
 import de.andreasgiemza.mangamanager.data.Subscription;
 import de.andreasgiemza.mangamanager.data.SubscriptionsList;
+import de.andreasgiemza.mangamanager.mangadetails.MangaDetails;
+import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 
 /**
  *
@@ -16,6 +22,8 @@ public class MangaManager extends javax.swing.JFrame {
 
     private final List<Subscription> subscriptions = new LinkedList<>();
     private final SubscriptionsTableModel subscriptionsTableModel = new SubscriptionsTableModel(subscriptions);
+
+    private final MangaManager mangaManager = this;
 
     public MangaManager() {
         initComponents();
@@ -27,6 +35,24 @@ public class MangaManager extends javax.swing.JFrame {
 
         subscriptions.addAll(SubscriptionsList.load());
         subscriptionsTableModel.fireTableDataChanged();
+
+        subscriptionsTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent me) {
+                JTable table = (JTable) me.getSource();
+                Point p = me.getPoint();
+                int row = table.rowAtPoint(p);
+                if (me.getClickCount() == 2) {
+                    Subscription selectedSubscription = ((SubscriptionsTableModel) subscriptionsTable.getModel()).getSubscription(subscriptionsTable.convertRowIndexToModel(row));
+
+                    MangaDetails mangaDetails = new MangaDetails(mangaManager, true, selectedSubscription);
+                    mangaDetails.setVisible(true);
+
+                    subscriptionsTableModel.fireTableDataChanged();
+                    SubscriptionsList.save(subscriptions);
+                }
+            }
+        });
     }
 
     public boolean addSubscription(Subscription subscription) {
@@ -35,6 +61,10 @@ public class MangaManager extends javax.swing.JFrame {
         }
 
         subscriptions.add(subscription);
+        try {
+            subscription.newChapters(subscription.getSite().getChapterList(subscription.getManga()));
+        } catch (Exception ex) {
+        }
         subscriptionsTableModel.fireTableDataChanged();
 
         return true;
@@ -69,6 +99,7 @@ public class MangaManager extends javax.swing.JFrame {
         addSubscriptionButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("MangaManager");
 
         subscriptionsTable.setAutoCreateRowSorter(true);
         subscriptionsTable.setModel(subscriptionsTableModel);
@@ -76,6 +107,11 @@ public class MangaManager extends javax.swing.JFrame {
         subscriptionsScrollPane.setViewportView(subscriptionsTable);
 
         updateButton.setText("Update");
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateButtonActionPerformed(evt);
+            }
+        });
 
         removeSubscriptionButton.setText("Remove subscription");
         removeSubscriptionButton.addActionListener(new java.awt.event.ActionListener() {
@@ -150,6 +186,28 @@ public class MangaManager extends javax.swing.JFrame {
             SubscriptionsList.save(subscriptions);
         }
     }//GEN-LAST:event_removeSubscriptionButtonActionPerformed
+
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+        final Loading loading = new Loading(this, true, getX(), getY(),
+                getWidth(), getHeight());
+        loading.startRunnable(new Runnable() {
+
+            @Override
+            public void run() {
+                for (Subscription subscription : subscriptions) {
+                    try {
+                        subscription.newChapters(subscription.getSite().getChapterList(subscription.getManga()));
+                    } catch (Exception ex) {
+                    }
+                }
+
+                loading.dispose();
+            }
+        });
+
+        subscriptionsTableModel.fireTableDataChanged();
+        SubscriptionsList.save(subscriptions);
+    }//GEN-LAST:event_updateButtonActionPerformed
 
     /**
      * @param args the command line arguments

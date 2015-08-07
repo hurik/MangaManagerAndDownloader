@@ -1,9 +1,13 @@
 package de.andreasgiemza.mangamanager.data;
 
+import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.SiteHelper;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -15,11 +19,26 @@ public class Subscription implements Serializable {
     private final String siteClass;
     private final Manga manga;
     private final String filter;
+    private final List<ChapterForSubscription> chapters = new LinkedList<>();
 
     public Subscription(String siteClass, Manga manga, String filter) {
         this.siteClass = siteClass;
         this.manga = manga;
         this.filter = filter;
+    }
+
+    public void newChapters(List<Chapter> chapterList) {
+        Collections.reverse(chapterList);
+
+        for (Chapter chapter : chapterList) {
+            if (filter.isEmpty() || chapter.getTitle().contains(filter)) {
+                ChapterForSubscription cfs = new ChapterForSubscription(chapter);
+
+                if (!chapters.contains(cfs)) {
+                    chapters.add(cfs);
+                }
+            }
+        }
     }
 
     public Site getSite() {
@@ -32,6 +51,22 @@ public class Subscription implements Serializable {
 
     public String getFilter() {
         return filter;
+    }
+
+    public List<ChapterForSubscription> getChapters() {
+        return chapters;
+    }
+
+    public int getUnreadChapters() {
+        int c = 0;
+
+        for (ChapterForSubscription chapter : chapters) {
+            if (chapter.getRead() == ChapterForSubscription.UNREAD) {
+                c++;
+            }
+        }
+
+        return c;
     }
 
     @Override

@@ -12,7 +12,7 @@ import javax.swing.table.AbstractTableModel;
 public class SubscriptionsTableModel extends AbstractTableModel {
 
     private final List<Subscription> subscriptions;
-    private final List<String> columnNames = Arrays.asList("Site", "Manga", "Filter");
+    private final List<String> columnNames = Arrays.asList("Site", "Manga", "Filter", "Chapter", "Unread chapters");
 
     public SubscriptionsTableModel(List<Subscription> subscriptions) {
         this.subscriptions = subscriptions;
@@ -34,6 +34,17 @@ public class SubscriptionsTableModel extends AbstractTableModel {
     }
 
     @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        switch (columnIndex) {
+            case 3:
+            case 4:
+                return Integer.class;
+            default:
+                return super.getColumnClass(columnIndex);
+        }
+    }
+
+    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0:
@@ -42,6 +53,10 @@ public class SubscriptionsTableModel extends AbstractTableModel {
                 return subscriptions.get(rowIndex).getManga().getTitle();
             case 2:
                 return subscriptions.get(rowIndex).getFilter();
+            case 3:
+                return subscriptions.get(rowIndex).getChapters().size();
+            case 4:
+                return subscriptions.get(rowIndex).getUnreadChapters();
             default:
                 return null;
         }
