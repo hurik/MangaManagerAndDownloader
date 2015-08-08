@@ -4,7 +4,6 @@ import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,7 +15,7 @@ import org.jsoup.select.Elements;
  *
  * @author Daniel Biesecke <dbiesecke@gmail.com>
  */
-public class MangaTube extends FoOlSlide implements Site, Serializable {
+public class MangaTube extends FoOlSlide implements Site {
 
     public MangaTube() {
         super(

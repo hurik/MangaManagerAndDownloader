@@ -2,14 +2,13 @@ package de.andreasgiemza.mangadownloader.sites.implementations.englishscanlation
 
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
-import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class RedHawkScanlations extends FoOlSlide implements Site, Serializable {
+public class RedHawkScanlations extends FoOlSlide implements Site {
 
     public RedHawkScanlations() {
         super("Red Hawk Scanlations", "http://www.redhawkscans.com", Arrays

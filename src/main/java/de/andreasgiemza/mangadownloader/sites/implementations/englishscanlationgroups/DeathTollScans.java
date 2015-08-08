@@ -6,7 +6,6 @@ import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.extend.FoOlSlide;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +16,7 @@ import org.jsoup.nodes.Document;
  *
  * @author hurik
  */
-public class DeathTollScans extends FoOlSlide implements Site, Serializable {
+public class DeathTollScans extends FoOlSlide implements Site {
 
     public DeathTollScans() {
         super("Death Toll Scans", "http://deathtollscans.net/", Arrays

@@ -1,14 +1,13 @@
 package de.andreasgiemza.mangamanager.data;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class ChapterForSubscription implements Serializable {
+public class ChapterForSubscription {
 
     public final static boolean READ = true;
     public final static boolean UNREAD = false;

@@ -1,13 +1,12 @@
 package de.andreasgiemza.mangadownloader.data;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class Manga implements Serializable, Comparable<Manga> {
+public class Manga implements Comparable<Manga> {
 
     private static final long serialVersionUID = 1L;
     private final String link;

@@ -1,18 +1,16 @@
 package de.andreasgiemza.mangadownloader.data;
 
+import com.thoughtworks.xstream.XStream;
 import de.andreasgiemza.mangadownloader.helpers.FilenameHelper;
 import de.andreasgiemza.mangadownloader.options.Options;
 import de.andreasgiemza.mangadownloader.sites.Site;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -20,8 +18,9 @@ import java.util.List;
  */
 public final class MangaList {
 
-    private final static String sourcesExtension = ".list";
-    private final static String sourcesCountExtension = ".count";
+    private final static String sourcesExtension = ".xml";
+    private final static String sourcesCountExtension = ".txt";
+    private final static XStream xstream = new XStream();
 
     private MangaList() {
     }
@@ -48,20 +47,18 @@ public final class MangaList {
                 Files.delete(sourceCountFile);
             }
 
-            try (FileOutputStream fout = new FileOutputStream(sourceFile.toFile());
-                    ObjectOutputStream oos = new ObjectOutputStream(fout)) {
-                oos.writeObject(mangas);
-            }
+            FileUtils.writeStringToFile(
+                    sourceFile.toFile(),
+                    xstream.toXML(mangas),
+                    "UTF-8");
 
-            try (FileOutputStream fout = new FileOutputStream(sourceCountFile.toFile());
-                    ObjectOutputStream oos = new ObjectOutputStream(fout)) {
-                oos.writeObject(mangas.size());
-            }
+            FileUtils.writeStringToFile(
+                    sourceCountFile.toFile(),
+                    Integer.toString(mangas.size()));
         } catch (IOException ex) {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public static List<Manga> load(Site site) {
         List<Manga> mangas = null;
 
@@ -70,10 +67,13 @@ public final class MangaList {
                 + sourcesExtension);
 
         if (Files.exists(sourceFile)) {
-            try (FileInputStream fin = new FileInputStream(sourceFile.toFile());
-                    ObjectInputStream ois = new ObjectInputStream(fin)) {
-                mangas = (LinkedList<Manga>) ois.readObject();
-            } catch (IOException | ClassNotFoundException ex) {
+            try {
+                String data = FileUtils.readFileToString(
+                        sourceFile.toFile(),
+                        "UTF-8");
+
+                mangas = (List<Manga>) xstream.fromXML(data);
+            } catch (IOException ex) {
             }
         }
 
@@ -97,7 +97,6 @@ public final class MangaList {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public static int getMangaCount(Site site) {
         int mangaCount = 0;
 
@@ -106,10 +105,9 @@ public final class MangaList {
                 + sourcesCountExtension);
 
         if (Files.exists(sourceCountFile)) {
-            try (FileInputStream fin = new FileInputStream(sourceCountFile.toFile());
-                    ObjectInputStream ois = new ObjectInputStream(fin)) {
-                mangaCount = (int) ois.readObject();
-            } catch (IOException | ClassNotFoundException ex) {
+            try {
+                mangaCount = Integer.parseInt(FileUtils.readFileToString(sourceCountFile.toFile()));
+            } catch (IOException ex) {
             }
         }
 

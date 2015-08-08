@@ -4,7 +4,6 @@ import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.SiteHelper;
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.Objects;
  *
  * @author Andreas Giemza <andreas@giemza.net>
  */
-public class Subscription implements Serializable {
+public class Subscription {
 
     private final String siteClass;
     private final Manga manga;
