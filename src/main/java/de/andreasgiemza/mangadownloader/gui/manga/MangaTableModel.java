@@ -11,7 +11,6 @@ import javax.swing.table.AbstractTableModel;
  */
 public class MangaTableModel extends AbstractTableModel {
 
-    private static final long serialVersionUID = 1L;
     private final List<Manga> mangas;
     private final List<String> columnNames = Arrays.asList("Title");
 

@@ -11,7 +11,6 @@ import javax.swing.table.AbstractTableModel;
  */
 public class ChaptersTableModel extends AbstractTableModel {
 
-    private static final long serialVersionUID = 1L;
     private final List<Chapter> chapters;
     private final List<String> columnNames = Arrays.asList("Title");
 

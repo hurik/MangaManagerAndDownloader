@@ -11,7 +11,6 @@ import javax.swing.table.AbstractTableModel;
  */
 public class DownloadTableModel extends AbstractTableModel {
 
-    private static final long serialVersionUID = 1L;
     private final List<Download> downloads;
     private final List<String> columnNames = Arrays.asList("ID", "Site",
             "Manga", "Chapter", "Status");
