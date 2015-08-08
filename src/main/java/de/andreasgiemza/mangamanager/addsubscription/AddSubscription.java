@@ -80,6 +80,7 @@ public final class AddSubscription extends javax.swing.JDialog {
         filterPreviewLabel = new javax.swing.JLabel();
         filterScrollPane = new javax.swing.JScrollPane();
         filterTable = new javax.swing.JTable();
+        markAllReadCheckBox = new javax.swing.JCheckBox();
         cancelButton = new javax.swing.JButton();
         addSubscriptionButton = new javax.swing.JButton();
 
@@ -185,6 +186,9 @@ public final class AddSubscription extends javax.swing.JDialog {
 
         mangaFilterPanel.add(filterPanel);
 
+        markAllReadCheckBox.setSelected(true);
+        markAllReadCheckBox.setText("Mark all chapters as read");
+
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -210,7 +214,8 @@ public final class AddSubscription extends javax.swing.JDialog {
                     .addComponent(mangaFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
                     .addComponent(sitePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(markAllReadCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addSubscriptionButton)))
@@ -226,7 +231,8 @@ public final class AddSubscription extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addSubscriptionButton)
-                    .addComponent(cancelButton))
+                    .addComponent(cancelButton)
+                    .addComponent(markAllReadCheckBox))
                 .addContainerGap())
         );
 
@@ -244,7 +250,7 @@ public final class AddSubscription extends javax.swing.JDialog {
 
     private void addSubscriptionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSubscriptionButtonActionPerformed
         Subscription subscription = new Subscription(site.getClass().getSimpleName(), manga, filterTextField.getText());
-        boolean added = ((MangaManager) parent).addSubscription(subscription);
+        boolean added = ((MangaManager) parent).addSubscription(subscription, markAllReadCheckBox.isSelected());
 
         if (!added) {
             JOptionPane.showMessageDialog(
@@ -373,6 +379,7 @@ public final class AddSubscription extends javax.swing.JDialog {
     private javax.swing.JScrollPane mangaScrollPane;
     private javax.swing.JTable mangaTable;
     private javax.swing.JTextField mangaTextField;
+    private javax.swing.JCheckBox markAllReadCheckBox;
     private javax.swing.JButton siteButton;
     private javax.swing.JPanel sitePanel;
     private javax.swing.JTextField siteTextField;

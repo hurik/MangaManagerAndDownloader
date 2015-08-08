@@ -2,6 +2,7 @@ package de.andreasgiemza.mangamanager;
 
 import de.andreasgiemza.mangadownloader.gui.dialogs.Loading;
 import de.andreasgiemza.mangamanager.addsubscription.AddSubscription;
+import static de.andreasgiemza.mangamanager.data.ChapterForSubscription.UNREAD;
 import de.andreasgiemza.mangamanager.data.Subscription;
 import de.andreasgiemza.mangamanager.data.SubscriptionsList;
 import de.andreasgiemza.mangamanager.mangadetails.MangaDetails;
@@ -55,14 +56,14 @@ public class MangaManager extends javax.swing.JFrame {
         });
     }
 
-    public boolean addSubscription(Subscription subscription) {
+    public boolean addSubscription(Subscription subscription, boolean selected) {
         if (subscriptions.contains(subscription)) {
             return false;
         }
 
         subscriptions.add(subscription);
         try {
-            subscription.newChapters(subscription.getSite().getChapterList(subscription.getManga()));
+            subscription.newChapters(subscription.getSite().getChapterList(subscription.getManga()), selected);
         } catch (Exception ex) {
         }
         subscriptionsTableModel.fireTableDataChanged();
@@ -196,7 +197,7 @@ public class MangaManager extends javax.swing.JFrame {
             public void run() {
                 for (Subscription subscription : subscriptions) {
                     try {
-                        subscription.newChapters(subscription.getSite().getChapterList(subscription.getManga()));
+                        subscription.newChapters(subscription.getSite().getChapterList(subscription.getManga()), UNREAD);
                     } catch (Exception ex) {
                     }
                 }

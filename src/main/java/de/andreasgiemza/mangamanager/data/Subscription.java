@@ -27,13 +27,13 @@ public class Subscription implements Serializable {
         this.filter = filter;
     }
 
-    public void newChapters(List<Chapter> chapterList) {
+    public void newChapters(List<Chapter> chapterList, boolean selected) {
         Collections.reverse(chapterList);
         Collections.reverse(chapters);
 
         for (Chapter chapter : chapterList) {
             if (filter.isEmpty() || chapter.getTitle().contains(filter)) {
-                ChapterForSubscription cfs = new ChapterForSubscription(chapter);
+                ChapterForSubscription cfs = new ChapterForSubscription(chapter, selected);
 
                 if (!chapters.contains(cfs)) {
                     chapters.add(cfs);

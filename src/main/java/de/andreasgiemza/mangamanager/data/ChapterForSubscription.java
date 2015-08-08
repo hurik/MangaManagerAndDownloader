@@ -17,9 +17,10 @@ public class ChapterForSubscription implements Serializable {
     private final String title;
     private Boolean read = UNREAD;
 
-    ChapterForSubscription(Chapter chapter) {
+    ChapterForSubscription(Chapter chapter, boolean read) {
         link = chapter.getLink();
         title = chapter.getTitle();
+        this.read = read;
     }
 
     public String getLink() {
