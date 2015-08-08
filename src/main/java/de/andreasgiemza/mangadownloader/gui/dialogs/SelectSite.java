@@ -95,6 +95,7 @@ public class SelectSite extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Select site");
 
         sitesTable.setAutoCreateRowSorter(true);
         sitesTable.setModel(new SiteTableModel());
