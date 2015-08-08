@@ -52,6 +52,11 @@ public class MangaDetails extends javax.swing.JDialog {
         });
 
         markUnreadButton.setText("Mark unread");
+        markUnreadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                markUnreadButtonActionPerformed(evt);
+            }
+        });
 
         closeButton.setText("Close");
         closeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -105,6 +110,16 @@ public class MangaDetails extends javax.swing.JDialog {
 
         chapterForSubscriptionTableModel.fireTableDataChanged();
     }//GEN-LAST:event_markReadButtonActionPerformed
+
+    private void markUnreadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_markUnreadButtonActionPerformed
+        for (int row : chaptersTable.getSelectedRows()) {
+            ChapterForSubscription cfstm = ((ChapterForSubscriptionTableModel) chaptersTable.getModel()).getChapter(chaptersTable.convertRowIndexToModel(row));
+
+            cfstm.setRead(ChapterForSubscription.UNREAD);
+        }
+
+        chapterForSubscriptionTableModel.fireTableDataChanged();
+    }//GEN-LAST:event_markUnreadButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane chaptersScrollPane;
