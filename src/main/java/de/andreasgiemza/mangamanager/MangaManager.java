@@ -62,10 +62,6 @@ public class MangaManager extends javax.swing.JFrame {
         }
 
         subscriptions.add(subscription);
-        try {
-            subscription.getNewChapters(subscription.getSite().getChapterList(subscription.getManga()), selected);
-        } catch (Exception ex) {
-        }
         subscriptionsTableModel.fireTableDataChanged();
 
         return true;

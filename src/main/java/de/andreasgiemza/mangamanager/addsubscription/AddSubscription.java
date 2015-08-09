@@ -249,7 +249,7 @@ public final class AddSubscription extends javax.swing.JDialog {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void addSubscriptionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSubscriptionButtonActionPerformed
-        Subscription subscription = new Subscription(site.getClass().getSimpleName(), manga, filterTextField.getText());
+        Subscription subscription = new Subscription(site.getClass().getSimpleName(), manga, filterTextField.getText(), chapters, markAllReadCheckBox.isSelected());
         boolean added = ((MangaManager) parent).addSubscription(subscription, markAllReadCheckBox.isSelected());
 
         if (!added) {

@@ -23,13 +23,15 @@ public class Subscription {
     private Date lastUpdate;
     private final List<ChapterForSubscription> chapters = new LinkedList<>();
 
-    public Subscription(String siteClass, Manga manga, String filter) {
+    public Subscription(String siteClass, Manga manga, String filter, List<Chapter> chapters, boolean selected) {
         this.siteClass = siteClass;
         this.manga = manga;
         this.filter = filter;
+
+        getNewChapters(chapters, selected);
     }
 
-    public void getNewChapters(List<Chapter> chapterList, boolean selected) {
+    public final void getNewChapters(List<Chapter> chapterList, boolean selected) {
         Collections.reverse(chapterList);
         Collections.reverse(chapters);
 
