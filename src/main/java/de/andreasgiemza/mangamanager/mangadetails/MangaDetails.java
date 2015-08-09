@@ -2,6 +2,14 @@ package de.andreasgiemza.mangamanager.mangadetails;
 
 import de.andreasgiemza.mangamanager.data.ChapterForSubscription;
 import de.andreasgiemza.mangamanager.data.Subscription;
+import java.awt.Desktop;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import javax.swing.JTable;
 
 /**
  *
@@ -9,12 +17,10 @@ import de.andreasgiemza.mangamanager.data.Subscription;
  */
 public class MangaDetails extends javax.swing.JDialog {
 
-    private final Subscription subscription;
     private final ChapterForSubscriptionTableModel chapterForSubscriptionTableModel;
 
     public MangaDetails(java.awt.Frame parent, boolean modal, Subscription subscription) {
         super(parent, modal);
-        this.subscription = subscription;
         this.chapterForSubscriptionTableModel = new ChapterForSubscriptionTableModel(subscription.getChapters());
         initComponents();
 
@@ -22,6 +28,23 @@ public class MangaDetails extends javax.swing.JDialog {
                 parent.getY() + (parent.getHeight() / 2) - (getHeight() / 2));
 
         setTitle(subscription.getSite().getName() + " - " + subscription.getManga().getTitle());
+
+        chaptersTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent me) {
+                JTable table = (JTable) me.getSource();
+                Point p = me.getPoint();
+                int row = table.rowAtPoint(p);
+                if (me.getClickCount() == 2) {
+                    ChapterForSubscription selectedChapter = ((ChapterForSubscriptionTableModel) chaptersTable.getModel()).getChapter(chaptersTable.convertRowIndexToModel(row));
+
+                    try {
+                        Desktop.getDesktop().browse(new URI(selectedChapter.getLink()));
+                    } catch (URISyntaxException | IOException ex) {
+                    }
+                }
+            }
+        });
     }
 
     /**
