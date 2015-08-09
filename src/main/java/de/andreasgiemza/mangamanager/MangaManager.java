@@ -54,6 +54,9 @@ public class MangaManager extends javax.swing.JFrame {
                 }
             }
         });
+
+        subscriptionsTable.setDefaultRenderer(Object.class, new SubscriptionsTableCellRenderer());
+        subscriptionsTable.setDefaultRenderer(Integer.class, new SubscriptionsTableCellRenderer());
     }
 
     public boolean addSubscription(Subscription subscription, boolean selected) {

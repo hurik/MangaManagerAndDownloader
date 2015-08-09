@@ -45,6 +45,8 @@ public class MangaDetails extends javax.swing.JDialog {
                 }
             }
         });
+
+        chaptersTable.setDefaultRenderer(Object.class, new ChapterForSubscriptionTableCellRenderer());
     }
 
     /**
