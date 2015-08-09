@@ -1,6 +1,7 @@
 package de.andreasgiemza.mangamanager.mangadetails;
 
 import de.andreasgiemza.mangamanager.data.ChapterForSubscription;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -12,7 +13,11 @@ import javax.swing.table.AbstractTableModel;
 public class ChapterForSubscriptionTableModel extends AbstractTableModel {
 
     private final List<ChapterForSubscription> chapters;
-    private final List<String> columnNames = Arrays.asList("Title", "Read");
+    private final List<String> columnNames = Arrays.asList(
+            "Title",
+            "Added",
+            "Status",
+            "Read date");
 
     public ChapterForSubscriptionTableModel(List<ChapterForSubscription> chapters) {
         this.chapters = chapters;
@@ -35,11 +40,25 @@ public class ChapterForSubscriptionTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
+        ChapterForSubscription chapter = chapters.get(rowIndex);
+
         switch (columnIndex) {
             case 0:
-                return chapters.get(rowIndex).getTitle();
+                return chapter.getTitle();
             case 1:
-                return (chapters.get(rowIndex).getRead() ? "READ" : "UNREAD");
+                if (chapter.getAddedDate() != null) {
+                    return new SimpleDateFormat("yyyy.MM.dd - HH:mm:ss").format(chapter.getAddedDate());
+                } else {
+                    return null;
+                }
+            case 2:
+                return (chapter.getRead() ? "READ" : "UNREAD");
+            case 3:
+                if (chapter.getReadDate() != null) {
+                    return new SimpleDateFormat("yyyy.MM.dd - HH:mm:ss").format(chapter.getReadDate());
+                } else {
+                    return null;
+                }
             default:
                 return null;
         }

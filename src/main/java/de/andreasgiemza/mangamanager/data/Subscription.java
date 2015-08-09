@@ -4,6 +4,8 @@ import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.SiteHelper;
+import static de.andreasgiemza.mangamanager.data.ChapterForSubscription.READ;
+import static de.andreasgiemza.mangamanager.data.ChapterForSubscription.UNREAD;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -66,6 +68,34 @@ public class Subscription {
         return lastUpdate;
     }
 
+    public String getLastReadChapter() {
+        ChapterForSubscription lastReadChapter = null;
+        Date lastReadDate = new Date(0);
+
+        for (ChapterForSubscription chapter : chapters) {
+            if (chapter.getRead() == READ && chapter.getReadDate() != null && chapter.getReadDate().compareTo(lastReadDate) > 0) {
+                lastReadChapter = chapter;
+                lastReadDate = chapter.getReadDate();
+            }
+        }
+
+        if (lastReadChapter == null) {
+            for (ChapterForSubscription chapter : chapters) {
+                if (chapter.getRead() == READ) {
+                    lastReadChapter = chapter;
+                    break;
+                }
+            }
+        }
+
+        if (lastReadChapter == null) {
+            return null;
+        } else {
+            return lastReadChapter.getTitle();
+        }
+
+    }
+
     public List<ChapterForSubscription> getChapters() {
         return chapters;
     }
@@ -74,7 +104,7 @@ public class Subscription {
         int c = 0;
 
         for (ChapterForSubscription chapter : chapters) {
-            if (chapter.getRead() == ChapterForSubscription.UNREAD) {
+            if (chapter.getRead() == UNREAD) {
                 c++;
             }
         }
@@ -104,4 +134,5 @@ public class Subscription {
         }
         return Objects.equals(this.manga, other.manga);
     }
+
 }

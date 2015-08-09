@@ -1,6 +1,8 @@
 package de.andreasgiemza.mangamanager.data;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -14,12 +16,18 @@ public class ChapterForSubscription {
 
     private final String link;
     private final String title;
+    private final Date addedDate = Calendar.getInstance().getTime();
     private Boolean read = UNREAD;
+    private Date readDate = null;
 
     ChapterForSubscription(Chapter chapter, boolean read) {
         link = chapter.getLink();
         title = chapter.getTitle();
         this.read = read;
+
+        if (read == READ) {
+            readDate = Calendar.getInstance().getTime();
+        }
     }
 
     public String getLink() {
@@ -30,12 +38,26 @@ public class ChapterForSubscription {
         return title;
     }
 
+    public Date getAddedDate() {
+        return addedDate;
+    }
+
     public Boolean getRead() {
         return read;
     }
 
-    public void setRead(Boolean readed) {
-        this.read = readed;
+    public void setRead(Boolean read) {
+        this.read = read;
+
+        if (read == READ) {
+            readDate = Calendar.getInstance().getTime();
+        } else {
+            readDate = null;
+        }
+    }
+
+    public Date getReadDate() {
+        return readDate;
     }
 
     @Override

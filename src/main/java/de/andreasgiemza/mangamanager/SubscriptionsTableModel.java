@@ -13,7 +13,15 @@ import javax.swing.table.AbstractTableModel;
 public class SubscriptionsTableModel extends AbstractTableModel {
 
     private final List<Subscription> subscriptions;
-    private final List<String> columnNames = Arrays.asList("Site", "Manga", "Filter", "Chapter", "Unread chapters", "Last update");
+    private final List<String> columnNames = Arrays.asList(
+            "Site",
+            "Manga",
+            "Filter",
+            "Chapter",
+            "Unread chapters",
+            "Last read chapter",
+            "Latest chapter",
+            "Last update");
 
     public SubscriptionsTableModel(List<Subscription> subscriptions) {
         this.subscriptions = subscriptions;
@@ -47,19 +55,25 @@ public class SubscriptionsTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
+        Subscription subscription = subscriptions.get(rowIndex);
+
         switch (columnIndex) {
             case 0:
-                return subscriptions.get(rowIndex).getSite().getName();
+                return subscription.getSite().getName();
             case 1:
-                return subscriptions.get(rowIndex).getManga().getTitle();
+                return subscription.getManga().getTitle();
             case 2:
-                return subscriptions.get(rowIndex).getFilter();
+                return subscription.getFilter();
             case 3:
-                return subscriptions.get(rowIndex).getChapters().size();
+                return subscription.getChapters().size();
             case 4:
-                return subscriptions.get(rowIndex).getUnreadChapters();
+                return subscription.getUnreadChapters();
             case 5:
-                return new SimpleDateFormat("yyyy.MM.dd - HH:mm:ss").format(subscriptions.get(rowIndex).getLastUpdate());
+                return subscription.getLastReadChapter();
+            case 6:
+                return subscription.getChapters().get(0).getTitle();
+            case 7:
+                return new SimpleDateFormat("yyyy.MM.dd - HH:mm:ss").format(subscription.getLastUpdate());
             default:
                 return null;
         }
