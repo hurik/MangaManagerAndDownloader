@@ -1,6 +1,7 @@
 package de.andreasgiemza.mangamanager;
 
 import de.andreasgiemza.mangamanager.data.Subscription;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -12,7 +13,7 @@ import javax.swing.table.AbstractTableModel;
 public class SubscriptionsTableModel extends AbstractTableModel {
 
     private final List<Subscription> subscriptions;
-    private final List<String> columnNames = Arrays.asList("Site", "Manga", "Filter", "Chapter", "Unread chapters");
+    private final List<String> columnNames = Arrays.asList("Site", "Manga", "Filter", "Chapter", "Unread chapters", "Last update");
 
     public SubscriptionsTableModel(List<Subscription> subscriptions) {
         this.subscriptions = subscriptions;
@@ -57,6 +58,8 @@ public class SubscriptionsTableModel extends AbstractTableModel {
                 return subscriptions.get(rowIndex).getChapters().size();
             case 4:
                 return subscriptions.get(rowIndex).getUnreadChapters();
+            case 5:
+                return new SimpleDateFormat("yyyy.MM.dd - HH:mm:ss").format(subscriptions.get(rowIndex).getLastUpdate());
             default:
                 return null;
         }

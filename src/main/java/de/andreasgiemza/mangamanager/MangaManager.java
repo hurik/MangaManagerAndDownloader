@@ -63,7 +63,7 @@ public class MangaManager extends javax.swing.JFrame {
 
         subscriptions.add(subscription);
         try {
-            subscription.newChapters(subscription.getSite().getChapterList(subscription.getManga()), selected);
+            subscription.getNewChapters(subscription.getSite().getChapterList(subscription.getManga()), selected);
         } catch (Exception ex) {
         }
         subscriptionsTableModel.fireTableDataChanged();
@@ -197,7 +197,7 @@ public class MangaManager extends javax.swing.JFrame {
             public void run() {
                 for (Subscription subscription : subscriptions) {
                     try {
-                        subscription.newChapters(subscription.getSite().getChapterList(subscription.getManga()), UNREAD);
+                        subscription.getNewChapters(subscription.getSite().getChapterList(subscription.getManga()), UNREAD);
                     } catch (Exception ex) {
                     }
                 }

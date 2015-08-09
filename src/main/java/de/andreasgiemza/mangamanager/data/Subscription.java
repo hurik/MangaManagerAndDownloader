@@ -4,7 +4,9 @@ import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.SiteHelper;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +20,7 @@ public class Subscription {
     private final String siteClass;
     private final Manga manga;
     private final String filter;
+    private Date lastUpdate;
     private final List<ChapterForSubscription> chapters = new LinkedList<>();
 
     public Subscription(String siteClass, Manga manga, String filter) {
@@ -26,7 +29,7 @@ public class Subscription {
         this.filter = filter;
     }
 
-    public void newChapters(List<Chapter> chapterList, boolean selected) {
+    public void getNewChapters(List<Chapter> chapterList, boolean selected) {
         Collections.reverse(chapterList);
         Collections.reverse(chapters);
 
@@ -41,6 +44,8 @@ public class Subscription {
         }
 
         Collections.reverse(chapters);
+
+        lastUpdate = Calendar.getInstance().getTime();
     }
 
     public Site getSite() {
@@ -53,6 +58,10 @@ public class Subscription {
 
     public String getFilter() {
         return filter;
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
     }
 
     public List<ChapterForSubscription> getChapters() {
