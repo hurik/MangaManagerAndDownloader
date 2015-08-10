@@ -47,11 +47,15 @@ public class ChapterForSubscription {
     }
 
     public void setRead(Boolean read) {
-        this.read = read;
-
         if (read == READ) {
-            readDate = Calendar.getInstance().getTime();
+            if (this.read == READ) {
+                return;
+            } else {
+                this.read = READ;
+                readDate = Calendar.getInstance().getTime();
+            }
         } else {
+            this.read = UNREAD;
             readDate = null;
         }
     }

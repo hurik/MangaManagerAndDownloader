@@ -61,6 +61,24 @@ public class MangaManager extends javax.swing.JFrame {
                     SubscriptionsList.save(subscriptions);
                 }
             }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                int r = subscriptionsTable.rowAtPoint(e.getPoint());
+                if (r >= 0 && r < subscriptionsTable.getRowCount()) {
+                    subscriptionsTable.setRowSelectionInterval(r, r);
+                } else {
+                    subscriptionsTable.clearSelection();
+                }
+
+                int rowindex = subscriptionsTable.getSelectedRow();
+                if (rowindex < 0) {
+                    return;
+                }
+                if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
+                    subscriptionPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
         });
 
         subscriptionsTable.setDefaultRenderer(Object.class, new SubscriptionsTableCellRenderer());
@@ -78,7 +96,7 @@ public class MangaManager extends javax.swing.JFrame {
         return true;
     }
 
-    private Subscription getSelectedSite() {
+    private Subscription getSelectedSubscription() {
         int selectedRow = subscriptionsTable.getSelectedRow();
 
         if (selectedRow < 0) {
@@ -100,12 +118,49 @@ public class MangaManager extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        subscriptionPopupMenu = new javax.swing.JPopupMenu();
+        openMenuItem = new javax.swing.JMenuItem();
+        updateMenuItem = new javax.swing.JMenuItem();
+        markAlllReadMenuItem = new javax.swing.JMenuItem();
+        removeMenuItem = new javax.swing.JMenuItem();
         subscriptionsScrollPane = new javax.swing.JScrollPane();
         subscriptionsTable = new javax.swing.JTable();
-        updateButton = new javax.swing.JButton();
+        updateAllButton = new javax.swing.JButton();
         removeSubscriptionButton = new javax.swing.JButton();
         addSubscriptionButton = new javax.swing.JButton();
         downloaderButton = new javax.swing.JButton();
+
+        openMenuItem.setText("Open");
+        openMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openMenuItemActionPerformed(evt);
+            }
+        });
+        subscriptionPopupMenu.add(openMenuItem);
+
+        updateMenuItem.setText("Update");
+        updateMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateMenuItemActionPerformed(evt);
+            }
+        });
+        subscriptionPopupMenu.add(updateMenuItem);
+
+        markAlllReadMenuItem.setText("Mark all as read");
+        markAlllReadMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                markAlllReadMenuItemActionPerformed(evt);
+            }
+        });
+        subscriptionPopupMenu.add(markAlllReadMenuItem);
+
+        removeMenuItem.setText("Remove");
+        removeMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeMenuItemActionPerformed(evt);
+            }
+        });
+        subscriptionPopupMenu.add(removeMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MangaManager");
@@ -115,10 +170,10 @@ public class MangaManager extends javax.swing.JFrame {
         subscriptionsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         subscriptionsScrollPane.setViewportView(subscriptionsTable);
 
-        updateButton.setText("Update");
-        updateButton.addActionListener(new java.awt.event.ActionListener() {
+        updateAllButton.setText("Update all");
+        updateAllButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateButtonActionPerformed(evt);
+                updateAllButtonActionPerformed(evt);
             }
         });
 
@@ -158,7 +213,7 @@ public class MangaManager extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addSubscriptionButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(updateButton)))
+                        .addComponent(updateAllButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -170,7 +225,7 @@ public class MangaManager extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addSubscriptionButton)
                     .addComponent(removeSubscriptionButton)
-                    .addComponent(updateButton)
+                    .addComponent(updateAllButton)
                     .addComponent(downloaderButton))
                 .addContainerGap())
         );
@@ -186,7 +241,7 @@ public class MangaManager extends javax.swing.JFrame {
     }//GEN-LAST:event_addSubscriptionButtonActionPerformed
 
     private void removeSubscriptionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeSubscriptionButtonActionPerformed
-        Subscription subscription = getSelectedSite();
+        Subscription subscription = getSelectedSubscription();
 
         if (subscription == null) {
             return;
@@ -206,7 +261,7 @@ public class MangaManager extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_removeSubscriptionButtonActionPerformed
 
-    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+    private void updateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateAllButtonActionPerformed
         final Loading loading = new Loading(this, true, getX(), getY(),
                 getWidth(), getHeight());
         loading.startRunnable(new Runnable() {
@@ -254,12 +309,82 @@ public class MangaManager extends javax.swing.JFrame {
 
         subscriptionsTableModel.fireTableDataChanged();
         SubscriptionsList.save(subscriptions);
-    }//GEN-LAST:event_updateButtonActionPerformed
+    }//GEN-LAST:event_updateAllButtonActionPerformed
 
     private void downloaderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloaderButtonActionPerformed
         new MangaDownloader().setVisible(true);
         dispose();
     }//GEN-LAST:event_downloaderButtonActionPerformed
+
+    private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
+        Subscription subscription = getSelectedSubscription();
+
+        if (subscription == null) {
+            return;
+        }
+
+        MangaDetails mangaDetails = new MangaDetails(mangaManager, true, subscription);
+        mangaDetails.setVisible(true);
+
+        subscriptionsTableModel.fireTableDataChanged();
+        SubscriptionsList.save(subscriptions);
+    }//GEN-LAST:event_openMenuItemActionPerformed
+
+    private void updateMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateMenuItemActionPerformed
+        final Subscription subscription = getSelectedSubscription();
+
+        if (subscription == null) {
+            return;
+        }
+
+        final Loading loading = new Loading(this, true, getX(), getY(),
+                getWidth(), getHeight());
+        loading.startRunnable(new Runnable() {
+
+            @Override
+            public void run() {
+
+                LinkedList<Subscription> tempList = new LinkedList<>(subscriptions);
+                Collections.shuffle(tempList, new Random(System.nanoTime()));
+
+                System.out.println("Updating subscription ...");
+                long startTime = System.nanoTime();
+
+                System.out.println("- Updating " + subscription.getManga().getTitle() + " ...");
+                try {
+                    subscription.getNewChapters(subscription.getSite().getChapterList(subscription.getManga()), UNREAD);
+                } catch (Exception ex) {
+                }
+                System.out.println("- Updating " + subscription.getManga().getTitle() + " ... done!");
+
+                long endTime = System.nanoTime();
+                double duration = (double) (endTime - startTime) / 1000000000;
+                System.out.println("Updating subscription ... done! (Time: " + new BigDecimal(duration).setScale(2, RoundingMode.HALF_UP) + "s)");
+
+                loading.dispose();
+            }
+        });
+
+        subscriptionsTableModel.fireTableDataChanged();
+        SubscriptionsList.save(subscriptions);
+    }//GEN-LAST:event_updateMenuItemActionPerformed
+
+    private void removeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeMenuItemActionPerformed
+        removeSubscriptionButtonActionPerformed(evt);
+    }//GEN-LAST:event_removeMenuItemActionPerformed
+
+    private void markAlllReadMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_markAlllReadMenuItemActionPerformed
+        final Subscription subscription = getSelectedSubscription();
+
+        if (subscription == null) {
+            return;
+        }
+
+        subscription.markAllAsRead();
+
+        subscriptionsTableModel.fireTableDataChanged();
+        SubscriptionsList.save(subscriptions);
+    }//GEN-LAST:event_markAlllReadMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -294,10 +419,15 @@ public class MangaManager extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addSubscriptionButton;
     private javax.swing.JButton downloaderButton;
+    private javax.swing.JMenuItem markAlllReadMenuItem;
+    private javax.swing.JMenuItem openMenuItem;
+    private javax.swing.JMenuItem removeMenuItem;
     private javax.swing.JButton removeSubscriptionButton;
+    private javax.swing.JPopupMenu subscriptionPopupMenu;
     private javax.swing.JScrollPane subscriptionsScrollPane;
     private javax.swing.JTable subscriptionsTable;
-    private javax.swing.JButton updateButton;
+    private javax.swing.JButton updateAllButton;
+    private javax.swing.JMenuItem updateMenuItem;
     // End of variables declaration//GEN-END:variables
 
 }
