@@ -11,8 +11,15 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
@@ -206,12 +213,40 @@ public class MangaManager extends javax.swing.JFrame {
 
             @Override
             public void run() {
-                for (Subscription subscription : subscriptions) {
-                    try {
-                        subscription.getNewChapters(subscription.getSite().getChapterList(subscription.getManga()), UNREAD);
-                    } catch (Exception ex) {
-                    }
+
+                LinkedList<Subscription> tempList = new LinkedList<>(subscriptions);
+                Collections.shuffle(tempList, new Random(System.nanoTime()));
+
+                System.out.println("Updating subscriptions ...");
+                long startTime = System.nanoTime();
+
+                ExecutorService executor = Executors.newFixedThreadPool(4);
+                for (final Subscription subscription : tempList) {
+
+                    executor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println("- Updating " + subscription.getManga().getTitle() + " ...");
+                            try {
+                                subscription.getNewChapters(subscription.getSite().getChapterList(subscription.getManga()), UNREAD);
+                            } catch (Exception ex) {
+                            }
+                            System.out.println("- Updating " + subscription.getManga().getTitle() + " ... done!");
+                        }
+                    });
+
                 }
+
+                executor.shutdown();
+
+                try {
+                    executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+                } catch (InterruptedException e) {
+                }
+
+                long endTime = System.nanoTime();
+                double duration = (double) (endTime - startTime) / 1000000000;
+                System.out.println("Updating subscriptions ... done! (Time: " + new BigDecimal(duration).setScale(2, RoundingMode.HALF_UP) + "s)");
 
                 loading.dispose();
             }
