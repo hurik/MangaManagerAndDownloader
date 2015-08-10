@@ -1,5 +1,6 @@
 package de.andreasgiemza.mangamanager;
 
+import de.andreasgiemza.mangadownloader.MangaDownloader;
 import de.andreasgiemza.mangadownloader.gui.dialogs.Loading;
 import de.andreasgiemza.mangamanager.addsubscription.AddSubscription;
 import static de.andreasgiemza.mangamanager.data.ChapterForSubscription.UNREAD;
@@ -97,6 +98,7 @@ public class MangaManager extends javax.swing.JFrame {
         updateButton = new javax.swing.JButton();
         removeSubscriptionButton = new javax.swing.JButton();
         addSubscriptionButton = new javax.swing.JButton();
+        downloaderButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MangaManager");
@@ -127,6 +129,13 @@ public class MangaManager extends javax.swing.JFrame {
             }
         });
 
+        downloaderButton.setText("Switch to Downloader");
+        downloaderButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                downloaderButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -136,11 +145,13 @@ public class MangaManager extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(subscriptionsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(updateButton)
+                        .addComponent(downloaderButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(removeSubscriptionButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addSubscriptionButton)))
+                        .addComponent(addSubscriptionButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(updateButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -152,7 +163,8 @@ public class MangaManager extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addSubscriptionButton)
                     .addComponent(removeSubscriptionButton)
-                    .addComponent(updateButton))
+                    .addComponent(updateButton)
+                    .addComponent(downloaderButton))
                 .addContainerGap())
         );
 
@@ -209,6 +221,11 @@ public class MangaManager extends javax.swing.JFrame {
         SubscriptionsList.save(subscriptions);
     }//GEN-LAST:event_updateButtonActionPerformed
 
+    private void downloaderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloaderButtonActionPerformed
+        new MangaDownloader().setVisible(true);
+        dispose();
+    }//GEN-LAST:event_downloaderButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -241,6 +258,7 @@ public class MangaManager extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addSubscriptionButton;
+    private javax.swing.JButton downloaderButton;
     private javax.swing.JButton removeSubscriptionButton;
     private javax.swing.JScrollPane subscriptionsScrollPane;
     private javax.swing.JTable subscriptionsTable;

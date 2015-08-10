@@ -29,11 +29,13 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="subscriptionsScrollPane" alignment="0" pref="780" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="updateButton" min="-2" max="-2" attributes="0"/>
+                      <Component id="downloaderButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="removeSubscriptionButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="addSubscriptionButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="updateButton" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -50,6 +52,7 @@
                   <Component id="addSubscriptionButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="removeSubscriptionButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="updateButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="downloaderButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -99,6 +102,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addSubscriptionButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="downloaderButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Switch to Downloader"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="downloaderButtonActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

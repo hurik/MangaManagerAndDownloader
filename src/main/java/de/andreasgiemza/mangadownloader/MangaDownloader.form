@@ -35,12 +35,16 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="sitePanel" alignment="0" max="32767" attributes="0"/>
                   <Component id="mangasDirPanel" alignment="0" max="32767" attributes="0"/>
                   <Component id="splitPane" alignment="0" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="managerButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -54,7 +58,9 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="sitePanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="splitPane" max="32767" attributes="0"/>
+              <Component id="splitPane" pref="445" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="managerButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -201,7 +207,7 @@
                               <Component id="mangaListSearchLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="mangaListScrollPane" pref="275" max="32767" attributes="0"/>
+                          <Component id="mangaListScrollPane" pref="151" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -272,7 +278,7 @@
                               <Component id="chapterDeSelectAllCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="chapterListScrollPane" pref="246" max="32767" attributes="0"/>
+                          <Component id="chapterListScrollPane" pref="122" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="downloadButton" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -363,7 +369,7 @@
                       <Component id="startDownloadButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="stopDownloadButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="48" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="removeDownloadButton" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="downloadScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
@@ -417,5 +423,13 @@
         </Container>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="managerButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Switch to Manager"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="managerButtonActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

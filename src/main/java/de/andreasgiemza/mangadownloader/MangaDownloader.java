@@ -22,6 +22,7 @@ import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
 import de.andreasgiemza.mangadownloader.options.Options;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangadownloader.sites.SiteHelper;
+import de.andreasgiemza.mangamanager.MangaManager;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.io.FileOutputStream;
@@ -291,6 +292,7 @@ public class MangaDownloader extends javax.swing.JFrame {
         startDownloadButton = new javax.swing.JButton();
         stopDownloadButton = new javax.swing.JButton();
         removeDownloadButton = new javax.swing.JButton();
+        managerButton = new javax.swing.JButton();
 
         mangasDirFileChooser.setDialogTitle("Select a manga directory ...");
         mangasDirFileChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
@@ -387,7 +389,7 @@ public class MangaDownloader extends javax.swing.JFrame {
                     .addComponent(mangaListSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(mangaListSearchLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(mangaListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE))
+                .addComponent(mangaListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE))
         );
 
         mangaChapterPanel.add(mangaListPanel);
@@ -435,7 +437,7 @@ public class MangaDownloader extends javax.swing.JFrame {
                         .addComponent(chapterListSearchLabel))
                     .addComponent(chapterDeSelectAllCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chapterListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+                .addComponent(chapterListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(downloadButton))
         );
@@ -490,12 +492,19 @@ public class MangaDownloader extends javax.swing.JFrame {
                 .addComponent(startDownloadButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(stopDownloadButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(removeDownloadButton))
             .addComponent(downloadScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
 
         splitPane.setRightComponent(downloadPanel);
+
+        managerButton.setText("Switch to Manager");
+        managerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                managerButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -506,7 +515,10 @@ public class MangaDownloader extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sitePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(mangasDirPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(splitPane))
+                    .addComponent(splitPane)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(managerButton)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -517,7 +529,9 @@ public class MangaDownloader extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sitePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(splitPane)
+                .addComponent(splitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(managerButton)
                 .addContainerGap())
         );
 
@@ -741,35 +755,10 @@ public class MangaDownloader extends javax.swing.JFrame {
         downloadsTableModel.fireTableDataChanged();
     }//GEN-LAST:event_removeDownloadButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Windows look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Windows is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MangaDownloader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new MangaDownloader().setVisible(true);
-            }
-        });
-    }
+    private void managerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_managerButtonActionPerformed
+        new MangaManager().setVisible(true);
+        dispose();
+    }//GEN-LAST:event_managerButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox chapterDeSelectAllCheckBox;
@@ -782,6 +771,7 @@ public class MangaDownloader extends javax.swing.JFrame {
     private javax.swing.JPanel downloadPanel;
     private javax.swing.JScrollPane downloadScrollPane;
     private javax.swing.JTable downloadTable;
+    private javax.swing.JButton managerButton;
     private javax.swing.JPanel mangaChapterPanel;
     private javax.swing.JPanel mangaListPanel;
     private javax.swing.JScrollPane mangaListScrollPane;
