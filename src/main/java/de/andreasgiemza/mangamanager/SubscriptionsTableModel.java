@@ -17,8 +17,8 @@ public class SubscriptionsTableModel extends AbstractTableModel {
             "Site",
             "Manga",
             "Filter",
-            "Chapter",
-            "Unread chapters",
+            "Chapters",
+            "Unread",
             "Last read chapter",
             "Latest chapter",
             "Last update");

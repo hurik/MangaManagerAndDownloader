@@ -7,6 +7,7 @@ import static de.andreasgiemza.mangamanager.data.ChapterForSubscription.UNREAD;
 import de.andreasgiemza.mangamanager.data.Subscription;
 import de.andreasgiemza.mangamanager.data.SubscriptionsList;
 import de.andreasgiemza.mangamanager.mangadetails.MangaDetails;
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
@@ -22,6 +23,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -124,7 +127,16 @@ public class MangaManager extends javax.swing.JFrame {
         markAlllReadMenuItem = new javax.swing.JMenuItem();
         removeMenuItem = new javax.swing.JMenuItem();
         subscriptionsScrollPane = new javax.swing.JScrollPane();
-        subscriptionsTable = new javax.swing.JTable();
+        subscriptionsTable = new JTable(){
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component component = super.prepareRenderer(renderer, row, column);
+                int rendererWidth = component.getPreferredSize().width;
+                TableColumn tableColumn = getColumnModel().getColumn(column);
+                tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+                return component;
+            }
+        };
         updateAllButton = new javax.swing.JButton();
         removeSubscriptionButton = new javax.swing.JButton();
         addSubscriptionButton = new javax.swing.JButton();
