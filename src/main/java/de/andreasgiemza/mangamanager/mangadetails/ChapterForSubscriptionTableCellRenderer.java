@@ -16,7 +16,7 @@ public class ChapterForSubscriptionTableCellRenderer extends DefaultTableCellRen
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-        if (((ChapterForSubscriptionTableModel) table.getModel()).getChapter(row).getRead() == UNREAD) {
+        if (((ChapterForSubscriptionTableModel) table.getModel()).getChapter(table.convertRowIndexToModel(row)).getRead() == UNREAD) {
             component.setFont(component.getFont().deriveFont(Font.BOLD));
         }
 
