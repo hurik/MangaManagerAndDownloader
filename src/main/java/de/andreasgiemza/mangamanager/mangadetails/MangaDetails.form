@@ -43,8 +43,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="chaptersScrollPane" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="33" max="32767" attributes="0"/>
+              <Component id="chaptersScrollPane" pref="429" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="markReadButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="markUnreadButton" alignment="3" min="-2" max="-2" attributes="0"/>
