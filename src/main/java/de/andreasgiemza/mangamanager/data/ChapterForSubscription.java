@@ -48,9 +48,7 @@ public class ChapterForSubscription {
 
     public void setRead(Boolean read) {
         if (read == READ) {
-            if (this.read == READ) {
-                return;
-            } else {
+            if (this.read == UNREAD) {
                 this.read = READ;
                 readDate = Calendar.getInstance().getTime();
             }
