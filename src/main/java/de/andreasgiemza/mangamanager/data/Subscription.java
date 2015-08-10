@@ -135,4 +135,9 @@ public class Subscription {
         return Objects.equals(this.manga, other.manga);
     }
 
+    @Override
+    public String toString() {
+        return getManga().getTitle() + " (" + siteClass + ") [" + chapters.size() + "/" + getUnreadChapters() + "]";
+    }
+
 }
