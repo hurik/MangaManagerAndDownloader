@@ -32,6 +32,7 @@ Little tool to download mangas from various sites.
 * LoneManga
 * MangaStream
 * Mangacow
+* One Time Scans
 * Red Hawk Scanlations
 * Roselia Scanlations
 * S2scans
