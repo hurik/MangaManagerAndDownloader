@@ -1,6 +1,9 @@
 package de.andreasgiemza.mangadownloader.helpers;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -17,9 +20,12 @@ public class RunInThreads {
     }
 
     public static void doIt(List<Runnable> runnables) {
+        List<Runnable> tempList = new LinkedList<>(runnables);
+        Collections.shuffle(tempList, new Random(System.nanoTime()));
+
         ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
 
-        for (final Runnable runnable : runnables) {
+        for (final Runnable runnable : tempList) {
             executor.execute(runnable);
         }
 

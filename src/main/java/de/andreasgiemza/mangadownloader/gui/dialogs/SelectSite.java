@@ -4,12 +4,15 @@ import de.andreasgiemza.mangadownloader.MangaDownloader;
 import de.andreasgiemza.mangadownloader.data.Manga;
 import de.andreasgiemza.mangadownloader.data.MangaList;
 import de.andreasgiemza.mangadownloader.gui.site.SiteTableModel;
+import de.andreasgiemza.mangadownloader.helpers.RunInThreads;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import de.andreasgiemza.mangamanager.addsubscription.AddSubscription;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -241,34 +244,52 @@ public class SelectSite extends javax.swing.JDialog {
 
         final Loading loading = new Loading(parentFrame, true, getX(), getY(),
                 getWidth(), getHeight());
+
         loading.startRunnable(new Runnable() {
 
             @Override
             public void run() {
-                String errors = "";
+                final List<String> errors = new LinkedList<>();
 
-                for (Site site : sites) {
-                    List<Manga> mangas;
+                System.out.println("Updating sites ...");
+                long startTime = System.nanoTime();
 
-                    try {
-                        mangas = new LinkedList<>(new HashSet<>(site.getMangaList()));
-                        Collections.sort(mangas);
+                List<Runnable> runnables = new LinkedList<>();
 
-                        // Save data to file
-                        MangaList.save(site, mangas);
-                    } catch (Exception ex) {
-                        errors += "Cant't connect to " + site.getName() + "!\n";
-                    }
+                for (final Site site : sites) {
+                    runnables.add(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println("- Updating " + site.getName() + " ...");
+
+                            List<Manga> mangas;
+
+                            try {
+                                mangas = new LinkedList<>(new HashSet<>(site.getMangaList()));
+                                Collections.sort(mangas);
+
+                                // Save data to file
+                                MangaList.save(site, mangas);
+                            } catch (Exception ex) {
+                                errors.add(site.getName());
+                            }
+
+                            System.out.println("- Updating " + site.getName() + " ... done!");
+                        }
+                    });
                 }
 
+                RunInThreads.doIt(runnables);
+
+                System.out.println("Updating subscriptions ... done! (Time: " + new BigDecimal((double) (System.nanoTime() - startTime) / 1000000000).setScale(2, RoundingMode.HALF_UP) + "s)");
+
                 if (!errors.isEmpty()) {
-                    JOptionPane.showMessageDialog(loading, errors, "Error",
+                    JOptionPane.showMessageDialog(loading, "Error while downloading: " + errors, "Error",
                             JOptionPane.ERROR_MESSAGE);
                 }
 
-                loading.dispose();
-
                 ((SiteTableModel) sitesTable.getModel()).fireTableDataChanged();
+                loading.dispose();
             }
         });
     }//GEN-LAST:event_updateAllButtonActionPerformed
