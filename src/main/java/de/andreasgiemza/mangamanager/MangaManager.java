@@ -2,6 +2,7 @@ package de.andreasgiemza.mangamanager;
 
 import de.andreasgiemza.mangadownloader.MangaDownloader;
 import de.andreasgiemza.mangadownloader.gui.dialogs.Loading;
+import de.andreasgiemza.mangadownloader.helpers.RunInThreads;
 import de.andreasgiemza.mangamanager.addsubscription.AddSubscription;
 import static de.andreasgiemza.mangamanager.data.ChapterForSubscription.UNREAD;
 import de.andreasgiemza.mangamanager.data.Subscription;
@@ -18,9 +19,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
@@ -31,23 +29,23 @@ import javax.swing.table.TableColumn;
  * @author Andreas Giemza <andreas@giemza.net>
  */
 public class MangaManager extends javax.swing.JFrame {
-
+    
     private final List<Subscription> subscriptions = new LinkedList<>();
     private final SubscriptionsTableModel subscriptionsTableModel = new SubscriptionsTableModel(subscriptions);
-
+    
     private final MangaManager mangaManager = this;
-
+    
     public MangaManager() {
         initComponents();
-
+        
         setLocation(
                 new Double((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (getWidth() / 2)).intValue(),
                 new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (getHeight() / 2)).intValue()
         );
-
+        
         subscriptions.addAll(SubscriptionsList.load());
         subscriptionsTableModel.fireTableDataChanged();
-
+        
         subscriptionsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent me) {
@@ -56,15 +54,15 @@ public class MangaManager extends javax.swing.JFrame {
                 int row = table.rowAtPoint(p);
                 if (me.getClickCount() == 2) {
                     Subscription selectedSubscription = ((SubscriptionsTableModel) subscriptionsTable.getModel()).getSubscription(subscriptionsTable.convertRowIndexToModel(row));
-
+                    
                     MangaDetails mangaDetails = new MangaDetails(mangaManager, true, selectedSubscription);
                     mangaDetails.setVisible(true);
-
+                    
                     subscriptionsTableModel.fireTableDataChanged();
                     SubscriptionsList.save(subscriptions);
                 }
             }
-
+            
             @Override
             public void mouseReleased(MouseEvent e) {
                 int r = subscriptionsTable.rowAtPoint(e.getPoint());
@@ -73,7 +71,7 @@ public class MangaManager extends javax.swing.JFrame {
                 } else {
                     subscriptionsTable.clearSelection();
                 }
-
+                
                 int rowindex = subscriptionsTable.getSelectedRow();
                 if (rowindex < 0) {
                     return;
@@ -83,32 +81,32 @@ public class MangaManager extends javax.swing.JFrame {
                 }
             }
         });
-
+        
         subscriptionsTable.setDefaultRenderer(Object.class, new SubscriptionsTableCellRenderer());
         subscriptionsTable.setDefaultRenderer(Integer.class, new SubscriptionsTableCellRenderer());
     }
-
+    
     public boolean addSubscription(Subscription subscription, boolean selected) {
         if (subscriptions.contains(subscription)) {
             return false;
         }
-
+        
         subscriptions.add(subscription);
         subscriptionsTableModel.fireTableDataChanged();
-
+        
         return true;
     }
-
+    
     private Subscription getSelectedSubscription() {
         int selectedRow = subscriptionsTable.getSelectedRow();
-
+        
         if (selectedRow < 0) {
             JOptionPane.showMessageDialog(this, "Please select a subscription!",
                     "Info", JOptionPane.INFORMATION_MESSAGE);
-
+            
             return null;
         }
-
+        
         return ((SubscriptionsTableModel) subscriptionsTable.getModel()).getSubscription(subscriptionsTable.convertRowIndexToModel(selectedRow));
     }
 
@@ -248,27 +246,27 @@ public class MangaManager extends javax.swing.JFrame {
     private void addSubscriptionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSubscriptionButtonActionPerformed
         AddSubscription addSubscription = new AddSubscription(this, true);
         addSubscription.setVisible(true);
-
+        
         SubscriptionsList.save(subscriptions);
     }//GEN-LAST:event_addSubscriptionButtonActionPerformed
 
     private void removeSubscriptionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeSubscriptionButtonActionPerformed
         Subscription subscription = getSelectedSubscription();
-
+        
         if (subscription == null) {
             return;
         }
-
+        
         int result = JOptionPane.showConfirmDialog(
                 this,
                 "Do you really want to remove " + subscription.getManga().getTitle() + "?",
                 "Remove subscription",
                 JOptionPane.OK_CANCEL_OPTION);
-
+        
         if (result == JOptionPane.YES_OPTION) {
             subscriptions.remove(subscription);
             subscriptionsTableModel.fireTableDataChanged();
-
+            
             SubscriptionsList.save(subscriptions);
         }
     }//GEN-LAST:event_removeSubscriptionButtonActionPerformed
@@ -277,20 +275,20 @@ public class MangaManager extends javax.swing.JFrame {
         final Loading loading = new Loading(this, true, getX(), getY(),
                 getWidth(), getHeight());
         loading.startRunnable(new Runnable() {
-
+            
             @Override
             public void run() {
-
+                
                 LinkedList<Subscription> tempList = new LinkedList<>(subscriptions);
                 Collections.shuffle(tempList, new Random(System.nanoTime()));
-
+                
                 System.out.println("Updating subscriptions ...");
                 long startTime = System.nanoTime();
-
-                ExecutorService executor = Executors.newFixedThreadPool(4);
+                
+                List<Runnable> runnables = new LinkedList<>();
+                
                 for (final Subscription subscription : tempList) {
-
-                    executor.execute(new Runnable() {
+                    runnables.add(new Runnable() {
                         @Override
                         public void run() {
                             System.out.println("- Updating " + subscription.getManga().getTitle() + " ...");
@@ -301,24 +299,18 @@ public class MangaManager extends javax.swing.JFrame {
                             System.out.println("- Updating " + subscription.getManga().getTitle() + " ... done!");
                         }
                     });
-
                 }
-
-                executor.shutdown();
-
-                try {
-                    executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-                } catch (InterruptedException e) {
-                }
-
+                
+                RunInThreads.doIt(runnables);
+                
                 long endTime = System.nanoTime();
                 double duration = (double) (endTime - startTime) / 1000000000;
                 System.out.println("Updating subscriptions ... done! (Time: " + new BigDecimal(duration).setScale(2, RoundingMode.HALF_UP) + "s)");
-
+                
                 loading.dispose();
             }
         });
-
+        
         subscriptionsTableModel.fireTableDataChanged();
         SubscriptionsList.save(subscriptions);
     }//GEN-LAST:event_updateAllButtonActionPerformed
@@ -330,53 +322,53 @@ public class MangaManager extends javax.swing.JFrame {
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
         Subscription subscription = getSelectedSubscription();
-
+        
         if (subscription == null) {
             return;
         }
-
+        
         MangaDetails mangaDetails = new MangaDetails(mangaManager, true, subscription);
         mangaDetails.setVisible(true);
-
+        
         subscriptionsTableModel.fireTableDataChanged();
         SubscriptionsList.save(subscriptions);
     }//GEN-LAST:event_openMenuItemActionPerformed
 
     private void updateMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateMenuItemActionPerformed
         final Subscription subscription = getSelectedSubscription();
-
+        
         if (subscription == null) {
             return;
         }
-
+        
         final Loading loading = new Loading(this, true, getX(), getY(),
                 getWidth(), getHeight());
         loading.startRunnable(new Runnable() {
-
+            
             @Override
             public void run() {
-
+                
                 LinkedList<Subscription> tempList = new LinkedList<>(subscriptions);
                 Collections.shuffle(tempList, new Random(System.nanoTime()));
-
+                
                 System.out.println("Updating subscription ...");
                 long startTime = System.nanoTime();
-
+                
                 System.out.println("- Updating " + subscription.getManga().getTitle() + " ...");
                 try {
                     subscription.getNewChapters(subscription.getSite().getChapterList(subscription.getManga()), UNREAD);
                 } catch (Exception ex) {
                 }
                 System.out.println("- Updating " + subscription.getManga().getTitle() + " ... done!");
-
+                
                 long endTime = System.nanoTime();
                 double duration = (double) (endTime - startTime) / 1000000000;
                 System.out.println("Updating subscription ... done! (Time: " + new BigDecimal(duration).setScale(2, RoundingMode.HALF_UP) + "s)");
-
+                
                 loading.dispose();
             }
         });
-
+        
         subscriptionsTableModel.fireTableDataChanged();
         SubscriptionsList.save(subscriptions);
     }//GEN-LAST:event_updateMenuItemActionPerformed
@@ -387,13 +379,13 @@ public class MangaManager extends javax.swing.JFrame {
 
     private void markAlllReadMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_markAlllReadMenuItemActionPerformed
         final Subscription subscription = getSelectedSubscription();
-
+        
         if (subscription == null) {
             return;
         }
-
+        
         subscription.markAllAsRead();
-
+        
         subscriptionsTableModel.fireTableDataChanged();
         SubscriptionsList.save(subscriptions);
     }//GEN-LAST:event_markAlllReadMenuItemActionPerformed
