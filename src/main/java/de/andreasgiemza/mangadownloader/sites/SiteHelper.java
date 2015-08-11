@@ -27,9 +27,12 @@ public final class SiteHelper {
                             Site.class);
 
             for (Class<?> clazz : clazzes) {
-                sites.add((Site) clazz.newInstance());
+                try {
+                    sites.add((Site) clazz.newInstance());
+                } catch (InstantiationException | IllegalAccessException ex) {
+                }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+        } catch (ClassNotFoundException ex) {
         }
 
         Collections.sort(sites, new Comparator<Site>() {
