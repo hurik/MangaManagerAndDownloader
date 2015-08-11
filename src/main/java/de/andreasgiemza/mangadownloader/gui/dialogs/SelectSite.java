@@ -281,7 +281,7 @@ public class SelectSite extends javax.swing.JDialog {
 
                 RunInThreads.doIt(runnables);
 
-                System.out.println("Updating subscriptions ... done! (Time: " + new BigDecimal((double) (System.nanoTime() - startTime) / 1000000000).setScale(2, RoundingMode.HALF_UP) + "s)");
+                System.out.println("Updating sites ... done! (Time: " + new BigDecimal((double) (System.nanoTime() - startTime) / 1000000000).setScale(2, RoundingMode.HALF_UP) + "s)");
 
                 if (!errors.isEmpty()) {
                     JOptionPane.showMessageDialog(loading, "Error while downloading: " + errors, "Error",
