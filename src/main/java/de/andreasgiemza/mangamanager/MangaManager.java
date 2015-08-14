@@ -43,9 +43,6 @@ public class MangaManager extends javax.swing.JFrame {
                 new Double((Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - (getHeight() / 2)).intValue()
         );
 
-        subscriptions.addAll(SubscriptionsList.load());
-        subscriptionsTableModel.fireTableDataChanged();
-
         subscriptionsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent me) {
@@ -84,6 +81,18 @@ public class MangaManager extends javax.swing.JFrame {
 
         subscriptionsTable.setDefaultRenderer(Object.class, new SubscriptionsTableCellRenderer());
         subscriptionsTable.setDefaultRenderer(Integer.class, new SubscriptionsTableCellRenderer());
+
+        final Loading loading = new Loading(this, true, getX(), getY(),
+                getWidth(), getHeight());
+        loading.startRunnable(new Runnable() {
+
+            @Override
+            public void run() {
+                subscriptions.addAll(SubscriptionsList.load());
+                subscriptionsTableModel.fireTableDataChanged();
+                loading.dispose();
+            }
+        });
     }
 
     public boolean addSubscription(Subscription subscription, boolean selected) {
