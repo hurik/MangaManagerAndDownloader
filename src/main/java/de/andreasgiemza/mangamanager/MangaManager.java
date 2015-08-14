@@ -290,9 +290,11 @@ public class MangaManager extends javax.swing.JFrame {
                             System.out.println("- Updating " + subscription.getManga().getTitle() + " ...");
                             try {
                                 subscription.getNewChapters(subscription.getSite().getChapterList(subscription.getManga()), UNREAD);
+                                subscriptionsTableModel.fireTableDataChanged();
+                                System.out.println("- Updating " + subscription.getManga().getTitle() + " ... done!");
                             } catch (Exception ex) {
+                                System.out.println("- Updating " + subscription.getManga().getTitle() + " ... not done! Error!");
                             }
-                            System.out.println("- Updating " + subscription.getManga().getTitle() + " ... done!");
                         }
                     });
                 }
