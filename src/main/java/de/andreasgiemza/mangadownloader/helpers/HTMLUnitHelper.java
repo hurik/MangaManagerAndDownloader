@@ -3,13 +3,19 @@ package de.andreasgiemza.mangadownloader.helpers;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.CookieManager;
 import com.gargoylesoftware.htmlunit.HttpMethod;
+import com.gargoylesoftware.htmlunit.IncorrectnessListener;
+import com.gargoylesoftware.htmlunit.SilentCssErrorHandler;
+import com.gargoylesoftware.htmlunit.StringWebResponse;
 import com.gargoylesoftware.htmlunit.UnexpectedPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptJobManager;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
+import com.gargoylesoftware.htmlunit.util.WebConnectionWrapper;
 import de.andreasgiemza.mangadownloader.data.Image;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -30,17 +36,10 @@ public class HTMLUnitHelper {
     }
 
     public static Document getHTMLPage(String url) throws Exception {
-        java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(Level.OFF);
-
         Exception ex = null;
 
         for (int i = 0; i < NUMBER_OF_TRIES; i++) {
-            try (WebClient webClient = new WebClient(BrowserVersion.CHROME)) {
-                webClient.setCookieManager(cookieManager);
-                webClient.getOptions().setJavaScriptEnabled(true);
-                webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-                webClient.getOptions().setThrowExceptionOnScriptError(false);
-
+            try (WebClient webClient = createWebClient()) {
                 HtmlPage page = webClient.getPage(url);
 
                 JavaScriptJobManager manager = page.getEnclosingWindow().getJobManager();
@@ -61,17 +60,10 @@ public class HTMLUnitHelper {
     }
 
     public static Document getHTMLPageWithPost(String url, ArrayList<NameValuePair> post) throws Exception {
-        java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(Level.OFF);
-
         Exception ex = null;
 
         for (int i = 0; i < NUMBER_OF_TRIES; i++) {
-            try (WebClient webClient = new WebClient(BrowserVersion.CHROME)) {
-                webClient.setCookieManager(cookieManager);
-                webClient.getOptions().setJavaScriptEnabled(true);
-                webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-                webClient.getOptions().setThrowExceptionOnScriptError(false);
-
+            try (WebClient webClient = createWebClient()) {
                 WebRequest requestSettings = new WebRequest(new URL(url), HttpMethod.POST);
 
                 requestSettings.setRequestParameters(new ArrayList<NameValuePair>());
@@ -97,16 +89,10 @@ public class HTMLUnitHelper {
     }
 
     public static byte[] getImage(Image image) throws Exception {
-        java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(Level.OFF);
-
         Exception ex = null;
 
         for (int i = 0; i < NUMBER_OF_TRIES; i++) {
-            try (WebClient webClient = new WebClient(BrowserVersion.CHROME)) {
-                webClient.setCookieManager(cookieManager);
-                webClient.getOptions().setJavaScriptEnabled(true);
-                webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-                webClient.getOptions().setThrowExceptionOnScriptError(false);
+            try (WebClient webClient = createWebClient()) {
                 webClient.addRequestHeader("Referer", image.getReferrer());
 
                 UnexpectedPage page = webClient.getPage(image.getLink());
@@ -126,5 +112,43 @@ public class HTMLUnitHelper {
         }
 
         throw ex;
+    }
+
+    private static WebClient createWebClient() {
+        WebClient webClient = new WebClient(BrowserVersion.CHROME);
+
+        // http://stackoverflow.com/a/23482615/2246865 by Neil McGuigan
+        java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(Level.OFF);
+
+        webClient.setCssErrorHandler(new SilentCssErrorHandler());
+
+        webClient.setIncorrectnessListener(new IncorrectnessListener() {
+            @Override
+            public void notify(String arg0, Object arg1) {
+            }
+        });
+
+        webClient.setCookieManager(cookieManager);
+        webClient.getOptions().setCssEnabled(false);
+        webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+        webClient.getOptions().setThrowExceptionOnScriptError(false);
+        webClient.getOptions().setPrintContentOnFailingStatusCode(false);
+        webClient.getOptions().setUseInsecureSSL(true);
+
+        // http://stackoverflow.com/a/14227559/2246865 by Lee
+        webClient.setWebConnection(new WebConnectionWrapper(webClient) {
+            @Override
+            public WebResponse getResponse(final WebRequest request) throws IOException {
+                if (request.getUrl().toString().contains("googlesyndication.com")
+                        || request.getUrl().toString().contains("disqus.com")
+                        || request.getUrl().toString().contains("google-analytics.com")) {
+                    return new StringWebResponse("", request.getUrl());
+                } else {
+                    return super.getResponse(request);
+                }
+            }
+        });
+
+        return webClient;
     }
 }
