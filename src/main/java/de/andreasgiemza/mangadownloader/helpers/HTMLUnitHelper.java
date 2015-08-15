@@ -16,6 +16,8 @@ import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import com.gargoylesoftware.htmlunit.util.WebConnectionWrapper;
 import de.andreasgiemza.mangadownloader.data.Image;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -39,7 +41,7 @@ public class HTMLUnitHelper {
         Exception ex = null;
 
         for (int i = 0; i < NUMBER_OF_TRIES; i++) {
-            try (WebClient webClient = createWebClient()) {
+            try (WebClient webClient = createWebClient(url)) {
                 HtmlPage page = webClient.getPage(url);
 
                 JavaScriptJobManager manager = page.getEnclosingWindow().getJobManager();
@@ -63,7 +65,7 @@ public class HTMLUnitHelper {
         Exception ex = null;
 
         for (int i = 0; i < NUMBER_OF_TRIES; i++) {
-            try (WebClient webClient = createWebClient()) {
+            try (WebClient webClient = createWebClient(url)) {
                 WebRequest requestSettings = new WebRequest(new URL(url), HttpMethod.POST);
 
                 requestSettings.setRequestParameters(new ArrayList<NameValuePair>());
@@ -92,7 +94,7 @@ public class HTMLUnitHelper {
         Exception ex = null;
 
         for (int i = 0; i < NUMBER_OF_TRIES; i++) {
-            try (WebClient webClient = createWebClient()) {
+            try (WebClient webClient = createWebClient(image.getLink())) {
                 webClient.addRequestHeader("Referer", image.getReferrer());
 
                 UnexpectedPage page = webClient.getPage(image.getLink());
@@ -114,7 +116,7 @@ public class HTMLUnitHelper {
         throw ex;
     }
 
-    private static WebClient createWebClient() {
+    private static WebClient createWebClient(final String url) {
         WebClient webClient = new WebClient(BrowserVersion.CHROME);
 
         // http://stackoverflow.com/a/23482615/2246865 by Neil McGuigan
@@ -139,16 +141,25 @@ public class HTMLUnitHelper {
         webClient.setWebConnection(new WebConnectionWrapper(webClient) {
             @Override
             public WebResponse getResponse(final WebRequest request) throws IOException {
-                if (request.getUrl().toString().contains("googlesyndication.com")
-                        || request.getUrl().toString().contains("disqus.com")
-                        || request.getUrl().toString().contains("google-analytics.com")) {
-                    return new StringWebResponse("", request.getUrl());
-                } else {
+                if (request.getUrl().toString().contains(getDomainName(url))) {
                     return super.getResponse(request);
+                } else {
+                    return new StringWebResponse("", request.getUrl());
                 }
             }
         });
 
         return webClient;
+    }
+
+    // http://stackoverflow.com/a/9608008/2246865 by Mike Samuel
+    private static String getDomainName(String url) {
+        try {
+            URI uri = new URI(url);
+            String domain = uri.getHost();
+            return domain.startsWith("www.") ? domain.substring(4) : domain;
+        } catch (URISyntaxException ex) {
+            return "";
+        }
     }
 }
