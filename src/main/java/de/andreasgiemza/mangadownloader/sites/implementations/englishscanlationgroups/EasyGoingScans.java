@@ -57,7 +57,7 @@ public class EasyGoingScans implements Site {
                 .select("option");
 
         for (Element row : rows) {
-            chapters.add(new Chapter(manga.getLink() + "/" + row.attr("value"),
+            chapters.add(new Chapter(manga, manga.getLink() + "/" + row.attr("value"),
                     row.text()));
         }
 

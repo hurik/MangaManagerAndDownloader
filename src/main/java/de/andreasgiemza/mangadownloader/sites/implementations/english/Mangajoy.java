@@ -54,7 +54,7 @@ public class Mangajoy implements Site {
                 continue;
             }
 
-            chapters.add(new Chapter(row.select("a").first().attr("href"), row
+            chapters.add(new Chapter(manga, row.select("a").first().attr("href"), row
                     .select("span[class=val]").first().text()));
         }
 

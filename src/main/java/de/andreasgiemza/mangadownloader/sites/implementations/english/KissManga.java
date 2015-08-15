@@ -75,7 +75,7 @@ public class KissManga implements Site {
 
             Element link = td.select("a").first();
 
-            chapters.add(new Chapter(link.attr("href"), link.text()));
+            chapters.add(new Chapter(manga, link.attr("href"), link.text()));
         }
 
         return chapters;

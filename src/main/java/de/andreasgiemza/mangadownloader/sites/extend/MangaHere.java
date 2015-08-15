@@ -77,7 +77,7 @@ public class MangaHere implements Site {
                 continue;
             }
 
-            chapters.add(new Chapter(row.select("a").first().attr("abs:href"),
+            chapters.add(new Chapter(manga, row.select("a").first().attr("abs:href"),
                     buildChapterName(row)));
         }
 

@@ -82,7 +82,7 @@ public class Batoto implements Site {
                     + cols.get(1).select("div").first().attr("title") + "]"
                     + " [" + cols.get(2).text() + "]";
 
-            chapters.add(new Chapter(link.attr("href"), title));
+            chapters.add(new Chapter(manga, link.attr("href"), title));
         }
 
         return chapters;

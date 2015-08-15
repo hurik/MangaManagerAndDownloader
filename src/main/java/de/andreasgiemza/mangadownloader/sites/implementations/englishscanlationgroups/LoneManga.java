@@ -62,7 +62,7 @@ public class LoneManga implements Site {
                 String link = data.attr("href");
 
                 if (link.startsWith("http://lonemanga.com/manga")) {
-                    chapters.add(new Chapter(link, data.text()));
+                    chapters.add(new Chapter(manga, link, data.text()));
                 }
             }
         }

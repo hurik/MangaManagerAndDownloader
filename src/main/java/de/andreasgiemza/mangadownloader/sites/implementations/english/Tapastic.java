@@ -88,7 +88,7 @@ public class Tapastic implements Site {
         Wrapper[] dataArray = new Gson().fromJson(jsonReader, Wrapper[].class);
 
         for (int i = 0; i < dataArray.length; i++) {
-            chapters.add(new Chapter(dataArray[i].id, "(" + i + ") "
+            chapters.add(new Chapter(manga, dataArray[i].id, "(" + i + ") "
                     + dataArray[i].title));
         }
 

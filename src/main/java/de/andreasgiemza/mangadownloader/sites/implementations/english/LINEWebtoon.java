@@ -57,7 +57,7 @@ public class LINEWebtoon implements Site {
         Elements pages = doc.select("li[id^=episode]");
 
         for (Element page : pages) {
-            chapters.add(new Chapter(page.select("a").first().attr("href")
+            chapters.add(new Chapter(manga, page.select("a").first().attr("href")
                     .replace(urlMobile, url), page
                     .select("span[class=ellipsis]").first().text()));
         }

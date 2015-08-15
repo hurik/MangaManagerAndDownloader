@@ -91,7 +91,7 @@ public class FoOlSlide implements Site {
             for (Element row : rows) {
                 Element link = row.select("div[class=title]").first()
                         .select("a").first();
-                chapters.add(new Chapter(link.attr("abs:href"), link.text()));
+                chapters.add(new Chapter(manga, link.attr("abs:href"), link.text()));
             }
         } else {
             for (Element group : groups) {
@@ -102,7 +102,7 @@ public class FoOlSlide implements Site {
                 for (Element row : rows) {
                     Element link = row.select("div[class=title]").first()
                             .select("a").first();
-                    chapters.add(new Chapter(link.attr("abs:href"), volume
+                    chapters.add(new Chapter(manga, link.attr("abs:href"), volume
                             + " - " + link.text()));
                 }
             }

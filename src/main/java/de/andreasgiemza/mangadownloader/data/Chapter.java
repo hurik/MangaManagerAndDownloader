@@ -11,9 +11,26 @@ public class Chapter {
     private boolean alreadyDownloaded = false;
     private boolean download = false;
 
-    public Chapter(String link, String title) {
+    public Chapter(Manga manga, String link, String title) {
         this.link = link;
-        this.title = title;
+        this.title = cleanTitle(manga, title);
+    }
+
+    private String cleanTitle(Manga manga, String title) {
+        // Remove not needed information
+        title = title.replace("Chapters", "");
+        title = title.replace(manga.getTitle(), "");
+
+        // Use abbreviations of volume and chapter
+        title = title.replace("Volume", "Vol.");
+        title = title.replace("Chapter", "Ch.");
+
+        title = title.trim();
+        if (title.startsWith("-")) {
+            title = title.substring(1);
+        }
+
+        return title.trim();
     }
 
     public String getLink() {

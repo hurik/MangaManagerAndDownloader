@@ -73,7 +73,7 @@ public class MangaEden implements Site {
 
         for (Element row : rows) {
             Element link = row.select("a").first();
-            chapters.add(new Chapter(link.attr("abs:href"), link.text()));
+            chapters.add(new Chapter(manga, link.attr("abs:href"), link.text()));
         }
 
         return chapters;

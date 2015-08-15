@@ -88,7 +88,7 @@ public class Mangacow implements Site {
             for (Element row : rows) {
                 Element link = row.select("a").first();
 
-                chapters.add(new Chapter(link.attr("href"), link
+                chapters.add(new Chapter(manga, link.attr("href"), link
                         .select("b[class=val]").first().text()));
             }
         }

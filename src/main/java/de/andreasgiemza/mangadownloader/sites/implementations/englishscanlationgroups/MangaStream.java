@@ -60,7 +60,7 @@ public class MangaStream implements Site {
                 continue;
             }
 
-            chapters.add(new Chapter(page.select("a").first().attr("href"),
+            chapters.add(new Chapter(manga, page.select("a").first().attr("href"),
                     page.select("a").first().text()));
         }
 
