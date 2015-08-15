@@ -71,7 +71,11 @@ public class SubscriptionsTableModel extends AbstractTableModel {
             case 5:
                 return subscription.getLastReadChapter();
             case 6:
-                return subscription.getChapters().get(0).getTitle();
+                if (!subscription.getChapters().isEmpty()) {
+                    return subscription.getChapters().get(0).getTitle();
+                } else {
+                    return null;
+                }
             case 7:
                 return new SimpleDateFormat("yyyy.MM.dd - HH:mm:ss").format(subscription.getLastUpdate());
             default:
