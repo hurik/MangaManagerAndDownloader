@@ -27,7 +27,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="mangaFilterPanel" pref="780" max="32767" attributes="0"/>
+                  <Component id="mangaFilterPanel" pref="620" max="32767" attributes="0"/>
                   <Component id="sitePanel" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="markAllReadCheckBox" min="-2" max="-2" attributes="0"/>
@@ -47,7 +47,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="sitePanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="mangaFilterPanel" max="32767" attributes="0"/>
+              <Component id="mangaFilterPanel" pref="377" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="addSubscriptionButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -126,7 +126,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="mangaTextField" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="mangaScrollPane" alignment="0" pref="379" max="32767" attributes="0"/>
+                  <Component id="mangaScrollPane" alignment="0" pref="296" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -137,7 +137,7 @@
                           <Component id="mangaLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="mangaScrollPane" pref="448" max="32767" attributes="0"/>
+                      <Component id="mangaScrollPane" pref="328" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -184,7 +184,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="filterScrollPane" pref="376" max="32767" attributes="0"/>
+                  <Component id="filterScrollPane" pref="299" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="filterLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -206,7 +206,7 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="filterPreviewLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="filterScrollPane" pref="423" max="32767" attributes="0"/>
+                      <Component id="filterScrollPane" pref="303" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
