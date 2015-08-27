@@ -287,7 +287,6 @@ public class MangaManager extends javax.swing.JFrame {
                             System.out.println("- Updating " + subscription.getManga().getTitle() + " ...");
                             try {
                                 subscription.getNewChapters(subscription.getSite().getChapterList(subscription.getManga()), UNREAD);
-                                subscriptionsTableModel.fireTableDataChanged();
                                 System.out.println("- Updating " + subscription.getManga().getTitle() + " ... done!");
                             } catch (Exception ex) {
                                 System.out.println("- Updating " + subscription.getManga().getTitle() + " ... not done! Error!");
@@ -300,6 +299,7 @@ public class MangaManager extends javax.swing.JFrame {
 
                 System.out.println("Updating subscriptions ... done! (Time: " + new BigDecimal((double) (System.nanoTime() - startTime) / 1000000000).setScale(2, RoundingMode.HALF_UP) + "s)");
 
+                subscriptionsTableModel.fireTableDataChanged();
                 loading.dispose();
             }
         });
