@@ -99,8 +99,14 @@ public class KissManga implements Site {
                         String line = scanner.nextLine();
 
                         if (line.contains("lstImages.push")) {
-                            String link = line.split("lstImages\\.push\\(\"")[1]
-                                    .split("\\?imgmax")[0];
+                            String link = line.split("lstImages\\.push\\(\"")[1];
+
+                            if (link.contains("?imgmax")) {
+                                link = link.split("\\?imgmax")[0];
+                            } else {
+                                link = link.split("\"\\);")[0];
+                            }
+
                             String extension = link.substring(
                                     link.length() - 3, link.length());
 
