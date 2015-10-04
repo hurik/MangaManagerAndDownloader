@@ -94,7 +94,7 @@ public class Mangachan implements Site {
                                 link.length() - 3, link.length());
 
                         images.add(new Image(link,
-                                referrer, extension, ImageType.HTMLUNIT));
+                                referrer, extension));
                     }
                 }
             }
