@@ -12,6 +12,7 @@ Little tool to track and download mangas from various sites.
 * **German:** MangaTube
 * **German Scanlation Groups:** Manga Scouts, MangaUnlimited, Thriller Bark Café and Tokido Translations
 * **Italian:** Manga Eden (Italian)
+* **Russian:** Mangachan
 
 ## Download
 [https://github.com/hurik/MangaDownloader/releases/latest](https://github.com/hurik/MangaDownloader/releases/latest)
