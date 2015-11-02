@@ -2,8 +2,9 @@ package de.andreasgiemza.mangadownloader.sites.implementations.english;
 
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
+import de.andreasgiemza.mangadownloader.data.ImageType;
 import de.andreasgiemza.mangadownloader.data.Manga;
-import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
+import de.andreasgiemza.mangadownloader.helpers.HTMLUnitHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -28,7 +29,7 @@ public class KissManga implements Site {
     public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(url + "/MangaList");
+        Document doc = HTMLUnitHelper.getHTMLPage(url + "/MangaList");
 
         int numberOfPages = Integer.parseInt(doc
                 .select("div[class=pagination pagination-left]").first()
@@ -36,7 +37,7 @@ public class KissManga implements Site {
 
         for (int page = 1; page <= numberOfPages; page++) {
             if (page != 1) {
-                doc = JsoupHelper.getHTMLPage(url + "/MangaList?page=" + page);
+                doc = HTMLUnitHelper.getHTMLPage(url + "/MangaList?page=" + page);
             }
 
             Elements rows = doc.select("table[class=listing]").first()
@@ -62,7 +63,7 @@ public class KissManga implements Site {
     public List<Chapter> getChapterList(Manga manga) throws Exception {
         List<Chapter> chapters = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(url + manga.getLink());
+        Document doc = HTMLUnitHelper.getHTMLPage(url + manga.getLink());
 
         Elements rows = doc.select("table[class=listing]").first().select("tr");
 
@@ -86,7 +87,7 @@ public class KissManga implements Site {
         List<Image> images = new LinkedList<>();
 
         String referrer = url + chapter.getLink();
-        Document doc = JsoupHelper.getHTMLPage(referrer);
+        Document doc = HTMLUnitHelper.getHTMLPage(referrer);
 
         Elements scripts = doc.select("script");
 
@@ -111,7 +112,7 @@ public class KissManga implements Site {
                                     link.length() - 3, link.length());
 
                             images.add(new Image(link + "?imgmax=9999",
-                                    referrer, extension));
+                                    referrer, extension, ImageType.HTMLUNIT));
                         }
                     }
                 }
