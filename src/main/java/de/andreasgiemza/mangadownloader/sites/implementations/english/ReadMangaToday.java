@@ -85,8 +85,9 @@ public class ReadMangaToday implements Site {
                 doc = JsoupHelper.getHTMLPage(referrer);
             }
 
-            String link = doc.select("div.page_chapter").first().select("img")
-                    .attr("src");
+            String link = doc.select("div[class=col-left col-md-12]").first()
+                    .select("div[class=content-list col-md-12 page_chapter]")
+                    .get(1).select("img").attr("src");
             String extension = link.substring(link.length() - 3, link.length());
 
             images.add(new Image(link, referrer, extension));
