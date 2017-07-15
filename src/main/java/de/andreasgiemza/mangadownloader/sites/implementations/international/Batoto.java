@@ -3,7 +3,7 @@ package de.andreasgiemza.mangadownloader.sites.implementations.international;
 import de.andreasgiemza.mangadownloader.data.Chapter;
 import de.andreasgiemza.mangadownloader.data.Image;
 import de.andreasgiemza.mangadownloader.data.Manga;
-import de.andreasgiemza.mangadownloader.helpers.JsoupHelper;
+import de.andreasgiemza.mangadownloader.helpers.BatotoJsoupHelper;
 import de.andreasgiemza.mangadownloader.sites.Site;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -29,7 +29,7 @@ public class Batoto implements Site {
     public List<Manga> getMangaList() throws Exception {
         List<Manga> mangas = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(url
+        Document doc = BatotoJsoupHelper.getHTMLPage(url
                 + "/comic/_/comics/?per_page=" + loadCount + "&st=0");
 
         int max = Integer.parseInt(doc.select("li[class=last]").first()
@@ -37,7 +37,7 @@ public class Batoto implements Site {
 
         for (int i = 0; i <= max; i += loadCount) {
             if (i != 0) {
-                doc = JsoupHelper
+                doc = BatotoJsoupHelper
                         .getHTMLPage(url + "/comic/_/comics/?per_page="
                                 + loadCount + "&st=" + i);
             }
@@ -65,7 +65,7 @@ public class Batoto implements Site {
     public List<Chapter> getChapterList(Manga manga) throws Exception {
         List<Chapter> chapters = new LinkedList<>();
 
-        Document doc = JsoupHelper.getHTMLPage(manga.getLink());
+        Document doc = BatotoJsoupHelper.getHTMLPage(manga.getLink());
 
         Elements rows = doc.select("table[class=ipb_table chapters_list]")
                 .first().select("tr");
@@ -83,6 +83,7 @@ public class Batoto implements Site {
                     + " [" + cols.get(2).text() + "]";
 
             chapters.add(new Chapter(manga, link.attr("href"), title));
+
         }
 
         return chapters;
@@ -91,9 +92,10 @@ public class Batoto implements Site {
     @Override
     public List<Image> getChapterImageLinks(Chapter chapter) throws Exception {
         List<Image> images = new LinkedList<>();
-
-        String referrer = chapter.getLink() + "?supress_webtoon=t";
-        Document doc = JsoupHelper.getHTMLPage(referrer);
+        String code = getChapterCode(chapter.getLink());
+        String referrer = "http://bato.to/areader?id=" + code + "&p=1&supress_webtoon=t";
+        
+        Document doc = BatotoJsoupHelper.getHTMLPage(referrer);
 
         // Get pages linkes
         Elements pages = doc.select("div[class=moderation_bar rounded clear]")
@@ -102,8 +104,9 @@ public class Batoto implements Site {
 
         for (int i = 0; i < pages.size(); i++) {
             if (i != 0) {
-                referrer = pages.get(i).attr("value") + "?supress_webtoon=t";
-                doc = JsoupHelper.getHTMLPage(referrer);
+                // referrer = pages.get(i).attr("value") + "&supress_webtoon=t";
+                referrer="http://bato.to/areader?id=" + code + "&p=" + String.valueOf(i + 1) + "&supress_webtoon=t";
+                doc = BatotoJsoupHelper.getHTMLPage(referrer);
             }
 
             String link = doc.select("img[id=comic_page]").first().attr("src");
@@ -115,6 +118,13 @@ public class Batoto implements Site {
         return images;
     }
 
+    // Batoto Specific Chapter code
+    private String getChapterCode(String url)
+    {
+        return url.substring(url.lastIndexOf("#") + 1);
+      
+    }
+    
     @Override
     public String getName() {
         return name;
