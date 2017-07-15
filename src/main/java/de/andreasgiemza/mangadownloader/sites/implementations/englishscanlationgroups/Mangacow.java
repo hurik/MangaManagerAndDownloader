@@ -19,7 +19,7 @@ import org.jsoup.select.Elements;
 public class Mangacow implements Site {
 
     private final String name = "Mangacow";
-    private final String url = "http://mangacow.co/";
+    private final String url = "http://mngcow.co/";
     private final List<String> language = Arrays.asList("English");
     private final Boolean watermarks = false;
 
@@ -30,7 +30,7 @@ public class Mangacow implements Site {
         Document doc = JsoupHelper.getHTMLPage(url
                 + "/manga-list/all/any/name-az/");
 
-        Element nav = doc.select("ul[class=pgg]").first();
+        Element nav = doc.select("ul[class=sct_content]").first();
 
         int pages = 1;
 
@@ -48,8 +48,8 @@ public class Mangacow implements Site {
             }
 
             Elements rows = doc.select("div[class=wpm_pag mng_lst tbn]")
-                    .first().select("div[class^=nde]");
-
+                    .first().select("ul[id=wpm_mng_lst]").select("li");
+            
             for (Element row : rows) {
                 Element link = row.select("div[class=det]").first().select("a")
                         .first();
