@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.andreasgiemza</groupId>
     <artifactId>mangamanageranddownloader</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>MangaManagerAndDownloader</name>
+    <version>0.0.2</version>
+    <name>MMD</name>
     <url>https://github.com/hurik/MangaDownloader</url>
     <dependencies>
         <dependency>
@@ -34,7 +34,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <build>
-        <finalName>${project.artifactId}-${maven.build.timestamp}</finalName>
+        <finalName>${project.name}-${project.version}</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -58,6 +58,28 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Packaging for OSX -->
+            <plugin>
+                <groupId>sh.tak.appbundler</groupId>
+                <artifactId>appbundle-maven-plugin</artifactId>
+                <version>1.2.0</version>
+                <configuration>
+                    <mainClass>de.andreasgiemza.mangamanager.MangaManager</mainClass>
+                    <generateDiskImageFile>true</generateDiskImageFile>
+                    <dictionaryFile>osx/Info.plist</dictionaryFile>
+                    <iconFile>images/icon.icns</iconFile>
+                    <!--Provide JRE When Target Environment doesn' have it-->
+                    <!--<jrePath>/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk</jrePath>-->
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin> 
         </plugins>
     </build>
 </project>
