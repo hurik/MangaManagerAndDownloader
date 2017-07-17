@@ -68,6 +68,8 @@
                     <generateDiskImageFile>true</generateDiskImageFile>
                     <dictionaryFile>osx/Info.plist</dictionaryFile>
                     <iconFile>images/icon.icns</iconFile>
+                    <includeApplicationsSymlink>true</includeApplicationsSymlink>
+                    <bundleName>MMD</bundleName>
                     <!--Provide JRE When Target Environment doesn' have it-->
                     <!--<jrePath>/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk</jrePath>-->
                 </configuration>
