@@ -33,7 +33,6 @@ public class MangaStream implements Site {
 
         Elements rows = doc.select("table[class=table table-striped]").first()
                 .select("tr");
-
         for (Element row : rows) {
             if (row == rows.first()) {
                 continue;
@@ -75,7 +74,7 @@ public class MangaStream implements Site {
         Document doc = JsoupHelper.getHTMLPage(referrer);
 
         // Get pages linkes
-        int max = Integer.parseInt(doc.select("div[class=btn-group]").last()
+        int max = Integer.parseInt(doc.select("div[class=btn-group btn-reader-page]").last()
                 .select("li").last().text().replace("Last Page (", "")
                 .replace(")", ""));
 
@@ -87,7 +86,7 @@ public class MangaStream implements Site {
                 doc = JsoupHelper.getHTMLPage(referrer);
             }
 
-            String link = doc.select("img[id=manga-page]").first().attr("src");
+            String link = "http:" + doc.select("img[id=manga-page]").first().attr("src");
             String extension = link.substring(link.length() - 3, link.length());
 
             imageLinks.add(new Image(link, referrer, extension));
